@@ -48,33 +48,33 @@
   gap: 10px;
 }
 
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px; 
-  cursor: pointer;
-  font-size: 16px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  transition: background-color 0.3s ease, color 0.3s ease;
+.btn  {
+  padding: 10px 20px !important;
+  border: none !important;
+  border-radius: 20px !important; 
+  cursor: pointer !important;
+  font-size: 16px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 500 !important;
+  transition: background-color 0.3s ease, color 0.3s ease !important;
 }
 
 .btn-primary {
-  background-color: #000000;
-  color: white;
+  background-color: #000000 !important;
+  color: white !important;
 }
 
 .btn-primary:hover {
-  background-color: #000000;
+  background-color: #000000 !important;
 }
 
 .btn-secondary {
-  background-color: white;
-  color: #000000;
-  border: 1px solid #000000;
+  background-color: white !important;
+  color: #000000 !important;
+  border: 1px solid #000000 !important;
 }
 
 .btn-secondary:hover {
-  background-color: #000000;
-  color: white;
+  background-color: #000000 !important;
+  color: white !important;
 }
