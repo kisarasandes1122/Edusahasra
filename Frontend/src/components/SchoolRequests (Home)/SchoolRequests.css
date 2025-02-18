@@ -1,0 +1,202 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+  }
+  
+  /* Container styles */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 1rem;
+  }
+  
+  /* Header styles */
+  .title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  
+  .subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 48px;
+  }
+  
+  /* Grid layout */
+  .school-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+  
+  /* Card styles */
+  .school-card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .school-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  /* School header styles */
+  .school-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .school-name {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  
+  /* Icon styles */
+  .school-card-icon {
+    width: 20px;
+    height: 20px;
+    color: #666;
+  }
+  
+  .school-card-icon-building {
+    color: #12263A;
+  }
+  
+  /* Info row styles */
+  .school-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 24px;
+  }
+  
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #666;
+  }
+  
+  /* Needs section styles */
+  .needs-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .needs-label {
+    font-weight: 500;
+  }
+  
+  /* Progress bar styles */
+  .progress-section {
+    margin-bottom: 24px;
+  }
+  
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #e5e7eb;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background-color: #12263A;
+    border-radius: 5px;
+    transition: width 1s ease-in-out;
+  }
+  
+  /* Button styles */
+  .donate-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #12263A;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .donate-button:hover {
+    background-color: #12263A;
+  }
+  
+  /* View all section styles */
+  .view-all-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+  }
+  
+  .view-all-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #12263A;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: gap 0.3s ease;
+  }
+  
+  .view-all-button:hover {
+    gap: 12px;
+  }
+  
+  .view-all-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Responsive styles */
+  @media screen and (max-width: 1024px) {
+    .school-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .school-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .container {
+      padding: 16px;
+    }
+    
+    .title {
+      font-size: 28px;
+    }
+  }
+  
+  /* Animation for progress bar */
+  @keyframes progressFill {
+    from {
+      width: 0;
+    }
+    to {
+      width: var(--progress);
+    }
+  }
