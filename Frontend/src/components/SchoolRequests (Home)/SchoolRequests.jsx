@@ -83,11 +83,11 @@ const SchoolRequests = () => {
         ))}
       </div>
 
-      <div className="view-all-container">
+      <div className="view-all-container"><a href="/needs" className='View-all-link'>
         <button className="view-all-button">
           View All Requests
           <ArrowRight className="view-all-icon" />
-        </button>
+        </button></a>
       </div>
     </div>
   );

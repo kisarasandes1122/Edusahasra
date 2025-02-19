@@ -67,10 +67,6 @@
   transition: background-color 0.2s ease;
 }
 
-.dropdown-trigger:hover {
-  background-color: #f3f4f6;
-}
-
 .dropdown-arrow {
   font-size: 20px;
   transition: transform 0.2s ease;

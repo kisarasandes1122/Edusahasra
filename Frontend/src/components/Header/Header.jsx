@@ -37,13 +37,13 @@ const DonationModal = ({ isOpen, onClose }) => {
           <div className="registration-section">
             <h3 className="section-title">Donor Registration</h3>
             <p className="section-description">New Here? Sign up start making an impact.</p>
-            <a href="/DonorRegistration"><button className="modal-button register-button">Register Now</button></a>
+            <a href="/donor-register"><button className="modal-button register-button">Register Now</button></a>
           </div>
           
           <div className="login-section">
             <h3 className="section-title">Donor Login</h3>
             <p className="section-description">Already have an account? Log in to continue Donating</p>
-            <a href="/DonorLogin"><button className="modal-button login-button">Login Now</button></a>
+            <a href="/donor-login"><button className="modal-button login-button">Login Now</button></a>
           </div>
         </div>
       </div>
@@ -162,7 +162,7 @@ const Header = ({ isAuthenticated, user }) => {
                   <div className="dropdown-menu">
                     <h3 className="dropdown-title">For Donors</h3><hr />
                     <div className="dropdown-items">
-                      <a href="#browse" className="dropdown-item">
+                      <a href="/Needs" className="dropdown-item">
                         <IoCalendarOutline className="dropdown-icon" />
                         <div className="dropdown-content">
                           <span className="dropdown-item-title">Browse Needs</span>

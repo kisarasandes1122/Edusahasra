@@ -169,6 +169,10 @@
     width: 20px;
     height: 20px;
   }
+
+  .View-all-link{
+    text-decoration: none;
+  }
   
   /* Responsive styles */
   @media screen and (max-width: 1024px) {

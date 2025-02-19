@@ -8,8 +8,8 @@ const HeroSection = () => {
   return (
     <div className="heroSectionContainer">
       <div className="heroBackground"></div>
-      <div className="donateButtonFrame">
-        <div className="donateButtonText">Start Donate</div>
+      <div className="donateButtonFrame"> <a href="/needs" className='donateButtonLink'>
+        <div className="donateButtonText">Start Donate</div></a>
       </div>
       <img className="heroImageOne" src={image1} alt="Students 1" />
       <img className="heroImageTwo" src={image2} alt="Students 2" />

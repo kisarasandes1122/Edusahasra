@@ -52,6 +52,11 @@
   font-weight: 800;
   position: relative;
 }
+
+.donateButtonLink{
+  text-decoration: none;
+}
+
 .heroImageOne {
   border-radius: 30px;
   border-style: solid;
