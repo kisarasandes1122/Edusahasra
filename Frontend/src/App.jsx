@@ -5,6 +5,7 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import DonorRegistration from './components/DonorRegistration/DonorRegistration';
 import DonorLogin from './components/DonorLogin/DonorLogin';
+import SchoolsInNeedPage from './components/SchoolInNeeds/SchoolsInNeedPage';
 
 const App = () => {
 
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/DonorRegistration" element={<DonorRegistration />} />
         <Route path="/DonorLogin" element={<DonorLogin />} />
+        <Route path='/Needs' element={<SchoolsInNeedPage />} />
       </Routes>
 
       <Footer />

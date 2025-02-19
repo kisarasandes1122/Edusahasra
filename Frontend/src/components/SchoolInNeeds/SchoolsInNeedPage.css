@@ -1,0 +1,216 @@
+.sin-container {
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 100px;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+  }
+  
+  .sin-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .sin-title {
+    font-size: 32px;
+    margin-bottom: 10px;
+    font-weight: 800;
+  }
+  
+  .sin-subtitle {
+    font-size: 16px;
+    max-width: 840px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+  
+  .sin-content {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .sin-sidebar {
+    flex: 0 0 300px;
+    background-color: #f5f7fa;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .sin-filter-section {
+    margin-bottom: 20px;
+  }
+  
+  .sin-filter-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  
+  .sin-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: white;
+    font-size: 14px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23131313%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+  }
+  
+  .sin-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .sin-checkbox-label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .sin-checkbox {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  .sin-reset-button {
+    width: 100%;
+    padding: 12px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .sin-reset-button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .sin-school-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .sin-school-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .sin-school-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .sin-school-icon {
+    font-size: 24px;
+    color: #12263A;
+  }
+  
+  .sin-school-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .sin-school-location, .sin-school-students {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  
+  .sin-location-icon, .sin-students-icon, .sin-needs-icon {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .sin-school-needs {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .sin-needs-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sin-needs-label {
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .sin-needs-text {
+    font-size: 14px;
+  }
+  
+  .sin-progress-section {
+    margin-top: 5px;
+  }
+  
+  .sin-progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .sin-progress-bar {
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .sin-progress-fill {
+    height: 100%;
+    background-color: #12263A;
+    border-radius: 4px;
+  }
+  
+  .sin-donate-button {
+    margin-top: 10px;
+    background-color: #12263A;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .sin-donate-button:hover {
+    background-color: #1a3b5d;
+  }
+  
+  @media (max-width: 768px) {
+    .sin-content {
+      flex-direction: column;
+    }
+    
+    .sin-sidebar {
+      flex: 0 0 auto;
+    }
+    
+    .sin-school-grid {
+      grid-template-columns: 1fr;
+    }
+  }
