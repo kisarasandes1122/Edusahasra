@@ -162,7 +162,7 @@ const Header = ({ isAuthenticated, user }) => {
                   <div className="dropdown-menu">
                     <h3 className="dropdown-title">For Donors</h3><hr />
                     <div className="dropdown-items">
-                      <a href="/Needs" className="dropdown-item">
+                      <a href="/needs" className="dropdown-item">
                         <IoCalendarOutline className="dropdown-icon" />
                         <div className="dropdown-content">
                           <span className="dropdown-item-title">Browse Needs</span>
