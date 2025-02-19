@@ -55,7 +55,7 @@ const WhyTrustUs = () => {
             <div className="features-grid">
                 {features.map((feature, index) => (
                 <div key={index} className="feature-card">
-                    <div className="icon">{feature.icon}</div>
+                    <div className="w-icon">{feature.icon}</div>
                     <h3>{feature.title}</h3>
                     <p>{feature.description}</p>
                 </div>
@@ -66,7 +66,7 @@ const WhyTrustUs = () => {
         <div className="stats-container">
             {stats.map((stat, index) => (
             <div key={index} className="stat-card">
-                <div className="icon">{stat.icon}</div>
+                <div className="w-icon">{stat.icon}</div>
                 <h3>{stat.number}</h3>
                 <p>{stat.label}</p>
             </div>

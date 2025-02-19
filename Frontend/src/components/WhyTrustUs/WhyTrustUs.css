@@ -32,7 +32,7 @@
     transform: translateY(-5px);
   }
   
-  .feature-card .icon {
+  .feature-card .w-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
     color: #000000;
@@ -62,7 +62,7 @@
     text-align: center;
   }
   
-  .stat-card .icon {
+  .stat-card .w-icon {
     font-size: 2rem;
     margin-bottom: 1rem;
     color: #000000;
