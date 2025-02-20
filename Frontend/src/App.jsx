@@ -8,6 +8,8 @@ import DonorLogin from './components/Donor/DonorLogin/DonorLogin';
 import SchoolsInNeedPage from './components/Donor/SchoolInNeeds/SchoolsInNeedPage';
 import NeedPage from './components/Donor/NeedPage/NeedPage';
 import DonationPage from './components/Donor/DonationPage/DonationPage';
+import SchoolRegistration from './components/School/SchoolRegistration/SchoolRegistration';
+import SchoolLogin from './components/School/SchoolLogin/SchoolLogin';
 
 const App = () => {
 
@@ -34,6 +36,8 @@ const App = () => {
         <Route path='/needs' element={<SchoolsInNeedPage />} />
         <Route path='/needs/1' element={<NeedPage />} />
         <Route path='/donate/1' element={<DonationPage />} />
+        <Route path="/school-register" element={<SchoolRegistration />} />
+        <Route path="/school-login" element={<SchoolLogin />} />
       </Routes>
 
       <Footer />

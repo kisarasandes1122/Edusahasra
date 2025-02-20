@@ -1,0 +1,99 @@
+.rs_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .rs_popup {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .rs_success_icon {
+    margin-bottom: 20px;
+  }
+  
+  .rs_title {
+    font-size: 24px;
+    color: #222;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  .rs_message {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 25px;
+    line-height: 1.5;
+  }
+  
+  .rs_verification_note {
+    margin-top: 15px;
+    font-weight: 500;
+    color: #555;
+    padding: 10px 15px;
+    background-color: #f5f7fa;
+    border-left: 4px solid #4CAF50;
+    text-align: left;
+    border-radius: 4px;
+  }
+  
+  .rs_back_home_button {
+    background-color: #152238;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 15px 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+    width: 200px;
+  }
+  
+  .rs_back_home_button:hover {
+    background-color: #0c1625;
+  }
+  
+  @media (max-width: 600px) {
+    .rs_popup {
+      padding: 20px;
+      width: 85%;
+    }
+    
+    .rs_title {
+      font-size: 20px;
+    }
+    
+    .rs_message {
+      font-size: 14px;
+    }
+    
+    .rs_back_home_button {
+      width: 100%;
+    }
+  }

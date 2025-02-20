@@ -82,13 +82,13 @@ const RequestModal = ({ isOpen, onClose }) => {
           <div className="registration-section">
             <h3 className="section-title">School/Teacher Registration</h3>
             <p className="section-description">New Here? Sign up to get the support you need.</p>
-            <button className="modal-button register-button">Register Now</button>
+            <a href="/school-register"><button className="modal-button register-button">Register Now</button></a>
           </div>
           
           <div className="login-section">
             <h3 className="section-title">School/Teacher Login</h3>
             <p className="section-description">Already have an account? Log in to continue request.</p>
-            <button className="modal-button login-button">Login Now</button>
+            <a href="/school-login"><button className="modal-button login-button">Login Now</button></a>
           </div>
         </div>
       </div>
