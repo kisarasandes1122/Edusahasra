@@ -1,8 +1,8 @@
 import React from 'react';
 import './HeroSection.css';
-import image1 from '../../assets/images/image1.jpg';
-import image2 from '../../assets/images/image2.webp';
-import image3 from '../../assets/images/image3.jpg';
+import image1 from '../../../assets/images/image1.jpg';
+import image2 from '../../../assets/images/image2.webp';
+import image3 from '../../../assets/images/image3.jpg';
 
 const HeroSection = () => {
   return (

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './Header.css';
 import './DonationModal.css';
-import logo from '../../assets/images/Edusahasra.png';
+import logo from '../../../assets/images/Edusahasra.png';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { FiTool } from 'react-icons/fi';
 import { IoIosArrowDown } from 'react-icons/io';

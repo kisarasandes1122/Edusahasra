@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
-import DonorRegistration from './components/DonorRegistration/DonorRegistration';
-import DonorLogin from './components/DonorLogin/DonorLogin';
-import SchoolsInNeedPage from './components/SchoolInNeeds/SchoolsInNeedPage';
-import NeedPage from './components/NeedPage/NeedPage';
-import DonationPage from './components/DonationPage/DonationPage';
+import Header from './components/Donor/Header/Header';
+import Footer from './components/Donor/Footer/Footer';
+import DonorRegistration from './components/Donor/DonorRegistration/DonorRegistration';
+import DonorLogin from './components/Donor/DonorLogin/DonorLogin';
+import SchoolsInNeedPage from './components/Donor/SchoolInNeeds/SchoolsInNeedPage';
+import NeedPage from './components/Donor/NeedPage/NeedPage';
+import DonationPage from './components/Donor/DonationPage/DonationPage';
 
 const App = () => {
 

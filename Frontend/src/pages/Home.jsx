@@ -1,8 +1,8 @@
 import React from 'react';
-import HeroSection from '../components/HeroSection/HeroSection';
-import WhyTrustUsSection from '../components/WhyTrustUs/WhyTrustUs';
-import HowItWorks from '../components/HowitWorks/HowitWorks';
-import SchoolRequests from '../components/SchoolRequests (Home)/SchoolRequests';
+import HeroSection from '../components/Donor/HeroSection/HeroSection';
+import WhyTrustUsSection from '../components/Donor/WhyTrustUs/WhyTrustUs';
+import HowItWorks from '../components/Donor/HowitWorks/HowitWorks';
+import SchoolRequests from '../components/Donor/SchoolRequests (Home)/SchoolRequests';
 
 const Home = () => {
   const mockAuthState = {

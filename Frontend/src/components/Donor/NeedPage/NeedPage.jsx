@@ -2,9 +2,9 @@ import React from 'react';
 import { IoLocationOutline } from 'react-icons/io5';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import './NeedPage.css';
-import img1 from '../../assets/images/Rural1.webp';
-import img2 from '../../assets/images/Rural2.webp';
-import img3 from '../../assets/images/Rural3.webp';
+import img1 from '../../../assets/images/Rural1.webp';
+import img2 from '../../../assets/images/Rural2.webp';
+import img3 from '../../../assets/images/Rural3.webp';
 
 const NeedPage = () => {
   // Sample data
