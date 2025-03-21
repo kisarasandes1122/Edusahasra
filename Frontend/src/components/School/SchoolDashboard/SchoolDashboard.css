@@ -66,6 +66,10 @@
     color: #4a5568;
     font-size: 15px;
   }
+
+  .dashboard-welcome p{
+    margin: 0px;
+  }
   
   .dashboard-grid {
     display: grid;
