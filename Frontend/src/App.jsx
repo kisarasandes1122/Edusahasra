@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
 import Home from './pages/Home';
 import Header from './components/Donor/Header/Header';
 import Footer from './components/Donor/Footer/Footer';
@@ -10,9 +10,10 @@ import NeedPage from './components/Donor/NeedPage/NeedPage';
 import DonationPage from './components/Donor/DonationPage/DonationPage';
 import SchoolRegistration from './components/School/SchoolRegistration/SchoolRegistration';
 import SchoolLogin from './components/School/SchoolLogin/SchoolLogin';
+import SchoolDashboard from './components/School/SchoolDashboard/SchoolDashboard';
 
-const App = () => {
-
+// Layout component with Header and Footer
+const StandardLayout = () => {
   const mockAuthState = {
     isAuthenticated: false,
     user: {
@@ -21,27 +22,48 @@ const App = () => {
   };
 
   return (
-  
-    <Router>
-
+    <>
       <Header 
         isAuthenticated={mockAuthState.isAuthenticated}
         user={mockAuthState.user}
       />
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/donor-register" element={<DonorRegistration />} />
-        <Route path="/donor-login" element={<DonorLogin />} />
-        <Route path='/needs' element={<SchoolsInNeedPage />} />
-        <Route path='/needs/1' element={<NeedPage />} />
-        <Route path='/donate/1' element={<DonationPage />} />
-        <Route path="/school-register" element={<SchoolRegistration />} />
-        <Route path="/school-login" element={<SchoolLogin />} />
-      </Routes>
-
+      <Outlet /> {/* This is where the route component will be rendered */}
       <Footer />
+    </>
+  );
+};
+
+// Simple layout without Header and Footer
+const DashboardLayout = () => {
+  return <Outlet />;
+};
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        {/* Routes with Header and Footer */}
+        <Route element={<StandardLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/donor-register" element={<DonorRegistration />} />
+          <Route path="/donor-login" element={<DonorLogin />} />
+          <Route path='/needs' element={<SchoolsInNeedPage />} />
+          <Route path='/needs/:id' element={<NeedPage />} />
+          <Route path='/donate/:id' element={<DonationPage />} />
+          <Route path="/school-register" element={<SchoolRegistration />} />
+          <Route path="/school-login" element={<SchoolLogin />} />
+        </Route>
+
+        {/* Routes WITHOUT Header and Footer */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/Dashboard" element={<SchoolDashboard />} />
+          {/* Add future dashboard routes here */}
+          {/* <Route path="/Dashboard/profile" element={<SchoolProfile />} /> */}
+          {/* <Route path="/Dashboard/donations" element={<DonationsList />} /> */}
+        </Route>
+      </Routes>
     </Router>
   );
 };
+
 export default App;
