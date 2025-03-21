@@ -225,7 +225,7 @@ const Header = ({ isAuthenticated, user }) => {
                         </div>
                         <div className="dropdown-content">
                           <span className="item-title">Messages</span>
-                          <span className="item-description">Track past donations.</span>
+                          <span className="item-description">View messages from schools.</span>
                         </div>
                       </a>
                       <a href="/profile" className="user-dropdown-item">
@@ -243,6 +243,7 @@ const Header = ({ isAuthenticated, user }) => {
                         </div>
                         <div className="dropdown-content">
                           <span className="item-title">Log out</span>
+                          <span className="item-description">Securely exit your account</span>
                         </div>
                       </button>
                     </div>

@@ -14,6 +14,7 @@ const SchoolRegistration = () => {
     streetAddress: '',
     city: '',
     district: '',
+    province: '',
     postalCode: '',
     additionalRemarks: '',
     principalName: '',
@@ -33,6 +34,7 @@ const SchoolRegistration = () => {
     streetAddress: '',
     city: '',
     district: '',
+    province: '',
     postalCode: '',
     principalName: '',
     principalEmail: '',
@@ -175,7 +177,7 @@ const SchoolRegistration = () => {
     // Required field validation
     const requiredFields = [
       'schoolName', 'schoolEmail', 'password', 'confirmPassword',
-      'streetAddress', 'city', 'district', 'postalCode',
+      'streetAddress', 'city', 'district', 'province', 'postalCode',
       'principalName', 'principalEmail', 'phoneNumber'
     ];
 
@@ -227,7 +229,7 @@ const SchoolRegistration = () => {
   const isFormValidForSubmit = () => {
     const requiredFields = [
       'schoolName', 'schoolEmail', 'password', 'confirmPassword',
-      'streetAddress', 'city', 'district', 'postalCode',
+      'streetAddress', 'city', 'district', 'province', 'postalCode',
       'principalName', 'principalEmail', 'phoneNumber'
     ];
 
@@ -381,17 +383,19 @@ const SchoolRegistration = () => {
   return (
     <>
       <div className="scrf_container">
-        <h1 className="scrf_title">Register Your School</h1>
+        <h1 className="scrf_title">Register Your School | පාසල් පද්ධතී ලියාපදිංචි කරන්න</h1>
         <p className="scrf_subtitle">
-          Join our platform to receive essential educational resources for your students.
+          Join our platform to receive essential educational resources for your students. Complete the 
+          registration and get verified within 24-72 hours
           <br />
-          Complete the registration and get verified within 24-72 hours
+          ඔබගේ සිසුන් සඳහා අත්‍යවශ්‍ය අධ්‍යාපනික සම්පත් ලබා ගැනීමට අපගේ වේදිකාවට සම්බන්ධ වන්න. ලියාපදිංචිය සම්පූර්ණ කර 
+          පැය 24-72ක් තුළ සත්‍යාපනය ලබා ගන්න.
         </p>
 
         <form className="scrf_form" onSubmit={handleSubmit}>
           {/* School Information Section */}
           <div className="scrf_section">
-            <h2 className="scrf_section_title">School Information</h2>
+            <h2 className="scrf_section_title">School Information | පාසල් තොරතුරු</h2>
 
             <div className="scrf_form_group">
               <div className="scrf_input_with_icon">
@@ -402,7 +406,7 @@ const SchoolRegistration = () => {
                   value={formData.schoolName}
                   onChange={handleChange}
                   className={`scrf_input scrf_input_with_icon_field ${errors.schoolName ? 'scrf_input_error' : ''}`}
-                  placeholder="School Name *"
+                  placeholder="School Name | පාසලේ නම *"
                   required
                 />
               </div>
@@ -418,7 +422,7 @@ const SchoolRegistration = () => {
                   value={formData.schoolEmail}
                   onChange={handleChange}
                   className={`scrf_input scrf_input_with_icon_field ${errors.schoolEmail ? 'scrf_input_error' : ''}`}
-                  placeholder="School Email Address* (This will be your login email)"
+                  placeholder="School Email Address (This will be your login email) | පාසලේ විද්‍යුත් තැපැල් ලිපිනය (මෙය ඔබගේ පිවිසුම් විද්‍යුත් තැපෑල වනු ඇත) *"
                   required
                 />
               </div>
@@ -435,7 +439,7 @@ const SchoolRegistration = () => {
                   onChange={handleChange}
                   onFocus={() => setIsPasswordFocused(true)}
                   className={`scrf_input scrf_input_with_icon_field ${errors.password ? 'scrf_input_error' : ''}`}
-                  placeholder="Password*"
+                  placeholder="Password | මුරපදය *"
                   required
                 />
               </div>
@@ -487,7 +491,7 @@ const SchoolRegistration = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   className={`scrf_input scrf_input_with_icon_field ${errors.confirmPassword ? 'scrf_input_error' : ''}`}
-                  placeholder="Confirm Password*"
+                  placeholder="Confirm Password | මුරපදය තහවුරු කරන්න *"
                   required
                 />
               </div>
@@ -499,8 +503,8 @@ const SchoolRegistration = () => {
 
           {/* School Address Section */}
           <div className="scrf_section">
-            <h2 className="scrf_section_title">School Address</h2>
-            <p className="scrf_section_subtitle">Ensure accuracy for logistic & delivery services</p>
+            <h2 className="scrf_section_title">School Address | පාසල් ලිපිනය</h2>
+            <p className="scrf_section_subtitle">Ensure accuracy for logistic & delivery services | ප්‍රවාහන හා බෙදාහැරීමේ සේවා සඳහා නිවැරදි බව තහවුරු කරන්න</p>
 
             <div className="scrf_form_group">
               <div className="scrf_input_with_icon">
@@ -511,7 +515,7 @@ const SchoolRegistration = () => {
                   value={formData.streetAddress}
                   onChange={handleChange}
                   className={`scrf_input scrf_input_with_icon_field ${errors.streetAddress ? 'scrf_input_error' : ''}`}
-                  placeholder="Street Address *"
+                  placeholder="Street Address | වීථි ලිපිනය *"
                   required
                 />
               </div>
@@ -528,7 +532,7 @@ const SchoolRegistration = () => {
                     value={formData.city}
                     onChange={handleChange}
                     className={`scrf_input scrf_input_with_icon_field ${errors.city ? 'scrf_input_error' : ''}`}
-                    placeholder="City *"
+                    placeholder="City | නගරය *"
                     required
                   />
                 </div>
@@ -542,7 +546,7 @@ const SchoolRegistration = () => {
                   className={`scrf_select ${errors.district ? 'scrf_input_error' : ''}`}
                   required
                 >
-                  <option value="">Select District *</option>
+                  <option value="">District | දිස්ත්‍රික්කය *</option>
                   {sriLankanDistricts.map((district) => (
                     <option key={district} value={district}>
                       {district}
@@ -553,17 +557,31 @@ const SchoolRegistration = () => {
               </div>
             </div>
 
-            <div className="scrf_form_group">
-              <input
-                type="text"
-                name="postalCode"
-                value={formData.postalCode}
-                onChange={handleChange}
-                className={`scrf_input ${errors.postalCode ? 'scrf_input_error' : ''}`}
-                placeholder="Postal Code *"
-                required
-              />
-              {errors.postalCode && <div className="scrf_error_message">{errors.postalCode}</div>}
+            <div className="scrf_form_row">
+              <div className="scrf_form_group scrf_half_width">
+                <input
+                  type="text"
+                  name="province"
+                  value={formData.province}
+                  onChange={handleChange}
+                  className={`scrf_input ${errors.province ? 'scrf_input_error' : ''}`}
+                  placeholder="Province | පළාත *"
+                  required
+                />
+                {errors.province && <div className="scrf_error_message">{errors.province}</div>}
+              </div>
+              <div className="scrf_form_group scrf_half_width">
+                <input
+                  type="text"
+                  name="postalCode"
+                  value={formData.postalCode}
+                  onChange={handleChange}
+                  className={`scrf_input ${errors.postalCode ? 'scrf_input_error' : ''}`}
+                  placeholder="Postal Code | තැපැල් කේතය *"
+                  required
+                />
+                {errors.postalCode && <div className="scrf_error_message">{errors.postalCode}</div>}
+              </div>
             </div>
 
             <div className="scrf_form_group">
@@ -572,14 +590,14 @@ const SchoolRegistration = () => {
                 value={formData.additionalRemarks}
                 onChange={handleChange}
                 className="scrf_textarea"
-                placeholder="Landmarks, Special Instruction, etc. (Optional)"
+                placeholder="Additional Remarks | අමතර සටහන් (Optional)"
               />
             </div>
           </div>
 
           {/* Principal Information Section */}
           <div className="scrf_section">
-            <h2 className="scrf_section_title">Principal / Contact Person Details</h2>
+            <h2 className="scrf_section_title">Principal / Contact Person Details | විදුහල්පති / සම්බන්ධතා පුද්ගලයාගේ විස්තර</h2>
 
             <div className="scrf_form_group">
               <div className="scrf_input_with_icon">
@@ -590,7 +608,7 @@ const SchoolRegistration = () => {
                   value={formData.principalName}
                   onChange={handleChange}
                   className={`scrf_input scrf_input_with_icon_field ${errors.principalName ? 'scrf_input_error' : ''}`}
-                  placeholder="Name *"
+                  placeholder="Name | නම *"
                   required
                 />
               </div>
@@ -606,7 +624,7 @@ const SchoolRegistration = () => {
                   value={formData.principalEmail}
                   onChange={handleChange}
                   className={`scrf_input scrf_input_with_icon_field ${errors.principalEmail ? 'scrf_input_error' : ''}`}
-                  placeholder="Email *"
+                  placeholder="Email | විද්‍යුත් තැපෑල *"
                   required
                 />
               </div>
@@ -622,7 +640,7 @@ const SchoolRegistration = () => {
                   value={formData.phoneNumber}
                   onChange={handleChange}
                   className={`scrf_input scrf_input_with_icon_field ${errors.phoneNumber ? 'scrf_input_error' : ''}`}
-                  placeholder="+94 Phone Number *"
+                  placeholder="Phone Number | දුරකථන අංකය *"
                   required
                 />
               </div>
@@ -632,7 +650,7 @@ const SchoolRegistration = () => {
 
           {/* Document Upload Section */}
           <div className="scrf_section">
-            <h2 className="scrf_section_title">School Verification Documents</h2>
+            <h2 className="scrf_section_title">School Verification Documents | පාසල් සත්‍යාපන ලේඛන</h2>
 
             <div
               className={`scrf_upload_area ${errors.documents ? 'scrf_upload_error' : ''}`}
@@ -642,8 +660,8 @@ const SchoolRegistration = () => {
               onDrop={handleFileDrop}
             >
               <FaCloudUploadAlt className="scrf_upload_icon" />
-              <p className="scrf_upload_text">Drop your files here or Browse *</p>
-              <p className="scrf_upload_formats">Allowed formats: .pdf, .jpg, .png(Max 5MB)</p>
+              <p className="scrf_upload_text">Drop your files here or Browse | ඔබගේ ගොනු මෙහි අතහරින්න හෝ පිරික්සන්න *</p>
+              <p className="scrf_upload_formats">Allowed formats: .pdf, .jpg, .png (Max 5MB)</p>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -690,13 +708,13 @@ const SchoolRegistration = () => {
                 required
               />
               <span className="scrf_checkbox_text">
-                I agree to the Terms & Conditions*
+                I agree to the Terms & Conditions | මම නියමයන් සහ කොන්දේසි වලට එකඟ වෙමි *
               </span>
             </label>
           </div>
 
           <p className="scrf_verification_note">
-            *Verification takes 24 to 72 hours. You will receive an email once your account is approved. After that you can log into account using email and password
+            *Verification takes 24 to 72 hours. You will receive an email once your account is approved. After that you can log into account using email and password | *සත්‍යාපනය පැය 24 සිට 72 දක්වා ගත වේ. ඔබගේ ගිණුම අනුමත වූ පසු ඔබට විද්‍යුත් තැපෑලක් ලැබෙනු ඇත. ඉන් පසුව ඔබට විද්‍යුත් තැපෑල සහ මුරපදය භාවිතයෙන් ගිණුමට පිවිසිය හැක
           </p>
 
           <button
