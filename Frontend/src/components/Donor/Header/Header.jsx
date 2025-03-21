@@ -5,6 +5,8 @@ import logo from '../../../assets/images/Edusahasra.png';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { FiTool } from 'react-icons/fi';
 import { IoIosArrowDown } from 'react-icons/io';
+import { IoChatbox } from "react-icons/io5";
+
 
 const DonationModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
@@ -169,11 +171,18 @@ const Header = ({ isAuthenticated, user }) => {
                           <span className="dropdown-item-description">Filter Requests by location, needs, or urgency</span>
                         </div>
                       </a>
-                      <a href="#how-it-works" className="dropdown-item">
+                      <a href="/howitworks" className="dropdown-item">
                         <FiTool className="dropdown-icon" />
                         <div className="dropdown-content">
                           <span className="dropdown-item-title">How It Works</span>
                           <span className="dropdown-item-description">Step-by-step donation process</span>
+                        </div>
+                      </a>
+                      <a href="/feedbacks" className="dropdown-item">
+                        <IoChatbox  className="dropdown-icon" />
+                        <div className="dropdown-content">
+                          <span className="dropdown-item-title">Feebacks</span>
+                          <span className="dropdown-item-description">See what others say about their experience</span>
                         </div>
                       </a>
                     </div>
