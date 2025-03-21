@@ -73,13 +73,17 @@ const SchoolLogin = () => {
     <div className="login-container">
       <div className="login-form-wrapper">
         <h1 className="login-title">Welcome to Edusahasra</h1>
-        <p className="login-subtitle">You can only log into the account, If your account approved.</p>
+        <p className="login-subtitle">
+          You can only log into the account, If your account approved. | 
+          <span className="sinhala-text">ඔබගේ ගිණුම අනුමත කර ඇත්නම් පමණක් ඔබට ගිණුමට පිවිසිය හැක</span>
+        </p>
         
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label">
               <MdEmail className="form-icon" />
-              Email Address<span className="required-mark">*</span>
+              Email Address | <span className="sinhala-text"> විද්‍යුත් තැපෑල ලිපිනය</span>
+              <span className="required-mark">*</span>
             </label>
             <input
               type="text"
@@ -95,7 +99,8 @@ const SchoolLogin = () => {
           <div className="form-group">
             <label className="form-label">
               <MdLock className="form-icon" />
-              Password<span className="required-mark">*</span>
+              Password |<span className="sinhala-text"> මුරපදය</span>
+              <span className="required-mark">*</span>
             </label>
             <input
               type="password"
@@ -120,7 +125,9 @@ const SchoolLogin = () => {
               />
               <label htmlFor="rememberMe" className="remember-label">Remember Me</label>
             </div>
-            <a href="#forgot" className="forgot-link">Forgot Password?</a>
+            <a href="#forgot" className="forgot-link">
+              Forgot Password? | <span className="sinhala-text"> මුරපදය අමතක වුණාද?</span>
+            </a>
           </div>
           
           <button 
@@ -128,13 +135,17 @@ const SchoolLogin = () => {
             className="signin-button"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Signing in...' : 'Sign in'}
+            {isSubmitting ? 'Signing in...' : 'Sign in | පිවිසෙන්න'}
           </button>
         </form>
         
         <div className="signup-link-container">
           <p className="signup-text">
-            Don't have an Account? <a href="/school-register" className="signup-link">Sign up</a>
+            Don't have an Account? <a href="/school-register" className="signup-link">Sign up</a> | 
+            <span className="sinhala-text"> ගිණුමක් නොමැතිද? </span>
+            <a href="/school-register" className="signup-link">
+              <span className="sinhala-text"> ලියාපදිංචි වන්න</span>
+            </a>
           </p>
         </div>
       </div>
