@@ -11,6 +11,7 @@ import DonationPage from './components/Donor/DonationPage/DonationPage';
 import SchoolRegistration from './components/School/SchoolRegistration/SchoolRegistration';
 import SchoolLogin from './components/School/SchoolLogin/SchoolLogin';
 import SchoolDashboard from './components/School/SchoolDashboard/SchoolDashboard';
+import ViewDonations from './components/School/ViewDonations/ViewDonations';
 
 // Layout component with Header and Footer
 const StandardLayout = () => {
@@ -57,9 +58,7 @@ const App = () => {
         {/* Routes WITHOUT Header and Footer */}
         <Route element={<DashboardLayout />}>
           <Route path="/Dashboard" element={<SchoolDashboard />} />
-          {/* Add future dashboard routes here */}
-          {/* <Route path="/Dashboard/profile" element={<SchoolProfile />} /> */}
-          {/* <Route path="/Dashboard/donations" element={<DonationsList />} /> */}
+          <Route path="/view-donations" element={<ViewDonations />} />
         </Route>
       </Routes>
     </Router>

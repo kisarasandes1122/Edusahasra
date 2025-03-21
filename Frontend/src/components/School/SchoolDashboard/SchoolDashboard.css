@@ -89,6 +89,7 @@
     transition: all 0.3s ease;
     cursor: pointer;
     text-align: center;
+    text-decoration: none; /* Remove default link underline */
   }
   
   .action-card {

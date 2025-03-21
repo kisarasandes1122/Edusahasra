@@ -21,39 +21,37 @@ const SchoolDashboard = () => {
       </div>
 
       <div className="dashboard-grid">
-        <div className="dashboard-card action-card">
-        <FaEye className="card-icon" />
+        <a href="/view-donations" className="dashboard-card action-card"> 
+          <FaEye className="card-icon" />
           <div className="card-content">
             <h3 className="card-title-sinhala">පරිත්‍යාග බලන්න</h3>
             <p className="card-title-english">View Donations</p>
           </div>
-          
-        </div>
+        </a>
 
-        <div className="dashboard-card action-card">
-        <FaHandHoldingHeart className="card-icon" />
+        <a href="/request-donations" className="dashboard-card action-card">
+          <FaHandHoldingHeart className="card-icon" />
           <div className="card-content">
             <h3 className="card-title-sinhala">සැපයුම් ඉල්ලන්න</h3>
             <p className="card-title-english">Request Donations</p>
           </div>
-        </div>
+        </a>
 
-        <div className="dashboard-card action-card">
-        <FaThumbsUp className="card-icon" />
+        <a href="/send-thanks" className="dashboard-card action-card">
+          <FaThumbsUp className="card-icon" />
           <div className="card-content">
             <h3 className="card-title-sinhala">ස්තුතිය ප්‍රකාශන්න</h3>
             <p className="card-title-english">Send Thanks</p>
           </div>
-          
-        </div>
+        </a>
 
-        <div className="dashboard-card action-card">
-        <FaUserCircle className="card-icon" />
+        <a href="/my-profile" className="dashboard-card action-card">
+          <FaUserCircle className="card-icon" />
           <div className="card-content">
             <h3 className="card-title-sinhala">මගේ විස්තර වෙනස් කිරීමට</h3>
             <p className="card-title-english">My Profile</p>
           </div>
-        </div>
+        </a>
       </div>
 
       <div className="dashboard-section recent-donations">
