@@ -48,7 +48,7 @@ const SchoolDashboard = () => {
         <a href="/my-profile" className="dashboard-card action-card">
           <FaUserCircle className="card-icon" />
           <div className="card-content">
-            <h3 className="card-title-sinhala">මගේ විස්තර වෙනස් කිරීමට</h3>
+            <h3 className="card-title-sinhala">මගේ විස්තර</h3>
             <p className="card-title-english">My Profile</p>
           </div>
         </a>
