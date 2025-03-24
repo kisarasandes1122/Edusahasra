@@ -5,13 +5,11 @@ import './SendThanks.css';
 const SendThanks = () => {
   const [selectedDonor, setSelectedDonor] = useState(0);
   const [selectedMessage, setSelectedMessage] = useState(null);
-  const [customMessage, setCustomMessage] = useState({ sinhala: '', english: '' });
+  const [customMessage, setCustomMessage] = useState('');
   const [isCustomMessage, setIsCustomMessage] = useState(false);
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const fileInputRef = useRef(null);
-
-  const donors = [
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [availableDonors, setAvailableDonors] = useState([
     {
       id: 1,
       name: 'Kisara Sandes',
@@ -30,40 +28,43 @@ const SendThanks = () => {
       donated: '40 Notebooks, 50 Pencils',
       date: 'March 10, 2025'
     }
-  ];
+  ]);
+  const fileInputRef = useRef(null);
 
   const thankYouMessages = [
     {
       id: 1,
-      sinhala: 'පොතත් පෑන් සහ පැන්සල් දුන්න ස්තුතියි අපෙ ශිෂ්‍ය වට ගොඩක් භාවිතා කරනු ඇත.',
-      english: 'Thank you for the notebooks and pencils! Our students will use them well.'
+      message: 'Thank you for the notebooks and pencils! Our students will use them well. / පොතත් පෑන් සහ පැන්සල් දුන්න ස්තුතියි අපෙ ශිෂ්‍ය වට ගොඩක් භාවිතා කරනු ඇත.'
     },
     {
       id: 2,
-      sinhala: 'මෙම පාසල් ද්‍රව්‍ය අපගේ පන්ති කාමරවල ඇති වෙනසක් කරනු ඇත. ඔබගේ කාරුණාව ස්තුතියි!',
-      english: 'These school supplies will make a real difference in our classrooms. Thank you for your kindness!'
+      message: 'These school supplies will make a real difference in our classrooms. Thank you for your kindness! / මෙම පාසල් ද්‍රව්‍ය අපගේ පන්ති කාමරවල ඇති වෙනසක් කරනු ඇත. ඔබගේ කාරුණාව ස්තුතියි!'
     },
     {
       id: 3,
-      sinhala: 'ඔබගේ තෝරාගත් පරිත්‍යාගය ගැන ඔබට වෙතින්. අපගේ පාසැල සහයෝගය දැක්වීම ගැන ස්තුතියි!',
-      english: 'We are grateful for your generous donation. Thank you for supporting our school!'
+      message: 'We are grateful for your generous donation. Thank you for supporting our school! / ඔබගේ තෝරාගත් පරිත්‍යාගය ගැන ඔබට වෙතින්. අපගේ පාසැල සහයෝගය දැක්වීම ගැන ස්තුතියි!'
     },
     {
       id: 4,
-      sinhala: 'ඔබගේ සහයෝගයට බොහොම ස්තුතියි! මෙම සැපයුම් අපට ලොකු උදව්වක් වන ඇත.',
-      english: 'Thank you very much for your support! These supplies will be a great help to us.'
+      message: 'Thank you very much for your support! These supplies will be a great help to us. / ඔබගේ සහයෝගයට බොහොම ස්තුතියි! මෙම සැපයුම් අපට ලොකු උදව්වක් වන ඇත.'
     }
   ];
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setUploadedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+    const files = Array.from(e.target.files);
+    if (files.length) {
+      const newImages = [...uploadedImages, ...files];
+      setUploadedImages(newImages);
+      
+      const newPreviews = [...imagePreviews];
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          newPreviews.push(reader.result);
+          setImagePreviews([...newPreviews]);
+        };
+        reader.readAsDataURL(file);
+      });
     }
   };
 
@@ -73,23 +74,30 @@ const SendThanks = () => {
 
   const handleDrop = (e) => {
     e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      setUploadedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length) {
+      const newImages = [...uploadedImages, ...files];
+      setUploadedImages(newImages);
+      
+      const newPreviews = [...imagePreviews];
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          newPreviews.push(reader.result);
+          setImagePreviews([...newPreviews]);
+        };
+        reader.readAsDataURL(file);
+      });
     }
   };
 
-  const removeImage = () => {
-    setUploadedImage(null);
-    setImagePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+  const removeImage = (index) => {
+    const newImages = [...uploadedImages];
+    const newPreviews = [...imagePreviews];
+    newImages.splice(index, 1);
+    newPreviews.splice(index, 1);
+    setUploadedImages(newImages);
+    setImagePreviews(newPreviews);
   };
 
   const handleMessageSelection = (index) => {
@@ -102,24 +110,41 @@ const SendThanks = () => {
     setSelectedMessage(null);
   };
 
+  const resetForm = () => {
+    setCustomMessage('');
+
+    setSelectedMessage(null);
+
+    setIsCustomMessage(false);
+    
+    setUploadedImages([]);
+    setImagePreviews([]);
+    
+    if (availableDonors.length > 0) {
+      setSelectedDonor(0);
+    }
+  };
+
   const handleSendThanks = () => {
-    // Prepare data for submission
+    const currentDonor = availableDonors[selectedDonor];
+  
     const thankYouData = {
-      donorId: donors[selectedDonor].id,
+      donorId: currentDonor.id,
       message: isCustomMessage 
         ? customMessage 
         : selectedMessage !== null 
-          ? thankYouMessages[selectedMessage] 
+          ? thankYouMessages[selectedMessage].message 
           : null,
-      image: uploadedImage
+      images: uploadedImages
     };
     
-    // Here you would typically send this data to your backend
     console.log('Sending thank you data:', thankYouData);
-    
-    // Reset form or redirect as needed
+  
+    const updatedDonors = [...availableDonors];
+    updatedDonors.splice(selectedDonor, 1);
+    setAvailableDonors(updatedDonors);
+    resetForm();
     alert('Thank you message sent successfully!');
-    // Additional logic for success handling or redirection
   };
 
   return (
@@ -144,112 +169,102 @@ const SendThanks = () => {
             දිරිගන්වයි
           </p>
           <p className="instruction-english">
-            Choose a donor who sent supplies to your school. Send them a thank you message and a photo. Your
+            Choose a donor who sent supplies to your school. Send them a thank you message and photos. Your
             thanks helps donors feel appreciated and encourages more support.
           </p>
         </div>
 
-        <div className="thankyou-form-container">
-          <h3 className="form-heading">
-            <span className="heading-sinhala">පරිත්‍යාගශීලීන්ට ස්තුතිය යවන්න | </span>
-            <span className="heading-english">Send Thanks to Donors</span>
-          </h3>
+        {availableDonors.length > 0 ? (
+          <div className="thankyou-form-container">
+            <h3 className="form-heading">
+              <span className="heading-sinhala">පරිත්‍යාගශීලීන්ට ස්තුතිය යවන්න | </span>
+              <span className="heading-english">Send Thanks to Donors</span>
+            </h3>
 
-          <div className="donor-selection-section">
-            <p className="selection-heading-sinhala">ස්තුති කිරීමට අදහස පරිත්‍යාගශීලියෙකු තෝරන්න</p>
-            <p className="selection-heading-english">Select Donor to Thank:</p>
+            <div className="donor-selection-section">
+              <p className="selection-heading-sinhala">ස්තුති කිරීමට අදහස පරිත්‍යාගශීලියෙකු තෝරන්න</p>
+              <p className="selection-heading-english">Select Donor to Thank:</p>
 
-            <div className="donors-list">
-              {donors.map((donor, index) => (
-                <div 
-                  key={donor.id} 
-                  className={`donor-item ${selectedDonor === index ? 'selected' : ''}`}
-                  onClick={() => setSelectedDonor(index)}
-                >
-                  <div className="donor-info">
-                    <h4 className="donor-name">{donor.name}</h4>
-                    <p className="donor-donated">Donated: {donor.donated}</p>
-                    <p className="donor-date">Date: {donor.date}</p>
+              <div className="donors-list">
+                {availableDonors.map((donor, index) => (
+                  <div 
+                    key={donor.id} 
+                    className={`donor-item ${selectedDonor === index ? 'selected' : ''}`}
+                    onClick={() => setSelectedDonor(index)}
+                  >
+                    <div className="donor-info">
+                      <h4 className="donor-name">{donor.name}</h4>
+                      <p className="donor-donated">Donated: {donor.donated}</p>
+                      <p className="donor-date">Date: {donor.date}</p>
+                    </div>
+                    <div className={`select-circle ${selectedDonor === index ? 'selected' : ''}`}>
+                      {selectedDonor === index && <FaCheck className="check-icon" />}
+                    </div>
                   </div>
-                  <div className={`select-circle ${selectedDonor === index ? 'selected' : ''}`}>
-                    {selectedDonor === index && <FaCheck className="check-icon" />}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="message-selection-section">
-            <p className="message-heading-sinhala">ස්තුතිය ප්‍රකාශ කරන්න</p>
-            <p className="message-heading-english">Say Thank You:</p>
+            <div className="message-selection-section">
+              <p className="message-heading-sinhala">ස්තුතිය ප්‍රකාශ කරන්න</p>
+              <p className="message-heading-english">Say Thank You:</p>
 
-            <div className="message-options">
-              {thankYouMessages.map((message, index) => (
+              <div className="message-options">
+                {thankYouMessages.map((message, index) => (
+                  <div 
+                    key={index} 
+                    className={`message-option ${selectedMessage === index ? 'selected' : ''}`}
+                    onClick={() => handleMessageSelection(index)}
+                  >
+                    <div className="message-content">
+                      <p className="message-text">{message.message}</p>
+                    </div>
+                    <div className={`select-circle ${selectedMessage === index ? 'selected' : ''}`}>
+                      {selectedMessage === index && <FaCheck className="check-icon" />}
+                    </div>
+                  </div>
+                ))}
+                
                 <div 
-                  key={index} 
-                  className={`message-option ${selectedMessage === index ? 'selected' : ''}`}
-                  onClick={() => handleMessageSelection(index)}
+                  className={`message-option custom-message-option ${isCustomMessage ? 'selected' : ''}`}
+                  onClick={toggleCustomMessage}
                 >
                   <div className="message-content">
-                    <p className="message-text-sinhala">{message.sinhala}</p>
-                    <p className="message-text-english">{message.english}</p>
+                    <p className="message-text">Want to say something else? / තවත් මොකක්ද කියන්න කැමතිද?</p>
                   </div>
-                  <div className={`select-circle ${selectedMessage === index ? 'selected' : ''}`}>
-                    {selectedMessage === index && <FaCheck className="check-icon" />}
+                  <div className={`select-circle ${isCustomMessage ? 'selected' : ''}`}>
+                    {isCustomMessage && <FaCheck className="check-icon" />}
                   </div>
-                </div>
-              ))}
-              
-              <div 
-                className={`message-option custom-message-option ${isCustomMessage ? 'selected' : ''}`}
-                onClick={toggleCustomMessage}
-              >
-                <div className="message-content">
-                  <p className="message-text-sinhala">තවත් මොකක්ද කියන්න කැමතිද?</p>
-                  <p className="message-text-english">Want to say something else?</p>
-                </div>
-                <div className={`select-circle ${isCustomMessage ? 'selected' : ''}`}>
-                  {isCustomMessage && <FaCheck className="check-icon" />}
                 </div>
               </div>
+
+              {isCustomMessage && (
+                <div className="custom-message-container">
+                  <div className="custom-message-inputs">
+                    <div className="input-group">
+                      <label className="input-label">Your message / ඔබගේ පණිවිඩය:</label>
+                      <textarea 
+                        className="custom-message-textarea"
+                        value={customMessage}
+                        onChange={(e) => setCustomMessage(e.target.value)}
+                        placeholder="Type your message here... / ඔබගේ පණිවිඩය මෙහි ලියන්න..."
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {isCustomMessage && (
-              <div className="custom-message-container">
-                <div className="custom-message-inputs">
-                  <div className="input-group">
-                    <label className="input-label">සිංහලෙන්:</label>
-                    <textarea 
-                      className="custom-message-textarea"
-                      value={customMessage.sinhala}
-                      onChange={(e) => setCustomMessage({...customMessage, sinhala: e.target.value})}
-                      placeholder="ඔබගේ සිංහල පණිවිඩය මෙහි ලියන්න..."
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label className="input-label">In English:</label>
-                    <textarea 
-                      className="custom-message-textarea"
-                      value={customMessage.english}
-                      onChange={(e) => setCustomMessage({...customMessage, english: e.target.value})}
-                      placeholder="Type your English message here..."
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="photo-upload-section">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              ref={fileInputRef}
-              style={{ display: 'none' }}
-            />
-            
-            {!imagePreview ? (
+            <div className="photo-upload-section">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                multiple
+              />
+              
               <div 
                 className="photo-upload-button"
                 onClick={() => fileInputRef.current.click()}
@@ -258,32 +273,46 @@ const SendThanks = () => {
               >
                 <FaPlus className="plus-icon" />
                 <div className="button-text">
-                  <span className="button-text-sinhala">ඡායාරූපයක් එකතු කරන්න (විකල්ප)</span>
-                  <span className="button-text-english">Add Photo (Optional)</span>
+                  <span className="add-button-text-sinhala">ඡායාරූප එකතු කරන්න (විකල්ප)</span>
+                  <span className="add-button-text-english">Add Photos (Optional)</span>
                 </div>
               </div>
-            ) : (
-              <div className="image-preview-container">
-                <div className="image-preview-header">
-                  <span className="preview-text">Photo Preview</span>
-                  <button className="remove-image-button" onClick={removeImage}>
-                    <FaTimes />
-                  </button>
-                </div>
-                <img src={imagePreview} alt="Preview" className="image-preview" />
-              </div>
-            )}
-          </div>
 
-          <button 
-            className="send-thanks-button"
-            onClick={handleSendThanks}
-            disabled={!((selectedMessage !== null || (isCustomMessage && (customMessage.sinhala || customMessage.english))))}
-          >
-            <span className="button-text-sinhala">ස්තුතිය යවන්න</span>
-            <span className="button-text-english">Send Thank You</span>
-          </button>
-        </div>
+              {imagePreviews.length > 0 && (
+                <div className="images-preview-grid">
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className="image-preview-container">
+                      <div className="image-preview-header">
+                        <span className="preview-text">Photo {index + 1}</span>
+                        <button className="remove-image-button" onClick={() => removeImage(index)}>
+                          <FaTimes />
+                        </button>
+                      </div>
+                      <img src={preview} alt={`Preview ${index + 1}`} className="image-preview" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <button 
+              className="send-thanks-button"
+              onClick={handleSendThanks}
+              disabled={!((selectedMessage !== null || (isCustomMessage && customMessage)))}
+            >
+              <span className="button-text-sinhala">ස්තුතිය යවන්න</span>
+              <span className="button-text-english">Send Thank You</span>
+            </button>
+          </div>
+        ) : (
+          <div className="no-donors-message">
+            <h3>All donors have been thanked!</h3>
+            <p>There are no more donors to thank at this time.</p>
+            <a href="/dashboard" className="return-dashboard-button">
+              Return to Dashboard
+            </a>
+          </div>
+        )}
 
         <div className="support-contact">
           <p>
