@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
-import { FaArrowLeft, FaPlus, FaCheck } from 'react-icons/fa';
+import React, { useState, useRef } from 'react';
+import { FaArrowLeft, FaPlus, FaCheck, FaTimes } from 'react-icons/fa';
 import './SendThanks.css';
 
 const SendThanks = () => {
   const [selectedDonor, setSelectedDonor] = useState(0);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [customMessage, setCustomMessage] = useState({ sinhala: '', english: '' });
+  const [isCustomMessage, setIsCustomMessage] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const fileInputRef = useRef(null);
 
   const donors = [
     {
@@ -28,22 +34,93 @@ const SendThanks = () => {
 
   const thankYouMessages = [
     {
+      id: 1,
       sinhala: 'පොතත් පෑන් සහ පැන්සල් දුන්න ස්තුතියි අපෙ ශිෂ්‍ය වට ගොඩක් භාවිතා කරනු ඇත.',
       english: 'Thank you for the notebooks and pencils! Our students will use them well.'
     },
     {
+      id: 2,
       sinhala: 'මෙම පාසල් ද්‍රව්‍ය අපගේ පන්ති කාමරවල ඇති වෙනසක් කරනු ඇත. ඔබගේ කාරුණාව ස්තුතියි!',
       english: 'These school supplies will make a real difference in our classrooms. Thank you for your kindness!'
     },
     {
+      id: 3,
       sinhala: 'ඔබගේ තෝරාගත් පරිත්‍යාගය ගැන ඔබට වෙතින්. අපගේ පාසැල සහයෝගය දැක්වීම ගැන ස්තුතියි!',
       english: 'We are grateful for your generous donation. Thank you for supporting our school!'
     },
     {
+      id: 4,
       sinhala: 'ඔබගේ සහයෝගයට බොහොම ස්තුතියි! මෙම සැපයුම් අපට ලොකු උදව්වක් වන ඇත.',
       english: 'Thank you very much for your support! These supplies will be a great help to us.'
     }
   ];
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploadedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      setUploadedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setUploadedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleMessageSelection = (index) => {
+    setSelectedMessage(index);
+    setIsCustomMessage(false);
+  };
+
+  const toggleCustomMessage = () => {
+    setIsCustomMessage(!isCustomMessage);
+    setSelectedMessage(null);
+  };
+
+  const handleSendThanks = () => {
+    // Prepare data for submission
+    const thankYouData = {
+      donorId: donors[selectedDonor].id,
+      message: isCustomMessage 
+        ? customMessage 
+        : selectedMessage !== null 
+          ? thankYouMessages[selectedMessage] 
+          : null,
+      image: uploadedImage
+    };
+    
+    // Here you would typically send this data to your backend
+    console.log('Sending thank you data:', thankYouData);
+    
+    // Reset form or redirect as needed
+    alert('Thank you message sent successfully!');
+    // Additional logic for success handling or redirection
+  };
 
   return (
     <div className="send-thanks-container">
@@ -108,25 +185,101 @@ const SendThanks = () => {
 
             <div className="message-options">
               {thankYouMessages.map((message, index) => (
-                <div key={index} className="message-option">
-                  <p className="message-text-sinhala">{message.sinhala}</p>
-                  <p className="message-text-english">{message.english}</p>
+                <div 
+                  key={index} 
+                  className={`message-option ${selectedMessage === index ? 'selected' : ''}`}
+                  onClick={() => handleMessageSelection(index)}
+                >
+                  <div className="message-content">
+                    <p className="message-text-sinhala">{message.sinhala}</p>
+                    <p className="message-text-english">{message.english}</p>
+                  </div>
+                  <div className={`select-circle ${selectedMessage === index ? 'selected' : ''}`}>
+                    {selectedMessage === index && <FaCheck className="check-icon" />}
+                  </div>
                 </div>
               ))}
+              
+              <div 
+                className={`message-option custom-message-option ${isCustomMessage ? 'selected' : ''}`}
+                onClick={toggleCustomMessage}
+              >
+                <div className="message-content">
+                  <p className="message-text-sinhala">තවත් මොකක්ද කියන්න කැමතිද?</p>
+                  <p className="message-text-english">Want to say something else?</p>
+                </div>
+                <div className={`select-circle ${isCustomMessage ? 'selected' : ''}`}>
+                  {isCustomMessage && <FaCheck className="check-icon" />}
+                </div>
+              </div>
             </div>
+
+            {isCustomMessage && (
+              <div className="custom-message-container">
+                <div className="custom-message-inputs">
+                  <div className="input-group">
+                    <label className="input-label">සිංහලෙන්:</label>
+                    <textarea 
+                      className="custom-message-textarea"
+                      value={customMessage.sinhala}
+                      onChange={(e) => setCustomMessage({...customMessage, sinhala: e.target.value})}
+                      placeholder="ඔබගේ සිංහල පණිවිඩය මෙහි ලියන්න..."
+                    />
+                  </div>
+                  <div className="input-group">
+                    <label className="input-label">In English:</label>
+                    <textarea 
+                      className="custom-message-textarea"
+                      value={customMessage.english}
+                      onChange={(e) => setCustomMessage({...customMessage, english: e.target.value})}
+                      placeholder="Type your English message here..."
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="photo-upload-section">
-            <button className="photo-upload-button">
-              <FaPlus className="plus-icon" />
-              <div className="button-text">
-                <span className="button-text-sinhala">ඡායාරූපයක් එකතු කරන්න (විකල්ප)</span>
-                <span className="button-text-english">Add Photo (Optional)</span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+            />
+            
+            {!imagePreview ? (
+              <div 
+                className="photo-upload-button"
+                onClick={() => fileInputRef.current.click()}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+              >
+                <FaPlus className="plus-icon" />
+                <div className="button-text">
+                  <span className="button-text-sinhala">ඡායාරූපයක් එකතු කරන්න (විකල්ප)</span>
+                  <span className="button-text-english">Add Photo (Optional)</span>
+                </div>
               </div>
-            </button>
+            ) : (
+              <div className="image-preview-container">
+                <div className="image-preview-header">
+                  <span className="preview-text">Photo Preview</span>
+                  <button className="remove-image-button" onClick={removeImage}>
+                    <FaTimes />
+                  </button>
+                </div>
+                <img src={imagePreview} alt="Preview" className="image-preview" />
+              </div>
+            )}
           </div>
 
-          <button className="send-thanks-button">
+          <button 
+            className="send-thanks-button"
+            onClick={handleSendThanks}
+            disabled={!((selectedMessage !== null || (isCustomMessage && (customMessage.sinhala || customMessage.english))))}
+          >
             <span className="button-text-sinhala">ස්තුතිය යවන්න</span>
             <span className="button-text-english">Send Thank You</span>
           </button>

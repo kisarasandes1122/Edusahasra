@@ -1,306 +1,399 @@
 /* SendThanks.css */
 .send-thanks-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    font-family: 'Roboto', 'Arial', sans-serif;
-    background-color: #f9fafb;
-    min-height: 100vh;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  }
-  
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Roboto', 'Arial', sans-serif;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.send-thanks-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: white;
+  border-bottom: 1px solid #eaeaea;
+  text-align: center;
+}
+
+.send-thanks-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.send-thanks-title-sinhala {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.send-thanks-title-english {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.send-thanks-content {
+  padding: 20px;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  background-color: #e2e8f0;
+  color: #4a5568;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.back-icon {
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+.instruction-box {
+  background-color: #edf2f7;
+  padding: 16px 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.instruction-sinhala {
+  color: #4a5568;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.instruction-english {
+  color: #2d3748;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.thankyou-form-container {
+  background-color: #edf2f7;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.form-heading {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.heading-sinhala {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.heading-english {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.donor-selection-section,
+.message-selection-section {
+  margin-bottom: 24px;
+}
+
+.selection-heading-sinhala,
+.message-heading-sinhala {
+  color: #4a5568;
+  margin-bottom: 4px;
+}
+
+.selection-heading-english,
+.message-heading-english {
+  color: #2d3748;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.donors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.donor-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.donor-item:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.donor-item.selected {
+  border: 2px solid #1a365d;
+}
+
+.donor-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #1a202c;
+}
+
+.donor-donated,
+.donor-date {
+  margin: 4px 0;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.select-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.select-circle.selected {
+  background-color: #1a365d;
+  border-color: #1a365d;
+}
+
+.check-icon {
+  color: white;
+  font-size: 12px;
+}
+
+.message-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message-option {
+  background-color: white;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.message-option:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.message-option.selected {
+  border: 2px solid #1a365d;
+}
+
+.message-content {
+  flex: 1;
+}
+
+.message-text-sinhala {
+  color: #4a5568;
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+.message-text-english {
+  color: #2d3748;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.custom-message-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.custom-message-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.custom-message-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.photo-upload-section {
+  margin-bottom: 24px;
+}
+
+.photo-upload-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px dashed #cbd5e0;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.photo-upload-button:hover {
+  background-color: #f7fafc;
+}
+
+.plus-icon {
+  margin-right: 12px;
+  font-size: 16px;
+  color: #4a5568;
+}
+
+.button-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.button-text-sinhala {
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.button-text-english {
+  color: #2d3748;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.image-preview-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 16px;
+  width: 100%;
+}
+
+.image-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.preview-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.remove-image-button {
+  background: none;
+  border: none;
+  color: #e53e3e;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-preview {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.send-thanks-button {
+  width: 100%;
+  background-color: #1a365d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.send-thanks-button:hover {
+  background-color: #2a4365;
+}
+
+.send-thanks-button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.support-contact {
+  background-color: #edf2f7;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  color: #4a5568;
+}
+
+.contact-number {
+  font-weight: 600;
+  color: #2d3748;
+  margin-left: 4px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
   .send-thanks-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 16px 24px;
-    background-color: white;
-    border-bottom: 1px solid #eaeaea;
-    text-align: center;
-  }
-  
-  .send-thanks-title {
-    display: flex;
     flex-direction: column;
-    align-items: center;
-  }
-  
-  .send-thanks-title-sinhala {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 600;
-    color: #2d3748;
-  }
-  
-  .send-thanks-title-english {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 500;
-    color: #4a5568;
-  }
-  
-  .send-thanks-content {
-    padding: 20px;
-  }
-  
-  .back-button {
-    display: inline-flex;
-    align-items: center;
-    background-color: #e2e8f0;
-    color: #4a5568;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-size: 14px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .back-icon {
-    margin-right: 8px;
-    font-size: 12px;
-  }
-  
-  .instruction-box {
-    background-color: #edf2f7;
-    padding: 16px 24px;
-    border-radius: 8px;
-    margin-bottom: 24px;
-  }
-  
-  .instruction-sinhala {
-    color: #4a5568;
-    margin-bottom: 8px;
-    line-height: 1.5;
-  }
-  
-  .instruction-english {
-    color: #2d3748;
-    margin: 0;
-    line-height: 1.5;
-  }
-  
-  .thankyou-form-container {
-    background-color: #edf2f7;
-    border-radius: 8px;
-    padding: 24px;
-    margin-bottom: 24px;
-  }
-  
-  .form-heading {
     text-align: center;
-    font-size: 18px;
-    margin-top: 0;
-    margin-bottom: 24px;
+    gap: 8px;
   }
   
-  .heading-sinhala {
-    font-weight: 500;
-    color: #4a5568;
-  }
-  
-  .heading-english {
-    font-weight: 600;
-    color: #2d3748;
-  }
-  
-  .donor-selection-section,
-  .message-selection-section {
-    margin-bottom: 24px;
-  }
-  
-  .selection-heading-sinhala,
-  .message-heading-sinhala {
-    color: #4a5568;
-    margin-bottom: 4px;
-  }
-  
-  .selection-heading-english,
-  .message-heading-english {
-    color: #2d3748;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 16px;
-  }
-  
-  .donors-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .donor-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    border-radius: 8px;
-    padding: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .donor-item:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
-  .donor-item.selected {
-    border: 2px solid #1a365d;
-  }
-  
-  .donor-name {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 4px 0;
-    color: #1a202c;
-  }
-  
-  .donor-donated,
-  .donor-date {
-    margin: 4px 0;
-    color: #4a5568;
-    font-size: 14px;
-  }
-  
-  .select-circle {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 2px solid #cbd5e0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .select-circle.selected {
-    background-color: #1a365d;
-    border-color: #1a365d;
-  }
-  
-  .check-icon {
-    color: white;
-    font-size: 12px;
-  }
-  
+  .donors-list,
   .message-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    gap: 8px;
   }
   
+  .donor-item,
   .message-option {
-    background-color: white;
-    border-radius: 8px;
-    padding: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    padding: 12px;
   }
   
-  .message-option:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
-  .message-text-sinhala {
-    color: #4a5568;
-    margin-bottom: 4px;
-    line-height: 1.5;
-  }
-  
-  .message-text-english {
-    color: #2d3748;
-    margin: 0;
-    line-height: 1.5;
-  }
-  
-  .photo-upload-section {
-    margin-bottom: 24px;
-  }
-  
-  .photo-upload-button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border: 1px dashed #cbd5e0;
-    border-radius: 8px;
-    padding: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .photo-upload-button:hover {
-    background-color: #f7fafc;
-  }
-  
-  .plus-icon {
-    margin-right: 12px;
-    font-size: 16px;
-    color: #4a5568;
-  }
-  
-  .button-text {
-    display: flex;
+  .custom-message-inputs {
     flex-direction: column;
   }
-  
-  .button-text-sinhala {
-    color: #4a5568;
-    font-size: 14px;
-  }
-  
-  .button-text-english {
-    color: #2d3748;
-    font-size: 14px;
-    font-weight: 500;
-  }
-  
-  .send-thanks-button {
-    width: 100%;
-    background-color: #1a365d;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .send-thanks-button:hover {
-    background-color: #2a4365;
-  }
-  
-  .support-contact {
-    background-color: #edf2f7;
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-    color: #4a5568;
-  }
-  
-  .contact-number {
-    font-weight: 600;
-    color: #2d3748;
-    margin-left: 4px;
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-    .send-thanks-header {
-      flex-direction: column;
-      text-align: center;
-      gap: 8px;
-    }
-    
-    .donors-list,
-    .message-options {
-      gap: 8px;
-    }
-    
-    .donor-item,
-    .message-option {
-      padding: 12px;
-    }
-  }
+}
