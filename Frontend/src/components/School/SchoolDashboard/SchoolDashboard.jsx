@@ -45,11 +45,11 @@ const SchoolDashboard = () => {
           </div>
         </a>
 
-        <a href="/my-profile" className="dashboard-card action-card">
+        <a href="/edit-profile" className="dashboard-card action-card">
           <FaUserCircle className="card-icon" />
           <div className="card-content">
-            <h3 className="card-title-sinhala">මගේ විස්තර</h3>
-            <p className="card-title-english">My Profile</p>
+            <h3 className="card-title-sinhala">විස්තර වෙනස් කරන්න</h3>
+            <p className="card-title-english">Edit Profile</p>
           </div>
         </a>
       </div>

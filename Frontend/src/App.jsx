@@ -14,8 +14,9 @@ import SchoolDashboard from './components/School/SchoolDashboard/SchoolDashboard
 import ViewDonations from './components/School/ViewDonations/ViewDonations';
 import RequestDonations from './components/School/RequestDonations/RequestDonations';
 import SendThanks from './components/School/SendThanks/SendThanks';
+import EditProfile from './components/School/EditProfile/EditProfile';
 
-// Layout component with Header and Footer
+
 const StandardLayout = () => {
   const mockAuthState = {
     isAuthenticated: false,
@@ -30,13 +31,13 @@ const StandardLayout = () => {
         isAuthenticated={mockAuthState.isAuthenticated}
         user={mockAuthState.user}
       />
-      <Outlet /> {/* This is where the route component will be rendered */}
+      <Outlet /> 
       <Footer />
     </>
   );
 };
 
-// Simple layout without Header and Footer
+
 const DashboardLayout = () => {
   return <Outlet />;
 };
@@ -45,7 +46,6 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Routes with Header and Footer */}
         <Route element={<StandardLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/donor-register" element={<DonorRegistration />} />
@@ -57,12 +57,12 @@ const App = () => {
           <Route path="/school-login" element={<SchoolLogin />} />
         </Route>
 
-        {/* Routes WITHOUT Header and Footer */}
         <Route element={<DashboardLayout />}>
           <Route path="/Dashboard" element={<SchoolDashboard />} />
           <Route path="/view-donations" element={<ViewDonations />} />
           <Route path="/request-donations" element={<RequestDonations />} />
           <Route path="/send-thanks" element={<SendThanks />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
         </Route>
       </Routes>
     </Router>
