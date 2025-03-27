@@ -243,7 +243,7 @@ const RequestDonations = () => {
           </button>
         </div>
 
-        <div className="contact-info">
+        <div className="scl-contact-info">
           <p>
             <span className="contact-text-sinhala">උදව් අවශ්‍යද? අපිට කථා කරන්න : </span>
             <span className="contact-number">0789200730</span>

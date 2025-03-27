@@ -17,7 +17,7 @@ import SendThanks from './components/School/SendThanks/SendThanks';
 import EditProfile from './components/School/EditProfile/EditProfile';
 
 
-const StandardLayout = () => {
+const DonorLayout = () => {
   const mockAuthState = {
     isAuthenticated: false,
     user: {
@@ -38,7 +38,7 @@ const StandardLayout = () => {
 };
 
 
-const DashboardLayout = () => {
+const SchoolLayout = () => {
   return <Outlet />;
 };
 
@@ -46,7 +46,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route element={<StandardLayout />}>
+        <Route element={<DonorLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/donor-register" element={<DonorRegistration />} />
           <Route path="/donor-login" element={<DonorLogin />} />
@@ -57,7 +57,7 @@ const App = () => {
           <Route path="/school-login" element={<SchoolLogin />} />
         </Route>
 
-        <Route element={<DashboardLayout />}>
+        <Route element={<SchoolLayout />}>
           <Route path="/Dashboard" element={<SchoolDashboard />} />
           <Route path="/view-donations" element={<ViewDonations />} />
           <Route path="/request-donations" element={<RequestDonations />} />

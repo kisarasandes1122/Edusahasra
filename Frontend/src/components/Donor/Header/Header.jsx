@@ -153,6 +153,7 @@ const Header = ({ isAuthenticated, user }) => {
           
           <nav className="nav">
             <ul>
+              <li><a href="/">Home</a></li>
               <li className="dropdown-container" ref={donorsDropdownRef}>
                 <button 
                   className="dropdown-trigger"
@@ -216,7 +217,7 @@ const Header = ({ isAuthenticated, user }) => {
                         </div>
                         <div className="dropdown-content">
                           <span className="item-title">My Donations</span>
-                          <span className="item-description">Track past donations.</span>
+                          <span className="item-description">Track donations.</span>
                         </div>
                       </a>
                       <a href="/messages" className="user-dropdown-item">
