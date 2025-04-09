@@ -1,7 +1,7 @@
 .why-trust-us {
     padding: 4rem 8rem;
     text-align: center;
-    background-color: #E2E9F0;
+    background-color: #EEF2E3;
     font-family: "Inter", sans-serif;
   }
   
@@ -21,7 +21,7 @@
   
   .feature-card {
     padding: 1.5rem;
-    background: white;
+    background: #C7F169;
     border-radius: 10px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;

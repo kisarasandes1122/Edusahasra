@@ -69,7 +69,7 @@
   }
   
   .school-card-icon-building {
-    color: #12263A;
+    color: #2A6F2B;
   }
   
   /* Info row styles */
@@ -119,7 +119,7 @@
   
   .progress-fill {
     height: 100%;
-    background-color: #12263A;
+    background-color: #78C51C !important;
     border-radius: 5px;
     transition: width 1s ease-in-out;
   }
@@ -128,7 +128,7 @@
   .donate-button {
     width: 100%;
     padding: 12px;
-    background-color: #12263A;
+    background-color: #78C51C;
     color: white;
     border: none;
     border-radius: 6px;
@@ -138,7 +138,7 @@
   }
   
   .donate-button:hover {
-    background-color: #12263A;
+    background-color: #2A6F2B;
   }
   
   /* View all section styles */
@@ -154,7 +154,7 @@
     gap: 8px;
     background: none;
     border: none;
-    color: #12263A;
+    color: #2A6F2B;
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;

@@ -54,7 +54,7 @@
   }
   
   .donate-now-btn {
-    background-color: #12263A;
+    background-color: #78C51C;
     color: white;
     border: none;
     border-radius: 5px;
@@ -66,7 +66,7 @@
   }
   
   .donate-now-btn:hover {
-    background-color: #0b2e4a;
+    background-color: #2A6F2B;
   }
   
   /* Image gallery styling */
@@ -126,7 +126,7 @@
   
   .progress-fill {
     height: 100%;
-    background-color: #12263A;
+    background-color: #78C51C;
     border-radius: 10px;
     transition: width 0.5s ease;
   }
@@ -172,7 +172,7 @@
   }
   
   .status-pending {
-    color: #12263A;
+    color: #000000;
   }
   
   /* Responsive adjustments */

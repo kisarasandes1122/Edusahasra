@@ -32,7 +32,7 @@
   
   .sin-sidebar {
     flex: 0 0 300px;
-    background-color: #f5f7fa;
+    background-color: #EEF2E3;
     padding: 20px;
     border-radius: 8px;
   }
@@ -83,7 +83,7 @@
   .sin-reset-button {
     width: 100%;
     padding: 12px;
-    background-color: white;
+    background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
@@ -120,7 +120,7 @@
   
   .sin-school-icon {
     font-size: 24px;
-    color: #12263A;
+    color: #2A6F2B;
   }
   
   .sin-school-name {
@@ -180,13 +180,13 @@
   
   .sin-progress-fill {
     height: 100%;
-    background-color: #12263A;
+    background-color: #78C51C;
     border-radius: 4px;
   }
   
   .sin-donate-button {
     margin-top: 10px;
-    background-color: #12263A;
+    background-color: #78C51C;
     color: white;
     border: none;
     border-radius: 4px;
@@ -198,9 +198,73 @@
   }
   
   .sin-donate-button:hover {
-    background-color: #1a3b5d;
+    background-color: #2A6F2B;
   }
   
+  /* Pagination styles */
+  .sin-main-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .sin-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  .sin-pagination-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    margin: 0 0.25rem;
+  }
+
+  .sin-pagination-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .sin-pagination-numbers {
+    display: flex;
+    margin: 0 0.5rem;
+  }
+
+  .sin-page-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    margin: 0 0.25rem;
+  }
+
+  .sin-active-page {
+    background-color: #4299e1;
+    color: white;
+    border-color: #4299e1;
+  }
+
+  .sin-results-summary {
+    margin-top: 1rem;
+    text-align: center;
+    color: #718096;
+    font-size: 0.875rem;
+  }
+
+
   @media (max-width: 768px) {
     .sin-content {
       flex-direction: column;

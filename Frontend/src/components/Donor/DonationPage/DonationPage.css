@@ -201,7 +201,7 @@
   
   /* Shipping cost */
   .donate__shippingCost {
-    background-color: #f0f5ff;
+    background-color: #C7F169;
     padding: 12px 16px;
     border-radius: 4px;
     margin-bottom: 20px;
@@ -234,7 +234,7 @@
   }
   
   .donate__summaryDelivery {
-    color: #12263A;
+    color: #5a6a7a;
     margin-top: 8px;
   }
   
@@ -249,7 +249,7 @@
   }
   
   .donate__submitBtn {
-    background-color: #12263A;
+    background-color: #78C51C;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -262,10 +262,10 @@
   }
   
   .donate__submitBtn:hover:not(:disabled) {
-    background-color: #12263A;
+    background-color: #2A6F2B;
   }
   
   .donate__submitBtn:disabled {
-    background-color: #7c93b5;
+    background-color: #EEF2E3;
     cursor: not-allowed;
   }

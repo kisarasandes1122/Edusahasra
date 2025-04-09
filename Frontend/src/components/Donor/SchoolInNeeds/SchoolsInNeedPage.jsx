@@ -1,108 +1,107 @@
 import React, { useState, useEffect } from 'react';
-import { FaSchool, FaMapMarkerAlt, FaUsers, FaListUl } from 'react-icons/fa';
+import { FaSchool, FaMapMarkerAlt, FaUsers, FaListUl, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import './SchoolsInNeedPage.css';
 
 const SchoolsInNeedPage = () => {
   // Mock school data with diverse locations  
-const allSchools = [
-  {
-    id: 1,
-    name: "Galle Central College",
-    location: "Galle, Southern Province",
-    students: 200,
-    needs: ["Textbooks", "Pens", "Pencils", "Bags"],
-    progress: 35
-  },
-  {
-    id: 2,
-    name: "Kandy Girls' High School",
-    location: "Kandy, Central Province",
-    students: 175,
-    needs: ["Books", "Stationery", "Equipment"],
-    progress: 60
-  },
-  {
-    id: 3,
-    name: "Jaffna Hindu College",
-    location: "Jaffna, Northern Province",
-    students: 220,
-    needs: ["Books", "Uniform", "Sports Gear"],
-    progress: 25
-  },
-  {
-    id: 4,
-    name: "Matara Rahula College",
-    location: "Matara, Southern Province",
-    students: 190,
-    needs: ["Textbooks", "Equipment", "Other"],
-    progress: 40
-  },
-  {
-    id: 5,
-    name: "Matale Girls' School",
-    location: "Matale, Central Province",
-    students: 165,
-    needs: ["Books", "Stationery", "Uniform"],
-    progress: 55
-  },
-  {
-    id: 6,
-    name: "Richmond College",
-    location: "Galle, Southern Province",
-    students: 210,
-    needs: ["Books", "Sports Gear", "Equipment"],
-    progress: 30
-  },
-  {
-    id: 7,
-    name: "Anuradhapura Central College",
-    location: "Anuradhapura, North Central Province",
-    students: 180,
-    needs: ["Books", "Uniforms", "Sports Equipment"],
-    progress: 45
-  },
-  {
-    id: 8,
-    name: "Badulla Mahinda College",
-    location: "Badulla, Uva Province",
-    students: 160,
-    needs: ["Books", "Stationery", "Library Resources"],
-    progress: 50
-  },
-  {
-    id: 9,
-    name: "Trincomalee Hindu College",
-    location: "Trincomalee, Eastern Province",
-    students: 230,
-    needs: ["Books", "Computers", "Uniforms"],
-    progress: 20
-  },
-  {
-    id: 10,
-    name: "Negombo St. Mary's College",
-    location: "Negombo, Western Province",
-    students: 195,
-    needs: ["Textbooks", "Sports Gear", "Other"],
-    progress: 38
-  },
-  {
-    id: 11,
-    name: "Ratnapura Royal College",
-    location: "Ratnapura, Sabaragamuwa Province",
-    students: 175,
-    needs: ["Books", "Pencils", "Bags"],
-    progress: 52
-  },
-  {
-    id: 12,
-    name: "Kurunegala Maliyadeva College",
-    location: "Kurunegala, North Western Province",
-    students: 215,
-    needs: ["Stationery", "Computers", "Library Books"],
-    progress: 33
-  }
-];
-
+  const allSchools = [
+    {
+      id: 1,
+      name: "Galle Central College",
+      location: "Galle, Southern Province",
+      students: 200,
+      needs: ["Textbooks", "Pens", "Pencils", "Bags"],
+      progress: 35
+    },
+    {
+      id: 2,
+      name: "Kandy Girls' High School",
+      location: "Kandy, Central Province",
+      students: 175,
+      needs: ["Books", "Stationery", "Equipment"],
+      progress: 60
+    },
+    {
+      id: 3,
+      name: "Jaffna Hindu College",
+      location: "Jaffna, Northern Province",
+      students: 220,
+      needs: ["Books", "Uniform", "Sports Gear"],
+      progress: 25
+    },
+    {
+      id: 4,
+      name: "Matara Rahula College",
+      location: "Matara, Southern Province",
+      students: 190,
+      needs: ["Textbooks", "Equipment", "Other"],
+      progress: 40
+    },
+    {
+      id: 5,
+      name: "Matale Girls' School",
+      location: "Matale, Central Province",
+      students: 165,
+      needs: ["Books", "Stationery", "Uniform"],
+      progress: 55
+    },
+    {
+      id: 6,
+      name: "Richmond College",
+      location: "Galle, Southern Province",
+      students: 210,
+      needs: ["Books", "Sports Gear", "Equipment"],
+      progress: 30
+    },
+    {
+      id: 7,
+      name: "Anuradhapura Central College",
+      location: "Anuradhapura, North Central Province",
+      students: 180,
+      needs: ["Books", "Uniforms", "Sports Equipment"],
+      progress: 45
+    },
+    {
+      id: 8,
+      name: "Badulla Mahinda College",
+      location: "Badulla, Uva Province",
+      students: 160,
+      needs: ["Books", "Stationery", "Library Resources"],
+      progress: 50
+    },
+    {
+      id: 9,
+      name: "Trincomalee Hindu College",
+      location: "Trincomalee, Eastern Province",
+      students: 230,
+      needs: ["Books", "Computers", "Uniforms"],
+      progress: 20
+    },
+    {
+      id: 10,
+      name: "Negombo St. Mary's College",
+      location: "Negombo, Western Province",
+      students: 195,
+      needs: ["Textbooks", "Sports Gear", "Other"],
+      progress: 38
+    },
+    {
+      id: 11,
+      name: "Ratnapura Royal College",
+      location: "Ratnapura, Sabaragamuwa Province",
+      students: 175,
+      needs: ["Books", "Pencils", "Bags"],
+      progress: 52
+    },
+    {
+      id: 12,
+      name: "Kurunegala Maliyadeva College",
+      location: "Kurunegala, North Western Province",
+      students: 215,
+      needs: ["Stationery", "Computers", "Library Books"],
+      progress: 33
+    }
+  ];
 
   const [location, setLocation] = useState('');
   const [itemCategories, setItemCategories] = useState({
@@ -115,6 +114,10 @@ const allSchools = [
   });
   const [sortBy, setSortBy] = useState('highest');
   const [filteredSchools, setFilteredSchools] = useState(allSchools);
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [schoolsPerPage] = useState(6);
 
   // Effect to filter schools based on selected filters
   useEffect(() => {
@@ -156,6 +159,7 @@ const allSchools = [
     }
     
     setFilteredSchools(result);
+    setCurrentPage(1); // Reset to first page when filters change
   }, [location, itemCategories, sortBy]);
 
   const handleCategoryChange = (category) => {
@@ -176,6 +180,32 @@ const allSchools = [
       other: false
     });
     setSortBy('highest');
+    setCurrentPage(1);
+  };
+
+  // Get current schools for pagination
+  const indexOfLastSchool = currentPage * schoolsPerPage;
+  const indexOfFirstSchool = indexOfLastSchool - schoolsPerPage;
+  const currentSchools = filteredSchools.slice(indexOfFirstSchool, indexOfLastSchool);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredSchools.length / schoolsPerPage);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
+  // Navigate to next page
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  
+  // Navigate to previous page
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   return (
@@ -283,54 +313,94 @@ const allSchools = [
           </button>
         </aside>
 
-        <main className="sin-school-grid">
-          {filteredSchools.length > 0 ? (
-            filteredSchools.map((school) => (
-              <div className="sin-school-card" key={school.id}>
-                <div className="sin-school-header">
-                  <FaSchool className="sin-school-icon" />
-                  <h3 className="sin-school-name">{school.name}</h3>
-                </div>
-                
-                <div className="sin-school-location">
-                  <FaMapMarkerAlt className="sin-location-icon" />
-                  <span className="sin-location-text">{school.location}</span>
-                </div>
-                
-                <div className="sin-school-students">
-                  <FaUsers className="sin-students-icon" />
-                  <span className="sin-students-text">{school.students} Students in need</span>
-                </div>
-                
-                <div className="sin-school-needs">
-                  <FaListUl className="sin-needs-icon" />
-                  <div className="sin-needs-container">
-                    <span className="sin-needs-label">Needs:</span>
-                    <span className="sin-needs-text">{school.needs.join(', ')}</span>
+        <main className="sin-main-content">
+          <div className="sin-school-grid">
+            {currentSchools.length > 0 ? (
+              currentSchools.map((school) => (
+                <div className="sin-school-card" key={school.id}>
+                  <div className="sin-school-header">
+                    <FaSchool className="sin-school-icon" />
+                    <h3 className="sin-school-name">{school.name}</h3>
                   </div>
-                </div>
-                
-                <div className="sin-progress-section">
-                  <div className="sin-progress-text">
-                    <span>Progress</span>
-                    <span>{school.progress}% Done</span>
+                  
+                  <div className="sin-school-location">
+                    <FaMapMarkerAlt className="sin-location-icon" />
+                    <span className="sin-location-text">{school.location}</span>
                   </div>
-                  <div className="sin-progress-bar">
-                    <div 
-                      className="sin-progress-fill" 
-                      style={{ width: `${school.progress}%` }}
-                    ></div>
+                  
+                  <div className="sin-school-students">
+                    <FaUsers className="sin-students-icon" />
+                    <span className="sin-students-text">{school.students} Students in need</span>
                   </div>
+                  
+                  <div className="sin-school-needs">
+                    <FaListUl className="sin-needs-icon" />
+                    <div className="sin-needs-container">
+                      <span className="sin-needs-label">Needs:</span>
+                      <span className="sin-needs-text">{school.needs.join(', ')}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="sin-progress-section">
+                    <div className="sin-progress-text">
+                      <span>Progress</span>
+                      <span>{school.progress}% Done</span>
+                    </div>
+                    <div className="sin-progress-bar">
+                      <div 
+                        className="sin-progress-fill" 
+                        style={{ width: `${school.progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  
+                  <button className="sin-donate-button">Donate Now</button>
                 </div>
-                
-                <button className="sin-donate-button">Donate Now</button>
+              ))
+            ) : (
+              <div className="sin-no-results">
+                <p>No schools match your current filters.</p>
               </div>
-            ))
-          ) : (
-            <div className="sin-no-results">
-              <p>No schools match your current filters.</p>
+            )}
+          </div>
+          
+          {/* Pagination */}
+          {filteredSchools.length > 0 && (
+            <div className="sin-pagination">
+              <button 
+                className="sin-pagination-button"
+                onClick={prevPage}
+                disabled={currentPage === 1}
+              >
+                <FaChevronLeft />
+              </button>
+              
+              <div className="sin-pagination-numbers">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => paginate(i + 1)}
+                    className={`sin-page-number ${currentPage === i + 1 ? 'sin-active-page' : ''}`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+              
+              <button 
+                className="sin-pagination-button"
+                onClick={nextPage}
+                disabled={currentPage === totalPages}
+              >
+                <FaChevronRight />
+              </button>
             </div>
           )}
+          
+          {/* Results summary */}
+          <div className="sin-results-summary">
+            Showing {indexOfFirstSchool + 1}-{Math.min(indexOfLastSchool, filteredSchools.length)} of {filteredSchools.length} schools
+          </div>
         </main>
       </div>
     </div>

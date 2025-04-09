@@ -24,7 +24,7 @@
   z-index: -1; 
 }
 .donateButtonFrame {
-  background: #12263a;
+  background: #78c51c;
   border-radius: 15px;
   padding: 11px 27px;
   display: flex;
@@ -41,7 +41,7 @@
 }
 
 .donateButtonFrame:hover {
-    background: #050505; 
+    background: #78c51c; 
 }
 
 .donateButtonText {
@@ -60,7 +60,7 @@
 .heroImageOne {
   border-radius: 30px;
   border-style: solid;
-  border-color: #12263a;
+  border-color: #043f2e;
   border-width: 5px;
   width: 427px;
   height: 308px;
@@ -72,7 +72,7 @@
 .heroImageTwo {
   border-radius: 30px;
   border-style: solid;
-  border-color: #12263a;
+  border-color: #043f2e;
   border-width: 5px;
   width: 410px;
   height: 273px;
@@ -121,7 +121,7 @@
 .heroImageThree {
   border-radius: 30px;
   border-style: solid;
-  border-color: #12263a;
+  border-color: #043f2e;
   border-width: 5px;
   width: 450px;
   height: 253px;
