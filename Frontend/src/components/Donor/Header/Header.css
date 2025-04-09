@@ -297,7 +297,7 @@
 .btn-primary:hover {
   background-color: #78c51c !important;
   color: #ffffff !important;
-  border-color: #2b6777 !important;
+  border-color: #78c51c !important;
 }
 
 .btn-secondary {
@@ -309,5 +309,5 @@
 .btn-secondary:hover {
   background-color: #78c51c !important;
   color: #ffffff !important;
-  border-color: #2b6777 !important;
+  border-color: #78c51c !important;
 }

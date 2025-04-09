@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaUser, FaLock, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaUser, FaLock, FaPhone, FaMapMarkerAlt, FaLocationArrow } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import './DonorRegistration.css';
 
@@ -11,15 +11,19 @@ const DonorRegistration = () => {
     confirmPassword: '',
     phoneNumber: '',
     address: '',
-    agreeToTerms: false
+    agreeToTerms: false,
+    latitude: '',
+    longitude: ''
   });
 
   const [errors, setErrors] = useState({
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    location: ''
   });
 
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [isLocationLoading, setIsLocationLoading] = useState(false);
   const passwordRef = useRef(null);
 
   const [passwordStrength, setPasswordStrength] = useState({
@@ -92,6 +96,80 @@ const DonorRegistration = () => {
 
   const isPasswordValid = () => {
     return Object.values(passwordStrength).every(Boolean);
+  };
+
+  const handleGetLocation = () => {
+    setIsLocationLoading(true);
+    setErrors(prev => ({ ...prev, location: '' }));
+    
+    if (!navigator.geolocation) {
+      setErrors(prev => ({ 
+        ...prev, 
+        location: 'Geolocation is not supported by your browser' 
+      }));
+      setIsLocationLoading(false);
+      return;
+    }
+    
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setFormData(prev => ({
+          ...prev,
+          latitude,
+          longitude
+        }));
+        
+        // Try to get address from coordinates using reverse geocoding
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+          );
+          const data = await response.json();
+          
+          if (data && data.display_name) {
+            setFormData(prev => ({
+              ...prev,
+              address: data.display_name
+            }));
+          }
+        } catch (error) {
+          console.error('Error fetching address:', error);
+        }
+        
+        setIsLocationLoading(false);
+      },
+      (error) => {
+        setIsLocationLoading(false);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            setErrors(prev => ({ 
+              ...prev, 
+              location: 'User denied the request for geolocation' 
+            }));
+            break;
+          case error.POSITION_UNAVAILABLE:
+            setErrors(prev => ({ 
+              ...prev, 
+              location: 'Location information is unavailable' 
+            }));
+            break;
+          case error.TIMEOUT:
+            setErrors(prev => ({ 
+              ...prev, 
+              location: 'The request to get user location timed out' 
+            }));
+            break;
+          default:
+            setErrors(prev => ({ 
+              ...prev, 
+              location: 'An unknown error occurred' 
+            }));
+            break;
+        }
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
   };
 
   const handleSubmit = (e) => {
@@ -225,7 +303,7 @@ const DonorRegistration = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group address-group">
           <FaMapMarkerAlt className="icon" />
           <textarea
             name="address"
@@ -234,6 +312,23 @@ const DonorRegistration = () => {
             onChange={handleChange}
             required
           />
+          <button 
+            type="button" 
+            className="location-button"
+            onClick={handleGetLocation}
+            disabled={isLocationLoading}
+          >
+            <FaLocationArrow className="location-icon" />
+            {isLocationLoading ? 'Getting Location...' : 'Get My Location'}
+          </button>
+          {errors.location && (
+            <div className="error-message">{errors.location}</div>
+          )}
+          {formData.latitude && formData.longitude && (
+            <div className="location-info">
+              Location detected: {formData.latitude.toFixed(6)}, {formData.longitude.toFixed(6)}
+            </div>
+          )}
         </div>
 
         <div className="donor-register-form-group checkbox">
