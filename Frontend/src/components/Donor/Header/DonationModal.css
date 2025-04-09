@@ -80,21 +80,21 @@
   }
   
   .register-button {
-    background-color: #12263A;
+    background-color: #78C51C;
     color: white;
   }
   
   .register-button:hover {
-    background-color: #0A1825;
+    background-color: #2A6F2B;
   }
   
   .login-button {
     background-color: white;
-    color: #12263A;
+    color: #78C51C;
     border: 1px solid #12263A;
   }
   
   .login-button:hover {
-    background-color: #12263A;
+    background-color: #2A6F2B;
     color: white;
   }

@@ -117,7 +117,7 @@
 .login-button {
   margin-top: 0.5rem;
   padding: 0.75rem;
-  background-color: #2a6f2b;
+  background-color: #78C51C;
   color: white;
   border: none;
   border-radius: 6px;
@@ -131,7 +131,7 @@
 }
 
 .login-button.button-disabled {
-  background-color: #79828b;
+  background-color: #EEF2E3;
   cursor: not-allowed;
 }
 
