@@ -1,307 +1,527 @@
+/* Updated SchoolRegistration.css */
+
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .scrf_container {
-    max-width: 950px;
-    margin: 40px auto;
-    font-family: 'Inter', sans-serif;
-    color: #333;
-    margin-bottom: 70px;
-  }
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
 
-  .scrf_title {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 10px;
-    font-weight: 700;
-  }
+/* Typography */
+.scrf_title {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
 
-  .scrf_subtitle {
-    text-align: center;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 30px;
-    line-height: 1.5;
-  }
+.scrf_subtitle {
+  color: #7f8c8d;
+  text-align: center;
+  margin-bottom: 2rem;
+}
 
-  .scrf_form {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-  }
+/* Progress Bar */
+.scrf_progress_bar {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+  position: relative;
+}
 
-  .scrf_section {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 20px;
-    background-color: #fff;
-  }
+.scrf_progress_bar::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 2px;
+  width: 100%;
+  background-color: #e0e0e0;
+  z-index: 1;
+}
 
-  .scrf_section_title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 15px;
-  }
+.scrf_progress_step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
 
-  .scrf_section_subtitle {
-    font-size: 13px;
-    color: #666;
-    margin-top: -10px;
-    margin-bottom: 15px;
-  }
+.scrf_step_number {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #7f8c8d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 5px;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
 
-  .scrf_form_group {
-    margin-bottom: 15px;
-    position: relative;
-  }
+.scrf_step_label {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+  text-align: center;
+  width: 80px;
+}
 
-  .scrf_label {
-    display: block;
-    font-size: 13px;
-    margin-bottom: 6px;
-  }
+.scrf_progress_active .scrf_step_number {
+  background-color: #78C51C;
+  color: white;
+  border-color: #78C51C;
+}
 
-  .scrf_input, .scrf_textarea, .scrf_select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    box-sizing: border-box;
-  }
+.scrf_progress_active .scrf_step_label {
+  color: #78C51C;
+  font-weight: 600;
+}
 
-  .scrf_input_with_icon {
-    position: relative;
-  }
+/* Form Elements */
+.scrf_form {
+  width: 100%;
+}
 
-  .scrf_icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-    font-size: 18px;
-  }
+.scrf_section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border-left: 4px solid #78C51C;
+}
 
-  .scrf_input_with_icon_field {
-    padding-left: 35px;
-  }
+.scrf_section_title {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
 
-  .scrf_textarea {
-    min-height: 80px;
-    resize: vertical;
-  }
+.scrf_section_subtitle {
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
 
-  .scrf_select {
-    height: 40px;
-    background-color: white;
-    cursor: pointer;
-  }
+.scrf_form_group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
 
-  .scrf_form_row {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-  }
+.scrf_form_row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
 
-  .scrf_half_width {
-    flex: 1;
-    margin-bottom: 0;
-  }
+.scrf_half_width {
+  flex: 1;
+}
 
-  .scrf_upload_area {
-    border: 1px dashed #aaa;
-    border-radius: 5px;
-    padding: 30px 20px;
-    text-align: center;
-    cursor: pointer;
-    background-color: #f9f9f9;
-    transition: all 0.3s ease;
-  }
+.scrf_input, .scrf_select, .scrf_textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
 
-  .scrf_upload_area:hover {
-    border-color: #666;
-    background-color: #f0f0f0;
-  }
+.scrf_input:focus, .scrf_select:focus, .scrf_textarea:focus {
+  border-color: #78C51C;
+}
 
-  .scrf_drag_over {
-    border-color: #4a90e2;
-    background-color: rgba(74, 144, 226, 0.1);
-  }
+.scrf_input_error {
+  border-color: #e74c3c;
+}
 
-  .scrf_upload_icon {
-    font-size: 40px;
-    color: #344054;
-    margin-bottom: 10px;
-  }
+.scrf_error_message {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+}
 
-  .scrf_upload_text {
-    font-size: 14px;
-    margin-bottom: 5px;
-  }
+.scrf_input_with_icon {
+  position: relative;
+}
 
-  .scrf_upload_formats {
-    font-size: 12px;
-    color: #666;
-  }
+.scrf_icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7f8c8d;
+}
 
-  .scrf_file_input {
-    display: none;
-  }
+.scrf_input_with_icon_field {
+  padding-left: 2.5rem;
+}
 
-  /* New styles for uploaded files list */
-  .scrf_uploaded_files {
-    margin-top: 15px;
-  }
+.scrf_textarea {
+  min-height: 100px;
+  resize: vertical;
+}
 
-  .scrf_file_item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    margin: 8px 0;
-    background-color: #f5f7fa;
-    border: 1px solid #e6e8eb;
-    border-radius: 5px;
-    font-size: 14px;
-  }
+/* Password Requirements */
+.scrf_password_requirements {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 5px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
 
-  .scrf_file_info {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.scrf_password_requirements ul {
+  list-style-type: none;
+}
 
-  .scrf_file_name {
-    font-weight: 500;
-    max-width: 350px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.scrf_password_requirements li {
+  margin-bottom: 0.5rem;
+  color: #7f8c8d;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+}
 
-  .scrf_file_size {
-    margin-left: 5px;
-    color: #666;
-    font-size: 12px;
-  }
+.scrf_check_icon {
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
 
-  .scrf_file_remove {
-    background: none;
-    border: none;
-    color: #666;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  }
+.scrf_valid {
+  color: #2ecc71;
+}
 
-  .scrf_file_remove:hover {
-    background-color: #f0f0f0;
-    color: #d32f2f;
-  }
+/* File Upload Area */
+.scrf_upload_area {
+  border: 2px dashed #bdc3c7;
+  border-radius: 5px;
+  padding: 2rem;
+  text-align: center;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-  .scrf_agreement {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 5px;
-  }
+.scrf_upload_area:hover {
+  border-color: #C7F169;
+  background-color: #f0fff1;
+}
 
-  .scrf_checkbox_container {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
+.scrf_drag_over {
+  border-color: #C7F169;
+  background-color: #f0fff1;
+}
 
-  .scrf_checkbox_text {
-    font-size: 14px;
-    margin-left: 8px;
-  }
+.scrf_upload_error {
+  border-color: #e74c3c;
+}
 
-  .scrf_verification_note {
-    font-size: 12px;
-    color: #666;
-    margin-top: 5px;
-    margin-bottom: 20px;
-  }
+.scrf_upload_icon {
+  font-size: 3rem;
+  color: #2A6F2B;
+  margin-bottom: 1rem;
+}
 
-  .scrf_submit_button {
-    background-color: #152238;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 15px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
+.scrf_upload_text {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
 
-  .scrf_submit_button:hover {
-    background-color: #0c1625;
-  }
+.scrf_upload_formats {
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
 
-  .scrf_submit_button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
+.scrf_file_input {
+  display: none;
+}
 
-  .scrf_password_requirements {
-    margin-top: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 10px;
-    font-size: 12px;
-  }
+/* Uploaded Files */
+.scrf_uploaded_files {
+  margin-top: 1.5rem;
+}
 
-  .scrf_password_requirements ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
+.scrf_file_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f2f2f2;
+  padding: 0.75rem 1rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+}
 
-  .scrf_password_requirements li {
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    color: #555;
-  }
+.scrf_file_info {
+  display: flex;
+  align-items: center;
+}
 
-  .scrf_check_icon {
-    display: inline-block;
-    width: 16px;
-    text-align: center;
-    margin-right: 8px;
-  }
+.scrf_file_name {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 0.5rem;
+}
 
-  .scrf_valid {
-    color: #4caf50;
-    font-weight: 500;
-  }
+.scrf_file_size {
+  color: #7f8c8d;
+  font-size: 0.85rem;
+}
 
-  .scrf_error_message {
-    color: #d32f2f;
-    font-size: 12px;
-    margin-top: 5px;
-  }
+.scrf_file_remove {
+  background: transparent;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .scrf_container {
-      padding: 0 15px;
-    }
+.scrf_file_remove:hover {
+  background-color: #ffebee;
+}
 
-    .scrf_form_row {
-      flex-direction: column;
-      gap: 10px;
-    }
+/* Agreement Section */
+.scrf_agreement {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
 
-    .scrf_half_width {
-      margin-bottom: 15px;
-    }
+.scrf_checkbox_container {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+}
 
-    .scrf_file_name {
-      max-width: 200px;
-    }
-  }
+.scrf_checkbox_container input {
+  margin-right: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.scrf_checkbox_text {
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.scrf_verification_note {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-left: 3px solid #2A6F2B;
+  border-radius: 3px;
+}
+
+/* Buttons */
+.scrf_nav_buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.scrf_prev_button,
+.scrf_next_button,
+.scrf_submit_button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.scrf_prev_button {
+  background-color: #f2f2f2;
+  color: #2c3e50;
+}
+
+.scrf_prev_button:hover {
+  background-color: #e0e0e0;
+}
+
+.scrf_next_button {
+  background-color: #78C51C;
+  color: white;
+  margin-left: auto;
+}
+
+.scrf_next_button:hover {
+  background-color: #2A6F2B;
+}
+
+.scrf_submit_button {
+  background-color: #2A6F2B;
+  color: white;
+  padding: 0.75rem 2rem;
+  font-weight: bold;
+  margin-left: auto;
+}
+
+.scrf_submit_button:hover {
+  background-color: #27ae60;
+}
+
+.scrf_submit_button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.scrf_button_icon {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+/* Language Selector */
+.scrf_language_selector {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.scrf_language_selector_wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 0.5rem;
+}
+
+.scrf_language_icon {
+  color: #39db34;
+  margin-right: 0.5rem;
+}
+
+.scrf_language_select {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  color: #30502c;
+}
+
+/* Location Section */
+.scrf_location_section {
+  padding: 1.5rem;
+  background-color: #f0fff2;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.scrf_location_info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.scrf_location_icon_container {
+  width: 50px;
+  height: 50px;
+  background-color: #78C51C;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+.scrf_location_icon {
+  color: white;
+  font-size: 1.5rem;
+}
+
+.scrf_location_text h3 {
+  color: #11151a;
+  margin-bottom: 0.5rem;
+}
+
+.scrf_location_text p {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.scrf_location_button {
+  background-color: #78C51C;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.scrf_location_button:hover {
+  background-color: #2A6F2B;
+}
+
+.scrf_location_button:disabled {
+  background-color: #C7F169;
+  cursor: not-allowed;
+}
+
+.scrf_location_button_icon {
+  margin-right: 0.5rem;
+}
+
+.scrf_coordinates {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.scrf_coordinate_item {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.scrf_coordinate_label {
+  font-weight: bold;
+  width: 100px;
+  color: #131413;
+}
+
+.scrf_coordinate_value {
+  color: #2A6F2B;
+  font-family: monospace;
+}
+
+.scrf_location_note {
+  background-color: #EEF2E3;
+  border-left: 3px solid #78C51C;
+  padding: 0.75rem;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  color: #666;
+}
