@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaArrowLeft, FaPlus } from 'react-icons/fa';
+import { FaArrowLeft, FaPlus, FaMapMarkerAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import './EditProfile.css';
 
@@ -21,6 +21,13 @@ const EditProfile = () => {
   
   const [schoolImages, setSchoolImages] = useState([]);
   
+  const [location, setLocation] = useState({
+    latitude: '',
+    longitude: '',
+    fetching: false,
+    error: null
+  });
+
   const handleBack = () => {
     navigate('/Dashboard');
   };
@@ -46,11 +53,47 @@ const EditProfile = () => {
     setSchoolImages(prevImages => [...prevImages, ...files]);
   };
   
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      setLocation(prev => ({
+        ...prev,
+        error: 'Geolocation is not supported by your browser'
+      }));
+      return;
+    }
+    
+    setLocation(prev => ({ ...prev, fetching: true, error: null }));
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          fetching: false,
+          error: null
+        });
+      },
+      (error) => {
+        setLocation({
+          latitude: '',
+          longitude: '',
+          fetching: false,
+          error: `Error getting location: ${error.message}`
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      }
+    );
+  };
 
   const handleSaveChanges = () => {
     console.log('School Info:', schoolInfo);
     console.log('Contact Info:', contactInfo);
     console.log('Images:', schoolImages);
+    console.log('Location:', location);
 
     alert('Changes saved successfully!');
 
@@ -96,6 +139,32 @@ const EditProfile = () => {
               onChange={handleSchoolInfoChange}
               className="form-input"
             />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">School Location</label>
+            <div className="location-container">
+              <div className="location-display">
+                {location.latitude && location.longitude ? (
+                  <div className="location-coordinates">
+                    <span>Latitude: {location.latitude.toFixed(6)}</span>
+                    <span>Longitude: {location.longitude.toFixed(6)}</span>
+                  </div>
+                ) : (
+                  <span className="no-location">No location data</span>
+                )}
+              </div>
+              <button 
+                type="button" 
+                onClick={handleGetLocation} 
+                className="get-location-btn"
+                disabled={location.fetching}
+              >
+                <FaMapMarkerAlt className="location-icon" />
+                {location.fetching ? 'Getting location...' : 'Get my location'}
+              </button>
+            </div>
+            {location.error && <div className="location-error">{location.error}</div>}
           </div>
 
           <div className="form-group">
