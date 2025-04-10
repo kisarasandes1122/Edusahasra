@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MdEmail, MdLock } from 'react-icons/md';
+import { MdEmail, MdLock, MdLanguage } from 'react-icons/md';
 import './SchoolLogin.css';
 
 const SchoolLogin = () => {
@@ -15,6 +15,7 @@ const SchoolLogin = () => {
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [language, setLanguage] = useState('english'); // 'english' or 'sinhala'
   
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,21 +38,25 @@ const SchoolLogin = () => {
     }
   };
   
+  const handleLanguageChange = (e) => {
+    setLanguage(e.target.value);
+  };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     
     // Validate
     const newErrors = {};
     if (!formData.email) {
-      newErrors.email = 'Email address is required';
+      newErrors.email = language === 'english' ? 'Email address is required' : 'විද්‍යුත් තැපෑල ලිපිනය අවශ්‍යයි';
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = language === 'english' ? 'Please enter a valid email address' : 'වලංගු විද්‍යුත් තැපෑල ලිපිනයක් ඇතුළත් කරන්න';
     }
     
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = language === 'english' ? 'Password is required' : 'මුරපදය අවශ්‍යයි';
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = language === 'english' ? 'Password must be at least 6 characters' : 'මුරපදය අවම වශයෙන් අක්ෂර 6ක් විය යුතුය';
     }
     
     if (Object.keys(newErrors).length > 0) {
@@ -65,24 +70,50 @@ const SchoolLogin = () => {
       console.log('Form submitted:', formData);
       setIsSubmitting(false);
       // Here you would typically make an API call to authenticate
-      alert('Login attempt successful! In a real app, this would connect to your backend.');
+      alert(language === 'english' ? 
+        'Login attempt successful! In a real app, this would connect to your backend.' : 
+        'පිවිසීමේ උත්සාහය සාර්ථකයි! සැබෑ යෙදුමක, මෙය ඔබගේ පසුබිම් සේවාවට සම්බන්ධ වනු ඇත.');
     }, 1500);
+  };
+  
+  const translations = {
+    title: language === 'english' ? 'Welcome to Edusahasra' : 'Edusahasra වෙත සාදරයෙන් පිළිගනිමු',
+    subtitle: language === 'english' 
+      ? 'You can only log into the account, If your account approved.' 
+      : 'ඔබගේ ගිණුම අනුමත කර ඇත්නම් පමණක් ඔබට ගිණුමට පිවිසිය හැක',
+    emailLabel: language === 'english' ? 'Email Address' : 'විද්‍යුත් තැපෑල ලිපිනය',
+    passwordLabel: language === 'english' ? 'Password' : 'මුරපදය',
+    rememberMe: language === 'english' ? 'Remember Me' : 'මතක තබා ගන්න',
+    forgotPassword: language === 'english' ? 'Forgot Password?' : 'මුරපදය අමතක වුණාද?',
+    signIn: language === 'english' ? 'Sign in' : 'පිවිසෙන්න',
+    noAccount: language === 'english' ? 'Don\'t have an Account?' : 'ගිණුමක් නොමැතිද?',
+    signUp: language === 'english' ? 'Sign up' : 'ලියාපදිංචි වන්න',
+    emailPlaceholder: language === 'english' ? 'Enter your email address' : 'ඔබගේ විද්‍යුත් තැපෑල ලිපිනය ඇතුළත් කරන්න',
+    passwordPlaceholder: language === 'english' ? 'Enter your password' : 'ඔබගේ මුරපදය ඇතුළත් කරන්න',
+    selectLanguage: language === 'english' ? 'Select Language' : 'භාෂාව තෝරන්න'
   };
   
   return (
     <div className="login-container">
       <div className="login-form-wrapper">
-        <h1 className="login-title">Welcome to Edusahasra</h1>
-        <p className="login-subtitle">
-          You can only log into the account, If your account approved. | 
-          <span className="sinhala-text">ඔබගේ ගිණුම අනුමත කර ඇත්නම් පමණක් ඔබට ගිණුමට පිවිසිය හැක</span>
-        </p>
+        <div className="language-selector-container">
+          <div className="language-selector">
+            <MdLanguage className="language-icon" />
+            <select value={language} onChange={handleLanguageChange} className="language-select">
+              <option value="english">English</option>
+              <option value="sinhala">සිංහල</option>
+            </select>
+          </div>
+        </div>
+        
+        <h1 className="login-title">{translations.title}</h1>
+        <p className="login-subtitle">{translations.subtitle}</p>
         
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label">
               <MdEmail className="form-icon" />
-              Email Address | <span className="sinhala-text"> විද්‍යුත් තැපෑල ලිපිනය</span>
+              {translations.emailLabel}
               <span className="required-mark">*</span>
             </label>
             <input
@@ -91,7 +122,7 @@ const SchoolLogin = () => {
               className={`form-input ${errors.email ? 'input-error' : ''}`}
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter your email address"
+              placeholder={translations.emailPlaceholder}
             />
             {errors.email && <p className="error-message">{errors.email}</p>}
           </div>
@@ -99,7 +130,7 @@ const SchoolLogin = () => {
           <div className="form-group">
             <label className="form-label">
               <MdLock className="form-icon" />
-              Password |<span className="sinhala-text"> මුරපදය</span>
+              {translations.passwordLabel}
               <span className="required-mark">*</span>
             </label>
             <input
@@ -108,7 +139,7 @@ const SchoolLogin = () => {
               className={`form-input ${errors.password ? 'input-error' : ''}`}
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
+              placeholder={translations.passwordPlaceholder}
             />
             {errors.password && <p className="error-message">{errors.password}</p>}
           </div>
@@ -123,11 +154,9 @@ const SchoolLogin = () => {
                 checked={formData.rememberMe}
                 onChange={handleChange}
               />
-              <label htmlFor="rememberMe" className="remember-label">Remember Me</label>
+              <label htmlFor="rememberMe" className="remember-label">{translations.rememberMe}</label>
             </div>
-            <a href="#forgot" className="forgot-link">
-              Forgot Password? | <span className="sinhala-text"> මුරපදය අමතක වුණාද?</span>
-            </a>
+            <a href="#forgot" className="forgot-link">{translations.forgotPassword}</a>
           </div>
           
           <button 
@@ -135,17 +164,15 @@ const SchoolLogin = () => {
             className="signin-button"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Signing in...' : 'Sign in | පිවිසෙන්න'}
+            {isSubmitting ? 
+              (language === 'english' ? 'Signing in...' : 'පිවිසෙමින්...') : 
+              translations.signIn}
           </button>
         </form>
         
         <div className="signup-link-container">
           <p className="signup-text">
-            Don't have an Account? <a href="/school-register" className="signup-link">Sign up</a> | 
-            <span className="sinhala-text"> ගිණුමක් නොමැතිද? </span>
-            <a href="/school-register" className="signup-link">
-              <span className="sinhala-text"> ලියාපදිංචි වන්න</span>
-            </a>
+            {translations.noAccount} <a href="/school-register" className="signup-link">{translations.signUp}</a>
           </p>
         </div>
       </div>

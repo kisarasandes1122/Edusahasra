@@ -139,7 +139,7 @@
   
   .table-header {
     display: flex;
-    background-color: #eaeef3;
+    background-color: #eaf3eb;
     font-weight: 600;
     padding: 15px 0;
   }
@@ -147,7 +147,8 @@
   .table-row {
     display: flex;
     padding: 15px 0;
-    border-bottom: 1px solid #eaeef3;
+    border-bottom: 1px solid #eaf3eb ;
+    background-color: #eaf3eb;
   }
   
   .table-row:last-child {
