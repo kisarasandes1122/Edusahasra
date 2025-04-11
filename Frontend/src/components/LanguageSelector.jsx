@@ -10,7 +10,7 @@ const LanguageSelector = () => {
   };
 
   return (
-    <div className="language-selector">
+    <div className="Scl-language-selector">
       <select 
         value={currentLanguage} 
         onChange={handleLanguageChange} 

@@ -1,130 +1,192 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../../LanguageContext';
 import './ViewDonations.css';
 
 const ViewDonations = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
-
-  const upcomingDonations = [
+  const { translations } = useLanguage();
+  
+  // Initial state for donations that need confirmation
+  const [pendingConfirmations, setPendingConfirmations] = useState([
     {
       id: 1,
-      item: 'notebooks',
-      quantity: 30,
-      expectedDate: 'June 24, 2025',
-      status: 'in_transit'
+      type: 'Notebooks',
+      count: 30
     },
     {
       id: 2,
-      item: 'pens_pencils',
-      quantity: 40,
-      expectedDate: 'June 24, 2025',
-      status: 'preparing'
+      type: 'Pens/Pencils',
+      count: 40
     }
-  ];
-
-  const donationsToConfirm = [
+  ]);
+  
+  // Initial state for all donations
+  const [allDonations, setAllDonations] = useState([
     {
       id: 1,
-      item: 'notebooks',
-      quantity: 30
+      type: 'Notebooks',
+      requested: 60,
+      received: 30
     },
     {
       id: 2,
-      item: 'pens_pencils',
-      quantity: 40
-    }
-  ];
-
-  const allDonations = [
-    {
-      id: 1,
-      item: 'notebooks',
-      requestedAmount: 60,
-      receivedAmount: 30
-    },
-    {
-      id: 2,
-      item: 'pens_pencils',
-      requestedAmount: 60,
-      receivedAmount: 30
+      type: 'Pens/Pencils',
+      requested: 60,
+      received: 30
     },
     {
       id: 3,
-      item: 'crayons',
-      requestedAmount: 60,
-      receivedAmount: 30
+      type: 'Crayons',
+      requested: 60,
+      received: 30
     }
-  ];
-
-  const handleConfirm = (id) => {
-    console.log('Confirmed donation', id);
-    // Implement confirmation logic here
-  };
+  ]);
 
   const handleBack = () => {
-    navigate('/dashboard');
+    navigate('/Dashboard');
+  };
+  
+  // Function to handle donation confirmation
+  const handleConfirmDonation = (donationId) => {
+    // Find the donation to confirm
+    const donationToConfirm = pendingConfirmations.find(item => item.id === donationId);
+    
+    if (!donationToConfirm) return;
+    
+    // Update the allDonations state to reflect the confirmed donation
+    setAllDonations(prevDonations => {
+      return prevDonations.map(donation => {
+        // Update the matching donation type
+        if (donation.type === donationToConfirm.type) {
+          return {
+            ...donation,
+            received: donation.received + donationToConfirm.count
+          };
+        }
+        return donation;
+      });
+    });
+    
+    // Remove the confirmed donation from pending confirmations
+    setPendingConfirmations(prevConfirmations => 
+      prevConfirmations.filter(item => item.id !== donationId)
+    );
   };
 
   return (
-    <div className="view-donations-container">
-      <h1>{t('view_donations')}</h1>
-      
-      <button className="back-button" onClick={handleBack}>
-        <span>←</span> {t('back')}
-      </button>
+    <div className="donations-container">
+      <header className="donations-header">
+        <div className="donations-title">
+          <h1>{translations.view_donations}</h1>
+        </div>
+      </header>
+
+      <div className="donations-back-btn-container">
+        <button className="donations-back-btn" onClick={handleBack}>
+          <FaArrowLeft className="back-icon" />
+          <span>{translations.back}</span>
+        </button>
+      </div>
 
       <div className="donations-section">
-        <h2>{t('upcoming_donations')}</h2>
-        <div className="donations-list">
-          {upcomingDonations.map((donation) => (
-            <div key={donation.id} className="donation-item">
-              <div className="donation-details">
-                <p className="donation-quantity">{donation.quantity} {t(donation.item)}</p>
-                <p className="donation-date">{t('expected_to_receive')}: {donation.expectedDate}</p>
+        <h3 className="section-title">
+          {translations.upcoming_donations}
+        </h3>
+
+        <div className="donation-list">
+          <div className="donation-item">
+            <div className="donation-details">
+              <div className="donation-type">
+                {/* Keep the English name directly instead of translating */}
+                <span className="donation-count">30 Notebooks</span>
               </div>
-              <div className={`status-label ${donation.status}`}>
-                {t(donation.status)}
+              <div className="donation-date">
+                {translations.expected_to_receive}: {translations.june} 24, 2025
+              </div>
+            </div>
+            <div className="donation-status transit">
+              <span>{translations.in_transit}</span>
+            </div>
+          </div>
+
+          <div className="donation-item">
+            <div className="donation-details">
+              <div className="donation-type">
+                {/* Keep the English name directly instead of translating */}
+                <span className="donation-count">40 Pens/Pencils</span>
+              </div>
+              <div className="donation-date">
+                {translations.expected_to_receive}: {translations.june} 24, 2025
+              </div>
+            </div>
+            <div className="donation-status preparing">
+              <span>{translations.preparing}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {pendingConfirmations.length > 0 && (
+        <div className="donations-section">
+          <h3 className="section-title">
+            {translations.confirm_donations}
+          </h3>
+
+          <div className="donation-list">
+            {pendingConfirmations.map(donation => (
+              <div className="donation-item" key={donation.id}>
+                <div className="donation-details">
+                  <div className="donation-type">
+                    <span className="donation-count">
+                      {/* Simply use the type as is, without translation */}
+                      {donation.count} {donation.type}
+                    </span>
+                  </div>
+                </div>
+                <button 
+                  className="donation-confirm-btn"
+                  onClick={() => handleConfirmDonation(donation.id)}
+                >
+                  <span>{translations.confirm}</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="donations-section">
+        <h3 className="section-title">
+          {translations.all_donations}
+        </h3>
+
+        <div className="donation-list">
+          {allDonations.map(donation => (
+            <div className="donation-item all-donation" key={donation.id}>
+              <div className="all-donation-details">
+                <div className="donation-type">
+                  <span className="donation-name">
+                    {/* Use the English type directly */}
+                    {donation.type}
+                  </span>
+                </div>
+                <div className="donation-counts">
+                  <span>{translations.requested_amount}: {donation.requested} | </span>
+                  <span>{translations.received_amount}: {donation.received}</span>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="donations-section">
-        <h2>{t('confirm_donations')}</h2>
-        <div className="donations-list">
-          {donationsToConfirm.map((donation) => (
-            <div key={donation.id} className="donation-item">
-              <div className="donation-details">
-                <p className="donation-quantity">{donation.quantity} {t(donation.item)}</p>
-              </div>
-              <button 
-                className="confirm-button"
-                onClick={() => handleConfirm(donation.id)}
-              >
-                {t('confirm')}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="donations-section">
-        <h2>{t('all_donations')}</h2>
-        <div className="donations-list">
-          {allDonations.map((donation) => (
-            <div key={donation.id} className="donation-item">
-              <div className="donation-details">
-                <p className="donation-name">{t(donation.item)}</p>
-                <p className="donation-amounts">
-                  {t('requested_amount')}: {donation.requestedAmount} | {t('received_amount')}: {donation.receivedAmount}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="donations-contact">
+        <p style={{ textAlign: 'center', padding: '15px 0' }}>
+          <span>{translations.need_help_contact_us} </span>
+          <span className="contact-number">0789200730</span>
+        </p>
       </div>
     </div>
   );
