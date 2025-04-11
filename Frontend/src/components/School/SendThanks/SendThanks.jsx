@@ -1,8 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { FaArrowLeft, FaPlus, FaCheck, FaTimes } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../LanguageContext';
 import './SendThanks.css';
 
 const SendThanks = () => {
+  const navigate = useNavigate();
+  const { translations } = useLanguage();
+  
   const [selectedDonor, setSelectedDonor] = useState(0);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [customMessage, setCustomMessage] = useState('');
@@ -34,19 +39,19 @@ const SendThanks = () => {
   const thankYouMessages = [
     {
       id: 1,
-      message: 'Thank you for the notebooks and pencils! Our students will use them well. / පොතත් පෑන් සහ පැන්සල් දුන්න ස්තුතියි අපෙ ශිෂ්‍ය වට ගොඩක් භාවිතා කරනු ඇත.'
+      message: translations.thank_you_message_1
     },
     {
       id: 2,
-      message: 'These school supplies will make a real difference in our classrooms. Thank you for your kindness! / මෙම පාසල් ද්‍රව්‍ය අපගේ පන්ති කාමරවල ඇති වෙනසක් කරනු ඇත. ඔබගේ කාරුණාව ස්තුතියි!'
+      message: translations.thank_you_message_2
     },
     {
       id: 3,
-      message: 'We are grateful for your generous donation. Thank you for supporting our school! / ඔබගේ තෝරාගත් පරිත්‍යාගය ගැන ඔබට වෙතින්. අපගේ පාසැල සහයෝගය දැක්වීම ගැන ස්තුතියි!'
+      message: translations.thank_you_message_3
     },
     {
       id: 4,
-      message: 'Thank you very much for your support! These supplies will be a great help to us. / ඔබගේ සහයෝගයට බොහොම ස්තුතියි! මෙම සැපයුම් අපට ලොකු උදව්වක් වන ඇත.'
+      message: translations.thank_you_message_4
     }
   ];
 
@@ -112,11 +117,8 @@ const SendThanks = () => {
 
   const resetForm = () => {
     setCustomMessage('');
-
     setSelectedMessage(null);
-
     setIsCustomMessage(false);
-    
     setUploadedImages([]);
     setImagePreviews([]);
     
@@ -144,46 +146,39 @@ const SendThanks = () => {
     updatedDonors.splice(selectedDonor, 1);
     setAvailableDonors(updatedDonors);
     resetForm();
-    alert('Thank you message sent successfully!');
+    alert(translations.thank_you_sent_successfully);
+  };
+
+  const handleBack = () => {
+    navigate('/Dashboard');
   };
 
   return (
     <div className="send-thanks-container">
       <header className="send-thanks-header">
         <div className="send-thanks-title">
-          <h1 className="send-thanks-title-sinhala">ස්තුතිය ප්‍රකාශන්න</h1>
-          <h2 className="send-thanks-title-english">Send Thanks</h2>
+          <h1>{translations.send_thanks}</h1>
         </div>
       </header>
 
       <div className="send-thanks-content">
-        <a href="/dashboard" className="back-button">
+        <button className="back-button" onClick={handleBack}>
           <FaArrowLeft className="back-icon" />
-          <span>ආපසු</span>
-        </a>
+          <span>{translations.back}</span>
+        </button>
 
         <div className="instruction-box">
-          <p className="instruction-sinhala">
-            ඔබේ පාසලට සැපයුම් යැවූ පරිත්‍යාගශීලියෙකු තෝරන්න. ඔවුන්ට ස්තුති පණිවුඩයක් සහ 
-            ඡායාරූප යවන්න. ඔබගේ ස්තුතිය පරිත්‍යාගශීලීන් අගය කරන අතර තවත් සහයෝගීත්වය 
-            දිරිගන්වයි
-          </p>
-          <p className="instruction-english">
-            Choose a donor who sent supplies to your school. Send them a thank you message and photos. Your
-            thanks helps donors feel appreciated and encourages more support.
-          </p>
+          <p>{translations.send_thanks_instruction}</p>
         </div>
 
         {availableDonors.length > 0 ? (
           <div className="thankyou-form-container">
             <h3 className="form-heading">
-              <span className="heading-sinhala">පරිත්‍යාගශීලීන්ට ස්තුතිය යවන්න | </span>
-              <span className="heading-english">Send Thanks to Donors</span>
+              {translations.send_thanks_to_donors}
             </h3>
 
             <div className="donor-selection-section">
-              <p className="selection-heading-sinhala">ස්තුති කිරීමට අදහස පරිත්‍යාගශීලියෙකු තෝරන්න</p>
-              <p className="selection-heading-english">Select Donor to Thank:</p>
+              <p className="selection-heading">{translations.select_donor_to_thank}</p>
 
               <div className="donors-list">
                 {availableDonors.map((donor, index) => (
@@ -194,8 +189,8 @@ const SendThanks = () => {
                   >
                     <div className="donor-info">
                       <h4 className="donor-name">{donor.name}</h4>
-                      <p className="donor-donated">Donated: {donor.donated}</p>
-                      <p className="donor-date">Date: {donor.date}</p>
+                      <p className="donor-donated">{translations.donated}: {donor.donated}</p>
+                      <p className="donor-date">{translations.date}: {donor.date}</p>
                     </div>
                     <div className={`select-circle ${selectedDonor === index ? 'selected' : ''}`}>
                       {selectedDonor === index && <FaCheck className="check-icon" />}
@@ -206,8 +201,7 @@ const SendThanks = () => {
             </div>
 
             <div className="message-selection-section">
-              <p className="message-heading-sinhala">ස්තුතිය ප්‍රකාශ කරන්න</p>
-              <p className="message-heading-english">Say Thank You:</p>
+              <p className="message-heading">{translations.say_thank_you}</p>
 
               <div className="message-options">
                 {thankYouMessages.map((message, index) => (
@@ -230,7 +224,7 @@ const SendThanks = () => {
                   onClick={toggleCustomMessage}
                 >
                   <div className="message-content">
-                    <p className="message-text">Want to say something else? / තවත් මොකක්ද කියන්න කැමතිද?</p>
+                    <p className="message-text">{translations.want_to_say_something_else}</p>
                   </div>
                   <div className={`select-circle ${isCustomMessage ? 'selected' : ''}`}>
                     {isCustomMessage && <FaCheck className="check-icon" />}
@@ -242,12 +236,12 @@ const SendThanks = () => {
                 <div className="custom-message-container">
                   <div className="custom-message-inputs">
                     <div className="input-group">
-                      <label className="input-label">Your message / ඔබගේ පණිවිඩය:</label>
+                      <label className="input-label">{translations.your_message}:</label>
                       <textarea 
                         className="custom-message-textarea"
                         value={customMessage}
                         onChange={(e) => setCustomMessage(e.target.value)}
-                        placeholder="Type your message here... / ඔබගේ පණිවිඩය මෙහි ලියන්න..."
+                        placeholder={translations.type_your_message_here}
                       />
                     </div>
                   </div>
@@ -273,8 +267,7 @@ const SendThanks = () => {
               >
                 <FaPlus className="plus-icon" />
                 <div className="button-text">
-                  <span className="add-button-text-sinhala">ඡායාරූප එකතු කරන්න (විකල්ප)</span>
-                  <span className="add-button-text-english">Add Photos (Optional)</span>
+                  {translations.add_photos_optional}
                 </div>
               </div>
 
@@ -283,7 +276,7 @@ const SendThanks = () => {
                   {imagePreviews.map((preview, index) => (
                     <div key={index} className="image-preview-container">
                       <div className="image-preview-header">
-                        <span className="preview-text">Photo {index + 1}</span>
+                        <span className="preview-text">{translations.photo} {index + 1}</span>
                         <button className="remove-image-button" onClick={() => removeImage(index)}>
                           <FaTimes />
                         </button>
@@ -300,23 +293,22 @@ const SendThanks = () => {
               onClick={handleSendThanks}
               disabled={!((selectedMessage !== null || (isCustomMessage && customMessage)))}
             >
-              <span className="button-text-sinhala">ස්තුතිය යවන්න</span>
-              <span className="button-text-english">Send Thank You</span>
+              {translations.send_thank_you}
             </button>
           </div>
         ) : (
           <div className="no-donors-message">
-            <h3>All donors have been thanked!</h3>
-            <p>There are no more donors to thank at this time.</p>
-            <a href="/dashboard" className="return-dashboard-button">
-              Return to Dashboard
-            </a>
+            <h3>{translations.all_donors_thanked}</h3>
+            <p>{translations.no_more_donors}</p>
+            <button onClick={() => navigate('/dashboard')} className="return-dashboard-button">
+              {translations.return_to_dashboard}
+            </button>
           </div>
         )}
 
         <div className="support-contact">
           <p>
-            <span className="contact-sinhala">උදව් අවශ්‍යද? අපිට කථා කරන්න : </span>
+            <span>{translations.need_help_contact_us}</span>
             <span className="contact-number">0789200730</span>
           </p>
         </div>

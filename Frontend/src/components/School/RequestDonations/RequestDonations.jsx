@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { FaArrowLeft, FaPlus, FaMinus, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../LanguageContext';
 import './RequestDonations.css';
 
 const RequestDonations = () => {
   const navigate = useNavigate();
+  const { translations } = useLanguage();
   
   // Minimum threshold for all donations
   const MINIMUM_THRESHOLD = 25;
@@ -133,31 +135,27 @@ const RequestDonations = () => {
   return (
     <div className="donations-container">
       <div className="donations-header">
-        <h1>සැපයුම් ඉල්ලන්න Request Donations</h1>
+        <h1>{translations.request_donations}</h1>
       </div>
 
       <div className="donations-content">
         <div className="back-button-container">
           <button className="back-button" onClick={handleBack}>
             <FaArrowLeft className="back-icon" />
-            <span className="back-text">ආපසු</span>
+            <span className="back-text">{translations.back}</span>
           </button>
         </div>
 
         <div className="donations-form-container">
           <div className="form-header">
             <h2 className="form-title">
-              සැපයුම් ඉල්ලන්න | Ask for Supplies
+              {translations.request_supplies}
             </h2>
             <p className="form-subtitle">
-              කරුණාකර ඔබගේ අවශ්‍ය සියලුම සැපයුම් තෝරන්න
-            </p>
-            <p className="form-subtitle-english">
-              Please select all the supplies for your school
+              {translations.please_select_supplies}
             </p>
             <p className="form-min-threshold" style={{ color: '#666', marginTop: '5px' }}>
-              <span className="min-threshold-sinhala">අවම ප්‍රමාණය: </span>
-              <span className="min-threshold-english">Minimum quantity: {MINIMUM_THRESHOLD}</span>
+              {translations.minimum_quantity} {MINIMUM_THRESHOLD}
             </p>
           </div>
 
@@ -231,21 +229,19 @@ const RequestDonations = () => {
                 <FaPlus className="plus-icon" />
               </div>
               <div className="add-text">
-                <span className="add-text-sinhala">වෙනත් අයිතම එකතු කරන්න</span>
-                <span className="add-text-english">Add Other Items</span>
+                {translations.add_other_items}
               </div>
             </button>
           </div>
 
           <button className="submit-button">
-            <span className="submit-text-sinhala">ඉල්ලීම යවන්න</span>
-            <span className="submit-text-english">Send Request</span>
+            {translations.send_request}
           </button>
         </div>
 
         <div className="scl-contact-info">
           <p>
-            <span className="contact-text-sinhala">උදව් අවශ්‍යද? අපිට කථා කරන්න : </span>
+            <span>{translations.need_help_contact_us}</span>
             <span className="contact-number">0789200730</span>
           </p>
         </div>

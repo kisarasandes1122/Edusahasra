@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { FaArrowLeft, FaPlus, FaMapMarkerAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../LanguageContext';
 import './EditProfile.css';
 
 const EditProfile = () => {
   const navigate = useNavigate();
+  const { translations } = useLanguage();
 
   const [schoolInfo, setSchoolInfo] = useState({
     name: 'Sri Sumangala College',
@@ -104,23 +106,23 @@ const EditProfile = () => {
     <div className="profile-container">
       <header className="profile-header">
         <div className="profile-title">
-          <h1 className="profile-title-text">My Profile</h1>
+          <h1 className="profile-title-text">{translations.my_profile}</h1>
         </div>
       </header>
 
       <div className="profile-back-btn-container">
         <button className="profile-back-btn" onClick={handleBack}>
           <FaArrowLeft className="back-icon" />
-          <span>Back</span>
+          <span>{translations.back}</span>
         </button>
       </div>
 
       <div className="profile-section">
-        <h3 className="section-title">School Information</h3>
+        <h3 className="section-title">{translations.school_information}</h3>
 
         <div className="profile-form">
           <div className="form-group">
-            <label className="form-label">School Name</label>
+            <label className="form-label">{translations.school_name}</label>
             <input
               type="text"
               name="name"
@@ -131,7 +133,7 @@ const EditProfile = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">School Address</label>
+            <label className="form-label">{translations.school_address}</label>
             <input
               type="text"
               name="address"
@@ -142,7 +144,7 @@ const EditProfile = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">School Location</label>
+            <label className="form-label">{translations.school_location}</label>
             <div className="location-container">
               <div className="location-display">
                 {location.latitude && location.longitude ? (
@@ -161,14 +163,14 @@ const EditProfile = () => {
                 disabled={location.fetching}
               >
                 <FaMapMarkerAlt className="location-icon" />
-                {location.fetching ? 'Getting location...' : 'Get my location'}
+                {location.fetching ? 'Getting location...' : translations.get_my_location}
               </button>
             </div>
             {location.error && <div className="location-error">{location.error}</div>}
           </div>
 
           <div className="form-group">
-            <label className="form-label">School Telephone Number</label>
+            <label className="form-label">{translations.school_telephone_number}</label>
             <input
               type="text"
               name="telephone"
@@ -179,7 +181,7 @@ const EditProfile = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Description about the School</label>
+            <label className="form-label">{translations.description_about_the_school}</label>
             <textarea
               name="description"
               value={schoolInfo.description}
@@ -192,11 +194,11 @@ const EditProfile = () => {
       </div>
 
       <div className="profile-section">
-        <h3 className="section-title">Contact Information</h3>
+        <h3 className="section-title">{translations.contact_information}</h3>
 
         <div className="profile-form">
           <div className="form-group">
-            <label className="form-label">Name</label>
+            <label className="form-label">{translations.name}</label>
             <input
               type="text"
               name="name"
@@ -207,7 +209,7 @@ const EditProfile = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Email Address</label>
+            <label className="form-label">{translations.email_address}</label>
             <input
               type="email"
               name="email"
@@ -218,7 +220,7 @@ const EditProfile = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Telephone Number</label>
+            <label className="form-label">{translations.telephone_number}</label>
             <input
               type="text"
               name="telephone"
@@ -235,7 +237,7 @@ const EditProfile = () => {
           <label htmlFor="school-images" className="image-upload-label">
             <FaPlus className="upload-icon" />
             <div className="upload-text">
-              <span className="upload-text-main">Add School Pictures</span>
+              <span className="upload-text-main">{translations.add_school_pictures}</span>
             </div>
           </label>
           <input
@@ -261,13 +263,13 @@ const EditProfile = () => {
 
       <div className="profile-save-container">
         <button className="profile-save-btn" onClick={handleSaveChanges}>
-          <span className="save-text">Save Changes</span>
+          <span className="save-text">{translations.save_changes}</span>
         </button>
       </div>
 
       <div className="profile-contact">
         <p>
-          <span className="contact-text">Need help? Contact us: </span>
+          <span className="contact-text">{translations.need_help_contact_us}</span>
           <span className="contact-number">0789200730</span>
         </p>
       </div>
