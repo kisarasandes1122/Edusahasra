@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaSignOutAlt, FaEye, FaHandHoldingHeart, FaThumbsUp, FaUserCircle } from 'react-icons/fa';
-import { useLanguage } from '../../LanguageContext';
+import { useLanguage } from '../../LanguageSelector/LanguageContext';
 import './SchoolDashboard.css';
 
 const SchoolDashboard = () => {

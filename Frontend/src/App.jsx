@@ -15,8 +15,8 @@ import ViewDonations from './components/School/ViewDonations/ViewDonations';
 import RequestDonations from './components/School/RequestDonations/RequestDonations';
 import SendThanks from './components/School/SendThanks/SendThanks';
 import EditProfile from './components/School/EditProfile/EditProfile';
-import { LanguageProvider } from './components/LanguageContext';
-import LanguageSelector from './components/LanguageSelector';
+import { LanguageProvider } from './components/LanguageSelector/LanguageContext';
+import LanguageSelector from './components/LanguageSelector/LanguageSelector';
 
 
 const DonorLayout = () => {

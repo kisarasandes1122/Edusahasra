@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaArrowLeft, FaPlus, FaMapMarkerAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '../../LanguageContext';
+import { useLanguage } from '../../LanguageSelector/LanguageContext';
 import './EditProfile.css';
 
 const EditProfile = () => {
