@@ -58,17 +58,17 @@
     margin: 4rem 10rem;
   }
   
-  .stat-card {
+  .h-stat-card {
     text-align: center;
   }
   
-  .stat-card .w-icon {
+  .h-stat-card .w-icon {
     font-size: 2rem;
     margin-bottom: 1rem;
     color: #000000;
   }
   
-  .stat-card h3 {
+  .h-stat-card h3 {
     font-size: 2rem;
     margin-bottom: 0.5rem;
     color: #000000;
@@ -76,7 +76,7 @@
 
   }
   
-  .stat-card p {
+  .h-stat-card p {
     color: #000000;
     font-size: 1.1rem;
     font-weight: 500;

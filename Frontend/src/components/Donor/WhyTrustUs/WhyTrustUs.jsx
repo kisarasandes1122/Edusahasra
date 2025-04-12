@@ -65,7 +65,7 @@ const WhyTrustUs = () => {
         
         <div className="stats-container">
             {stats.map((stat, index) => (
-            <div key={index} className="stat-card">
+            <div key={index} className="h-stat-card">
                 <div className="w-icon">{stat.icon}</div>
                 <h3>{stat.number}</h3>
                 <p>{stat.label}</p>
