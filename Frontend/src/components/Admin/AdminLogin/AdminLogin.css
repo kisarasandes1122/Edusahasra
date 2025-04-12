@@ -1,0 +1,186 @@
+.edusahasra-admin-login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .edusahasra-admin-login-card {
+    width: 400px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+  }
+  
+  .edusahasra-admin-login-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .edusahasra-admin-login-logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+  }
+  
+  .edusahasra-admin-login-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #343a40;
+    margin: 0 0 10px 0;
+  }
+  
+  .edusahasra-admin-login-subtitle {
+    font-size: 14px;
+    color: #6c757d;
+    margin: 0;
+  }
+  
+  .edusahasra-admin-login-alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  
+  .edusahasra-admin-login-form {
+    margin-bottom: 20px;
+  }
+  
+  .edusahasra-admin-login-form-group {
+    margin-bottom: 20px;
+  }
+  
+  .edusahasra-admin-login-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 8px;
+  }
+  
+  .edusahasra-admin-login-input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .edusahasra-admin-login-input-group:focus-within {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+  }
+  
+  .edusahasra-admin-login-input-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-right: 1px solid #ced4da;
+    height: 100%;
+  }
+  
+  .edusahasra-admin-login-input {
+    flex: 1;
+    border: none;
+    padding: 12px 15px;
+    font-size: 14px;
+    outline: none;
+    color: #495057;
+  }
+  
+  .edusahasra-admin-login-input::placeholder {
+    color: #adb5bd;
+  }
+  
+  .edusahasra-admin-login-input-error {
+    border-color: #dc3545;
+  }
+  
+  .edusahasra-admin-login-error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 0;
+  }
+  
+  .edusahasra-admin-login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .edusahasra-admin-login-remember {
+    display: flex;
+    align-items: center;
+  }
+  
+  .edusahasra-admin-login-checkbox {
+    margin-right: 8px;
+  }
+  
+  .edusahasra-admin-login-checkbox-label {
+    font-size: 14px;
+    color: #495057;
+  }
+  
+  .edusahasra-admin-login-forgot-link {
+    font-size: 14px;
+    color: #0d6efd;
+    text-decoration: none;
+  }
+  
+  .edusahasra-admin-login-forgot-link:hover {
+    text-decoration: underline;
+  }
+  
+  .edusahasra-admin-login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .edusahasra-admin-login-button:hover {
+    background-color: #0b5ed7;
+  }
+  
+  .edusahasra-admin-login-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+  
+  .edusahasra-admin-login-footer {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .edusahasra-admin-login-help-text {
+    font-size: 13px;
+    color: #6c757d;
+    margin: 0;
+  }
+  
+  .edusahasra-admin-login-help-link {
+    color: #0d6efd;
+    text-decoration: none;
+  }
+  
+  .edusahasra-admin-login-help-link:hover {
+    text-decoration: underline;
+  }

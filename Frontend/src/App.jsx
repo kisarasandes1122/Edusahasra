@@ -17,6 +17,7 @@ import SendThanks from './components/School/SendThanks/SendThanks';
 import EditProfile from './components/School/EditProfile/EditProfile';
 import { LanguageProvider } from './components/LanguageSelector/LanguageContext';
 import LanguageSelector from './components/LanguageSelector/LanguageSelector';
+import AdminLogin from './components/Admin/AdminLogin/AdminLogin';
 import AdminDashboard from './components/Admin/AdminDashboard/AdminDashboard';
 import AdminNavigation from './components/Admin/AdminNavigation/AdminNavigation';
 import SchoolVerification from './components/Admin/SchoolVerification/SchoolVerification';
@@ -88,6 +89,8 @@ const App = () => {
           <Route path="/send-thanks" element={<SendThanks />} />
           <Route path="/edit-profile" element={<EditProfile />} />
         </Route>
+
+        <Route path="/admin-login" element={<AdminLogin />} />
 
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminDashboard />} />
