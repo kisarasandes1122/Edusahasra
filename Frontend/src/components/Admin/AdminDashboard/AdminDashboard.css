@@ -20,8 +20,10 @@
     padding: 5px;
   }
   
-  .edusahasra-menu-icon {
-    font-size: 22px;
+  .edusahasra-header-title {
+    font-size: 18px; 
+    font-weight: 600;
+    color: #343a40;
   }
   
   .edusahasra-user-profile {

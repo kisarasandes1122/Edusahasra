@@ -23,7 +23,7 @@ const AdminDashboard = () => {
     { 
       id: 3, 
       title: 'Total Donations', 
-      value: '$1.2M', 
+      value: '1000', 
       icon: <FaBook className="edusahasra-stat-icon-element" />, 
       change: { value: '15%', direction: 'up', label: ' from last month.' } 
     },
@@ -47,14 +47,6 @@ const AdminDashboard = () => {
     },
     { 
       id: 2, 
-      icon: '$', 
-      type: 'donation', 
-      title: 'New donation received: $5,000',
-      time: '3 hours ago',
-      action: { label: 'View', type: 'success' }
-    },
-    { 
-      id: 3, 
       icon: <FaUsers />, 
       type: 'donor', 
       title: 'New donor registration: Sarah Johnson',
@@ -71,14 +63,14 @@ const AdminDashboard = () => {
 
   return (
     <div className="edusahasra-dashboard">
-      <header className="edusahasra-dashboard-header">
-        <button className="edusahasra-menu-button">
-          <RiMenuLine className="edusahasra-menu-icon" />
-        </button>
-        <div className="edusahasra-user-profile">
-          <span className="edusahasra-user-name">John Admin</span>
-        </div>
-      </header>
+        <header className="edusahasra-dashboard-header">
+            
+            <span className="edusahasra-header-title">Admin Dashboard</span>
+
+            <div className="edusahasra-user-profile">
+                <span className="edusahasra-user-name">John Admin</span>
+            </div>
+        </header>
 
       <div className="edusahasra-stats-container">
         {stats.map(stat => (

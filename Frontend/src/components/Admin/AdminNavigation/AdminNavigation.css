@@ -11,13 +11,14 @@
   .edusahasra-logo-container {
     display: flex;
     align-items: center;
-    padding: 20px;
+    justify-content: center;
+    padding: 10px;
     border-bottom: 1px solid #e9ecef;
   }
   
   .edusahasra-logo {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
   }
   
   .edusahasra-brand-name {
