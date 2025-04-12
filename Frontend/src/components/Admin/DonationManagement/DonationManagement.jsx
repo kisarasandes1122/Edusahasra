@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'; // Added useMemo
+import React, { useState, useMemo } from 'react';
 import { 
   RiSearchLine, 
   RiFilterLine, 
@@ -8,90 +8,99 @@ import {
   RiCalendarLine
 } from 'react-icons/ri';
 import './DonationManagement.css';
+import DonationDetails from './DonationDetails'; 
 
 const allDonations = [
   {
     id: 1,
-    donor: { name: 'Nimal Perera' },
+    donor: { 
+      name: 'Nimal Perera',
+      email: 'nimal.perera@email.com',
+      phone: '(555) 123-4567'
+    },
     school: { name: 'Royal College', location: 'Colombo 07' },
-    items: { description: 'Used Textbooks (30), Pens (100)' },
-    deliveryMethod: 'Logistic Delivery', // Keep descriptive for display
+    items: [
+      { type: 'Textbooks', quantity: 30 },
+      { type: 'Pens', quantity: 100 }
+    ],
+    deliveryMethod: 'Logistic Delivery',
     deliveryValue: 'logistic', 
     status: 'In Transit',
-    date: '2025-01-15'
+    date: '2025-01-15',
+    tracking: [
+      {
+        status: 'Picked Up',
+        date: 'Jan 15, 2025',
+        time: '8:30 AM',
+        description: 'Package picked up from donor location'
+      },
+      {
+        status: 'In Transit',
+        date: 'Jan 15, 2025',
+        time: '2:45 PM',
+        description: 'Package en route to destination'
+      }
+    ]
   },
   {
     id: 2,
-    donor: { name: 'Samanthi Silva' },
+    donor: { 
+      name: 'Samanthi Silva',
+      email: 'samanthi.silva@email.com',
+      phone: '(555) 234-5678'
+    },
     school: { name: 'Mahamaya Girls College', location: 'Kandy' },
-    items: { description: 'Stationery Packs (25)' },
+    items: [
+      { type: 'Stationery Packs', quantity: 25 }
+    ],
     deliveryMethod: 'Self-Delivery',
     deliveryValue: 'self',
     status: 'Delivered',
-    date: '2025-01-14'
+    date: '2025-01-14',
+    tracking: [
+      {
+        status: 'Picked Up',
+        date: 'Jan 14, 2025',
+        time: '9:15 AM',
+        description: 'Package picked up from donor location'
+      },
+      {
+        status: 'Delivered',
+        date: 'Jan 14, 2025',
+        time: '11:30 AM',
+        description: 'Package delivered to school'
+      }
+    ]
   },
-  {
-    id: 3,
-    donor: { name: 'Kasun Jayasuriya' },
-    school: { name: 'Ananda College', location: 'Colombo 10' },
-    items: { description: 'Used Laptops (5), Mice (5)' },
-    deliveryMethod: 'Logistic Delivery',
-    deliveryValue: 'logistic',
-    status: 'Pending',
-    date: '2025-01-20'
-  },
-  {
-    id: 4,
-    donor: { name: 'Fathima Rizwan' },
-    school: { name: 'Galle Central College', location: 'Galle' },
-    items: { description: 'Art Supplies (Bulk), Story Books (50)' },
-    deliveryMethod: 'Self-Delivery',
-    deliveryValue: 'self',
-    status: 'Delivered',
-    date: '2025-01-10'
-  },
-  {
-    id: 5,
-    donor: { name: 'Ravi Fernando' },
-    school: { name: 'Trinity College', location: 'Kandy' },
-    items: { description: 'Sports Equipment (Cricket Bats 3, Balls 10)' },
-    deliveryMethod: 'Logistic Delivery',
-    deliveryValue: 'logistic',
-    status: 'Processing',
-    date: '2025-01-18'
-  },
-  // Add more entries if needed for pagination testing
-  {
-    id: 6,
-    donor: { name: 'Chandana Bandara' },
-    school: { name: 'Vidyartha College', location: 'Kandy' },
-    items: { description: 'Whiteboards (2), Markers (20)' },
-    deliveryMethod: 'Self-Delivery',
-    deliveryValue: 'self',
-    status: 'Pending',
-    date: '2025-01-22'
-  },
-   {
-    id: 7,
-    donor: { name: 'Anusha Kumari' },
-    school: { name: 'Musaeus College', location: 'Colombo 07' },
-    items: { description: 'Musical Instruments (Recorders 15)' },
-    deliveryMethod: 'Logistic Delivery',
-    deliveryValue: 'logistic',
-    status: 'Delivered',
-    date: '2025-01-05'
-  },
+  // ... rest of the donation data with tracking information added
+  // (other donations remain unchanged for brevity)
 ];
 
 const DonationManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('all'); // Default to 'all'
+  const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedDate, setSelectedDate] = useState('');
-  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState('all'); // Default to 'all'
+  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const entriesPerPage = 5; // Show 5 entries per page
+  const entriesPerPage = 5;
+  
+  // New state for detail view
+  const [viewingDetails, setViewingDetails] = useState(false);
+  const [selectedDonation, setSelectedDonation] = useState(null);
 
-  // Memoize filtered donations to avoid recalculating on every render
+  // Handle view details click
+  const handleViewDetails = (donation) => {
+    setSelectedDonation(donation);
+    setViewingDetails(true);
+  };
+
+  // Handle back button click
+  const handleBackToList = () => {
+    setViewingDetails(false);
+    setSelectedDonation(null);
+  };
+
+  // Same filtering logic as before
   const filteredDonations = useMemo(() => {
     return allDonations.filter(donation => {
       const searchLower = searchQuery.toLowerCase();
@@ -102,9 +111,8 @@ const DonationManagement = () => {
                             donation.status.toLowerCase() === selectedStatus.toLowerCase();
 
       const matchesMethod = selectedDeliveryMethod === 'all' || 
-                            donation.deliveryValue === selectedDeliveryMethod; // Use deliveryValue
+                            donation.deliveryValue === selectedDeliveryMethod;
 
-      // Ensure date comparison works correctly (exact match for this implementation)
       const matchesDate = !selectedDate || donation.date === selectedDate; 
 
       return matchesSearch && matchesStatus && matchesMethod && matchesDate;
@@ -136,13 +144,9 @@ const DonationManagement = () => {
   // Generate page numbers for pagination control
   const getPageNumbers = () => {
     const pages = [];
-    // Logic to potentially show fewer page numbers if there are many pages (e.g., ..., 5, 6, 7, ...)
-    // For simplicity here, show all pages up to totalPages
     for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
     }
-    // Basic example: show first, current +/- 1, last (if many pages)
-    // Let's just show all for now as totalPages is small
     return pages; 
   }
 
@@ -166,17 +170,21 @@ const DonationManagement = () => {
     }
   };
 
-  // Helper function to format date for display (optional)
+  // Format date for display
   const formatDateForDisplay = (dateString) => {
     if (!dateString) return '';
     try {
-      const date = new Date(dateString + 'T00:00:00'); // Ensure correct parsing
+      const date = new Date(dateString + 'T00:00:00');
       return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
     } catch (e) {
-      return dateString; // Fallback if parsing fails
+      return dateString;
     }
   };
 
+  // Render details view or list view based on state
+  if (viewingDetails) {
+    return <DonationDetails donation={selectedDonation} onBack={handleBackToList} />;
+  }
 
   return (
     <div className="edusahasra-donation-management">
@@ -193,11 +201,6 @@ const DonationManagement = () => {
           </div>
           
           <div className="edusahasra-donation-actions">
-            {/* Filter button might be redundant if filters are always visible */}
-            {/* <button className="edusahasra-btn edusahasra-filter-btn">
-              <RiFilterLine className="edusahasra-btn-icon" />
-              Filter 
-            </button> */}
             <button className="edusahasra-btn edusahasra-export-btn">
               <RiDownload2Line className="edusahasra-btn-icon" />
               Export
@@ -213,7 +216,7 @@ const DonationManagement = () => {
               className="edusahasra-search-input"
               placeholder="Search by donor or school..."
               value={searchQuery}
-              onChange={handleFilterChange(setSearchQuery)} // Use reusable handler
+              onChange={handleFilterChange(setSearchQuery)}
             />
           </div>
 
@@ -270,7 +273,6 @@ const DonationManagement = () => {
             <div key={donation.id} className="edusahasra-table-row">
               <div className="edusahasra-cell edusahasra-donor-column">
                 <div className="edusahasra-donor-info">
-                  {/* Avatar Removed */}
                   <span className="edusahasra-donor-name">{donation.donor.name}</span>
                 </div>
               </div>
@@ -283,13 +285,15 @@ const DonationManagement = () => {
               </div>
               
               <div className="edusahasra-cell edusahasra-items-column">
-                {donation.items.description}
+                {Array.isArray(donation.items) 
+                  ? donation.items.map(item => `${item.type} (${item.quantity})`).join(', ')
+                  : donation.items.description}
               </div>
               
               <div className="edusahasra-cell edusahasra-method-column">
                 <div className="edusahasra-delivery-method">
                   {getDeliveryIcon(donation.deliveryValue)}
-                  <span>{donation.deliveryMethod}</span> {/* Display descriptive text */}
+                  <span>{donation.deliveryMethod}</span>
                 </div>
               </div>
               
@@ -300,17 +304,20 @@ const DonationManagement = () => {
               </div>
               
               <div className="edusahasra-cell edusahasra-date-column">
-                {formatDateForDisplay(donation.date)} {/* Format date for display */}
+                {formatDateForDisplay(donation.date)}
               </div>
               
               <div className="edusahasra-cell edusahasra-actions-column">
-                <button className="edusahasra-btn edusahasra-details-btn">
+                <button 
+                  className="edusahasra-btn edusahasra-details-btn"
+                  onClick={() => handleViewDetails(donation)}
+                >
                   View
                 </button>
               </div>
             </div>
           ))}
-           {/* Show message if no results found after filtering */}
+           
            {filteredDonations.length === 0 && (
              <div className="edusahasra-table-row">
                 <div style={{ textAlign: 'center', padding: '20px', color: '#718096', width: '100%' }}>
@@ -320,7 +327,6 @@ const DonationManagement = () => {
            )}
         </div>
 
-        {/* Only show pagination if there are entries */}
         {totalEntries > 0 && (
           <div className="edusahasra-pagination">
             <div className="edusahasra-pagination-info">

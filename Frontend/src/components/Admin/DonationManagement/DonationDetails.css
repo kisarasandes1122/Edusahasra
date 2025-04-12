@@ -1,0 +1,195 @@
+/* DonationDetails.css */
+
+.edusahasra-donation-details-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 24px;
+  }
+  
+  .edusahasra-back-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #4a5568;
+    padding: 8px 0;
+  }
+  
+  .edusahasra-back-button:hover {
+    color: #2d3748;
+  }
+  
+  .edusahasra-donation-details-summary {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .edusahasra-details-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .edusahasra-details-heading h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: #2d3748;
+  }
+  
+  .edusahasra-details-sections {
+    display: flex;
+    gap: 48px;
+  }
+  
+  .edusahasra-details-section {
+    flex: 1;
+  }
+  
+  .edusahasra-donor-details h3,
+  .edusahasra-school-details h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #2d3748;
+  }
+  
+  .edusahasra-donor-details p,
+  .edusahasra-school-details p {
+    font-size: 14px;
+    color: #4a5568;
+    margin: 4px 0;
+  }
+  
+  .edusahasra-donation-items-section {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .edusahasra-donation-items-section h3,
+  .edusahasra-tracking-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+    color: #2d3748;
+  }
+  
+  .edusahasra-donation-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .edusahasra-donation-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background-color: #f7fafc;
+    border-radius: 8px;
+  }
+  
+  .edusahasra-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #e2e8f0;
+    font-size: 20px;
+  }
+  
+  .edusahasra-item-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .edusahasra-item-name {
+    font-weight: 500;
+    font-size: 16px;
+    color: #2d3748;
+  }
+  
+  .edusahasra-item-quantity {
+    font-size: 14px;
+    color: #718096;
+  }
+  
+  .edusahasra-tracking-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .edusahasra-tracking-event {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .edusahasra-tracking-status {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .edusahasra-tracking-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #ebf8ff;
+    color: #3182ce;
+    font-size: 16px;
+  }
+  
+  .edusahasra-tracking-status-info {
+    flex: 1;
+  }
+  
+  .edusahasra-tracking-status-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #2d3748;
+  }
+  
+  .edusahasra-tracking-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #718096;
+    margin-bottom: 8px;
+  }
+  
+  .edusahasra-tracking-description {
+    font-size: 14px;
+    color: #4a5568;
+    margin: 0;
+  }
+  
+  /* Connect timeline events with a line */
+  .edusahasra-tracking-event:not(:last-child) .edusahasra-tracking-status::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    left: 16px;
+    height: calc(100% - 32px);
+    width: 2px;
+    background-color: #e2e8f0;
+  }
+  
+  .edusahasra-tracking-status {
+    position: relative;
+  }
