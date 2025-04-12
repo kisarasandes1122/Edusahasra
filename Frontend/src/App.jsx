@@ -17,6 +17,12 @@ import SendThanks from './components/School/SendThanks/SendThanks';
 import EditProfile from './components/School/EditProfile/EditProfile';
 import { LanguageProvider } from './components/LanguageSelector/LanguageContext';
 import LanguageSelector from './components/LanguageSelector/LanguageSelector';
+import AdminDashboard from './components/Admin/AdminDashboard/AdminDashboard';
+import AdminNavigation from './components/Admin/AdminNavigation/AdminNavigation';
+import SchoolVerification from './components/Admin/SchoolVerification/SchoolVerification';
+import DonationManagement from './components/Admin/DonationManagement/DonationManagement';
+import AnalyticsReports from './components/Admin/AnalyticsReports/AnalyticsReports';
+import AdminSettings from './components/Admin/AdminSettings/AdminSettings';
 
 
 const DonorLayout = () => {
@@ -49,6 +55,17 @@ const SchoolLayout = () => {
   );
 };
 
+const AdminLayout = () => {
+  return (
+    <div className="edusahasra-app">
+      <AdminNavigation />
+      <main className="edusahasra-main-content">
+        <Outlet />
+      </main>
+    </div>
+  );
+};
+
 const App = () => {
   return (
     <Router>
@@ -70,6 +87,14 @@ const App = () => {
           <Route path="/request-donations" element={<RequestDonations />} />
           <Route path="/send-thanks" element={<SendThanks />} />
           <Route path="/edit-profile" element={<EditProfile />} />
+        </Route>
+
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/school-verification" element={<SchoolVerification />} />
+          <Route path="/admin/donation-management" element={<DonationManagement />} />
+          <Route path="/admin/analytics-reports" element={<AnalyticsReports />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
         </Route>
       </Routes>
     </Router>

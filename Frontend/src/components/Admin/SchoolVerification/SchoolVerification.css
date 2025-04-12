@@ -1,0 +1,508 @@
+
+.sv-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f5f7fa; 
+    min-height: 100vh;
+    color: #333; 
+}
+
+.sv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e8ecf1; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.sv-header-left {
+    display: flex;
+    align-items: center;
+}
+
+.sv-menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 20px;
+    color: #616671; 
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sv-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333; 
+    margin: 0;
+}
+
+.sv-header-right {
+    display: flex;
+    align-items: center;
+}
+
+.sv-user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.sv-username {
+    font-size: 14px;
+    color: #4b5563; 
+}
+
+
+.sv-content {
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 24px;
+}
+
+.sv-page-header {
+    margin-bottom: 24px;
+}
+
+.sv-page-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1f2937; 
+    margin: 0 0 8px 0;
+}
+
+.sv-page-subtitle {
+    font-size: 14px;
+    color: #6b7280; 
+    margin: 0;
+}
+
+/* Filters */
+.sv-filters {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 16px; 
+    margin-bottom: 24px;
+}
+
+.sv-search-box {
+    position: relative;
+    flex-grow: 1; 
+    min-width: 250px; 
+}
+
+.sv-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af; 
+    pointer-events: none; 
+}
+
+.sv-search-input {
+    width: 100%;
+    padding: 10px 10px 10px 40px; 
+    border: 1px solid #d1d5db; /* Standard border */
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s; /* Smooth transitions */
+    box-sizing: border-box; /* Include padding and border in width */
+}
+
+.sv-search-input:focus {
+    outline: none;
+    border-color: #3b82f6; /* Blue border on focus */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); /* Subtle blue shadow */
+}
+
+.sv-dropdowns {
+    display: flex;
+    flex-wrap: wrap; /* Allow dropdowns to wrap */
+    gap: 16px; /* Spacing between dropdowns */
+}
+
+.sv-dropdown {
+    position: relative; /* Needed for absolute positioning of the menu */
+}
+
+.sv-dropdown-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between text and icon */
+    width: 180px; /* Slightly wider default width */
+    padding: 10px 12px;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #4b5563; /* Standard text color */
+    text-align: left; /* Ensure text aligns left */
+    transition: border-color 0.2s;
+}
+
+.sv-dropdown-button:hover {
+    border-color: #9ca3af; /* Slightly darker border on hover */
+}
+
+.sv-dropdown-button span {
+    margin-right: 8px; /* Space between text and icon */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis if text is too long */
+    white-space: nowrap;
+}
+
+.sv-dropdown-button svg { /* Style the chevron icon */
+    flex-shrink: 0; /* Prevent icon from shrinking */
+    transition: transform 0.2s ease-in-out;
+}
+
+.sv-chevron-up svg { /* Rotate chevron when dropdown is open */
+    transform: rotate(180deg);
+}
+
+.sv-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px); /* Position below the button */
+    left: 0;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Soft shadow */
+    z-index: 10; /* Ensure menu is above other content */
+    padding: 8px 0;
+    margin: 0;
+    list-style: none;
+    min-width: 100%; /* Menu at least as wide as button */
+    max-height: 250px; /* Limit height and allow scrolling */
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+}
+
+/* Specific styling for location dropdown if needed, e.g., width */
+.sv-dropdown-menu-location {
+   width: 220px; /* Example: make location menu wider */
+}
+
+/* Specific styling for sort dropdown if needed */
+.sv-dropdown-menu-sort {
+   width: 240px; /* Example: make sort menu wider */
+}
+
+
+.sv-dropdown-item {
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #374151; /* Slightly darker item text */
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+    white-space: nowrap; /* Prevent items from wrapping */
+}
+
+.sv-dropdown-item:hover {
+    background-color: #f3f4f6; /* Light grey background on hover */
+}
+
+.sv-dropdown-item-active {
+    background-color: #eef2ff; /* Light blue background for active item */
+    color: #3b82f6; /* Blue text for active item */
+    font-weight: 500;
+}
+
+/* Tabs */
+.sv-tabs {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb; /* Separator line */
+    margin-bottom: 16px; /* Space below tabs */
+}
+
+.sv-tab {
+    padding: 12px 24px;
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280; /* Grey inactive tab text */
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent; /* Placeholder for active border */
+    margin-bottom: -1px; /* Align border with container border */
+}
+
+.sv-tab:hover {
+    color: #4b5563; /* Darker grey on hover */
+}
+
+.sv-tab-active {
+    color: #3b82f6; /* Blue active tab text */
+    border-bottom-color: #3b82f6; /* Blue underline for active tab */
+}
+
+/* Table */
+.sv-table-container {
+    background-color: white;
+    border: 1px solid #e5e7eb; /* Add border around table container */
+    border-radius: 8px;
+    overflow-x: auto; /* Allow horizontal scroll on small screens */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.sv-table {
+    width: 100%;
+    border-collapse: collapse; /* Clean table lines */
+    min-width: 600px; /* Ensure table has minimum width before scrolling */
+}
+
+.sv-table-head {
+    background-color: #f9fafb; /* Very light grey header */
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.sv-table-head th {
+    padding: 14px 24px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280; /* Header text color */
+    text-align: left;
+    text-transform: uppercase; /* Uppercase headers */
+    letter-spacing: 0.05em; /* Slight letter spacing */
+    white-space: nowrap; /* Prevent headers from wrapping */
+}
+
+.sv-table-body td {
+    padding: 16px 24px;
+    font-size: 14px;
+    border-bottom: 1px solid #e5e7eb; /* Row separator */
+    color: #4b5563; /* Standard cell text color */
+    vertical-align: middle; /* Align cell content vertically */
+}
+
+.sv-table-row:last-child td {
+    border-bottom: none; /* Remove border from last row */
+}
+
+.sv-table-row:hover {
+    background-color: #f9fafb; /* Highlight row on hover */
+}
+
+.sv-school-name {
+    font-weight: 500;
+    color: #1f2937; /* Darker text for school name */
+}
+
+.sv-school-location {
+    color: #6b7280; /* Lighter text for location */
+}
+
+.sv-submission-date {
+    white-space: nowrap; /* Prevent date wrapping */
+}
+
+.sv-status {
+    display: inline-block;
+    padding: 4px 10px; /* Smaller padding for status badges */
+    border-radius: 12px; /* Pill shape */
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5; /* Ensure text is centered vertically */
+    white-space: nowrap;
+}
+
+.sv-status-approved {
+    background-color: #d1fae5; /* Light green */
+    color: #065f46; /* Dark green text */
+}
+
+.sv-status-pending {
+    background-color: #fef3c7; /* Light yellow */
+    color: #92400e; /* Dark yellow/brown text */
+}
+
+.sv-status-rejected {
+    background-color: #fee2e2; /* Light red */
+    color: #991b1b; /* Dark red text */
+}
+
+.sv-status-under-review { /* Example, if needed */
+    background-color: #dbeafe; /* Light blue */
+    color: #1e40af; /* Dark blue text */
+}
+
+.sv-action-button {
+    padding: 0; /* Remove default padding */
+    background: none;
+    border: none;
+    color: #3b82f6; /* Blue link color */
+    font-weight: 500;
+    font-size: 14px; /* Match table text size */
+    cursor: pointer;
+    transition: color 0.2s;
+    text-decoration: none; /* Remove default underline */
+}
+
+.sv-action-button:hover {
+    color: #2563eb; /* Darker blue on hover */
+    text-decoration: underline; /* Underline on hover */
+}
+
+.sv-action-button-view {
+    color: #4b5563; /* Slightly more subtle color for 'View' */
+}
+
+.sv-action-button-view:hover {
+    color: #1f2937; /* Darker grey on hover */
+}
+
+/* Style for the 'No Results' row */
+.sv-no-results {
+    text-align: center;
+    color: #6b7280;
+    padding: 40px 24px !important; /* Ensure padding overrides default */
+    font-style: italic;
+}
+
+
+/* Pagination */
+.sv-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb; /* Separator above pagination */
+    background-color: #ffffff; /* White background for pagination */
+    border-bottom-left-radius: 8px; /* Match container rounding */
+    border-bottom-right-radius: 8px;
+}
+
+.sv-pagination-info {
+    font-size: 14px;
+    color: #6b7280; /* Info text color */
+}
+
+.sv-pagination-controls {
+    display: flex;
+    gap: 8px; /* Spacing between buttons */
+}
+
+.sv-pagination-button {
+    min-width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px; /* Horizontal padding for number buttons */
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: white;
+    color: #4b5563; /* Button text color */
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sv-pagination-button:hover:not(:disabled) {
+    background-color: #f9fafb; /* Light background on hover */
+    border-color: #9ca3af;
+}
+
+.sv-pagination-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.sv-page-active {
+    background-color: #3b82f6; /* Blue background for active page */
+    border-color: #3b82f6;
+    color: white;
+    font-weight: 500;
+}
+
+.sv-page-active:hover {
+    background-color: #2563eb; /* Darker blue on hover */
+    border-color: #2563eb;
+}
+
+
+.sv-prev-button, .sv-next-button {
+    padding: 0 12px; /* More padding for prev/next text */
+}
+
+.sv-prev-button span, .sv-next-button span {
+   margin: 0 4px; /* Space around text if using icons */
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sv-filters {
+      flex-direction: column; /* Stack filters vertically */
+      align-items: stretch; /* Stretch items to full width */
+    }
+
+    .sv-search-box {
+        min-width: 0; /* Remove min-width */
+    }
+
+    .sv-dropdowns {
+      flex-direction: column; /* Stack dropdowns */
+      align-items: stretch;
+      gap: 12px; /* Adjust gap for vertical layout */
+    }
+
+    .sv-dropdown-button {
+        width: 100%; /* Make dropdown buttons full width */
+    }
+
+    .sv-dropdown-menu {
+        width: 100%; /* Make dropdown menus full width */
+        box-sizing: border-box;
+    }
+
+    .sv-pagination {
+      flex-direction: column; /* Stack pagination info and controls */
+      gap: 16px; /* Space between info and controls */
+      align-items: center; /* Center items */
+    }
+
+    .sv-pagination-controls {
+      justify-content: center; /* Center buttons */
+    }
+
+    .sv-tabs {
+      overflow-x: auto; /* Allow horizontal scroll for tabs if they overflow */
+      white-space: nowrap;
+      padding-bottom: 1px; /* Prevent scrollbar overlap with border */
+    }
+
+    .sv-tab {
+      padding: 10px 16px; /* Slightly reduce tab padding */
+    }
+
+    .sv-page-title {
+      font-size: 20px;
+    }
+
+    .sv-content {
+        padding: 16px; /* Reduce padding on smaller screens */
+    }
+
+    .sv-header {
+        padding: 12px 16px;
+    }
+
+    .sv-table-head th, .sv-table-body td {
+        padding: 12px 16px; /* Reduce table cell padding */
+    }
+}
+
+@media (max-width: 480px) {
+    .sv-pagination-controls {
+        flex-wrap: wrap; /* Allow pagination buttons to wrap */
+        justify-content: center;
+    }
+    .sv-pagination-info {
+        text-align: center; /* Center pagination info text */
+    }
+}
