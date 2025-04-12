@@ -353,6 +353,23 @@
     color: #4b5563;
   }
   
+  .svr-notes-display {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #f9fafb;
+    line-height: 1.5;
+    color: #4b5563;
+  }
+  
+  .svr-notes-empty {
+    color: #9ca3af;
+    font-style: italic;
+  }
+
   /* Responsive styles */
   @media (max-width: 768px) {
     .svr-content-columns {

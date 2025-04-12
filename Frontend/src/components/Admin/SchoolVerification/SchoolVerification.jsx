@@ -288,10 +288,10 @@ const SchoolVerification = () => {
                         </button>
                       ) : (
                         <button
-                          className="sv-action-button sv-action-button-view" // Optional different style for view
-                          onClick={() => handleReview(school)} // Assuming view also uses the review modal
-                        >
-                          View Details
+                            className="sv-action-button sv-action-button-view"
+                            onClick={() => handleReview(school)}
+                            >
+                            View Details
                         </button>
                       )}
                     </td>

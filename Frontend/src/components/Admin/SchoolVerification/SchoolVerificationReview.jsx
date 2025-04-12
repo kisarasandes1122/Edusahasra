@@ -3,7 +3,7 @@ import { FiDownload, FiX, FiCheck, FiPlus } from 'react-icons/fi';
 import './SchoolVerificationReview.css';
 
 const SchoolVerificationReview = ({ school, onClose, onApprove, onReject }) => {
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState(school.notes || '');
 
   // Sample document data - in a real app, these would likely be fetched based on school ID
   const documents = [
@@ -67,13 +67,22 @@ const SchoolVerificationReview = ({ school, onClose, onApprove, onReject }) => {
     alert(`Downloading ${document.name}`);
   };
 
+  // Format date for better display
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  };
+
+  // Determine if the modal is in view-only mode (for approved or rejected schools)
+  const isViewOnly = school.status === 'approved' || school.status === 'rejected';
+
   return (
     <div className="svr-overlay">
       <div className="svr-modal">
         <div className="svr-modal-header">
           <div>
             <h2 className="svr-modal-title">{school.name}</h2>
-            <p className="svr-modal-subtitle">School Verification Review</p>
+            <p className="svr-modal-subtitle">School Verification {isViewOnly ? 'Details' : 'Review'}</p>
           </div>
           <button className="svr-close-button" onClick={onClose}>
             <FiX />
@@ -107,8 +116,19 @@ const SchoolVerificationReview = ({ school, onClose, onApprove, onReject }) => {
               
               <div className="svr-info-group">
                 <label className="svr-label">Submission Date</label>
-                <p className="svr-value">{school.submissionDate}</p>
+                <p className="svr-value">{formatDate(school.submissionDate)}</p>
               </div>
+              
+              {isViewOnly && (
+                <div className="svr-info-group">
+                  <label className="svr-label">Status</label>
+                  <p className="svr-value">
+                    <span className={`sv-status sv-status-${school.status}`}>
+                      {school.status.charAt(0).toUpperCase() + school.status.slice(1)}
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
             
             <div className="svr-docs-column">
@@ -138,14 +158,26 @@ const SchoolVerificationReview = ({ school, onClose, onApprove, onReject }) => {
           
           <div className="svr-notes-section">
             <h3 className="svr-notes-title">
-              Verification Notes <FiPlus className="svr-notes-icon" />
+              Verification Notes {!isViewOnly && <FiPlus className="svr-notes-icon" />}
             </h3>
-            <textarea 
-              className="svr-notes-input"
-              placeholder="Add notes about this verification..."
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            ></textarea>
+            {isViewOnly ? (
+              school.notes ? (
+                <div className="svr-notes-display">
+                  <p>{school.notes}</p>
+                </div>
+              ) : (
+                <div className="svr-notes-display svr-notes-empty">
+                  <p>No verification notes were added.</p>
+                </div>
+              )
+            ) : (
+              <textarea 
+                className="svr-notes-input"
+                placeholder="Add notes about this verification..."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+              ></textarea>
+            )}
           </div>
         </div>
         
@@ -163,7 +195,7 @@ const SchoolVerificationReview = ({ school, onClose, onApprove, onReject }) => {
             )}
           </div>
           <button className="svr-cancel-button" onClick={onClose}>
-            Cancel
+            {isViewOnly ? "Close" : "Cancel"}
           </button>
         </div>
       </div>
