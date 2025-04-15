@@ -1,0 +1,338 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap');
+
+.aboutUsContainer,
+.aboutUsContainer * {
+  box-sizing: border-box;
+}
+
+.aboutUsContainer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Inter", sans-serif;
+  color: #000000;
+  overflow-x: hidden;
+}
+
+
+
+.aboutUsBackground {
+  background: #ffffff;
+  width: 100%; 
+  height: 100%; 
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: -1; 
+}
+
+/* Header Section */
+.aboutUsHeader {
+  width: 100%;
+  max-width: 1200px;
+  padding: 80px 20px 40px;
+  text-align: center;
+}
+
+.aboutUsTitle {
+  font-size: 48px;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.aboutUsTitleLight {
+  font-weight: 300;
+}
+
+.aboutUsTitleBold {
+  font-weight: 800;
+}
+
+.aboutUsSubtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: #333;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Common Section Styles */
+.aboutUsSection {
+  width: 100%;
+  max-width: 1200px;
+  padding: 60px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+.sectionContent {
+  flex: 1;
+  max-width: 600px;
+}
+
+.sectionTitle {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #043f2e;
+}
+
+.sectionText {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+.sectionImageContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sectionImage {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 30px;
+  border: 5px solid #043f2e;
+  object-fit: cover;
+}
+
+/* Mission Section Specific */
+.missionSection {
+  background-color: #f9f9f9;
+  border-radius: 30px;
+  margin-top: 20px;
+}
+
+/* Problem Section Specific */
+.problemSection {
+  flex-direction: row-reverse;
+}
+
+.problemCards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.problemCard {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #78c51c;
+}
+
+.problemCard h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #043f2e;
+}
+
+.problemCard p {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Solution Section Specific */
+.solutionSection {
+  background-color: #f9f9f9;
+  border-radius: 30px;
+}
+
+.solutionList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.solutionList li {
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.highlight {
+  font-weight: 600;
+  color: #78c51c;
+}
+
+.processSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 450px;
+}
+
+.processStep {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stepNumber {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #78c51c;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.stepText {
+  font-size: 16px;
+}
+
+/* Team Section Specific */
+.teamSection {
+  flex-direction: row-reverse;
+}
+
+.teamImage {
+  border-radius: 30px;
+  height: 350px;
+}
+
+/* Impact Goals Section */
+.impactSection {
+  flex-direction: column;
+  text-align: center;
+  background-color: #043f2e;
+  color: white;
+  border-radius: 30px;
+}
+
+.impactTitle {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 40px;
+  color: white;
+}
+
+.impactGoals {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  gap: 20px;
+}
+
+.impactGoal {
+  flex: 1;
+  max-width: 300px;
+  padding: 20px;
+}
+
+.impactNumber {
+  font-size: 48px;
+  font-weight: 800;
+  color: #78c51c;
+  margin-bottom: 10px;
+}
+
+.impactText {
+  font-size: 18px;
+}
+
+/* CTA Section */
+.ctaSection {
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  padding: 60px 20px;
+  
+
+}
+
+.ctaTitle {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.ctaText {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.ctaButton {
+  display: inline-block;
+  padding: 15px 30px;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.donateButton {
+  background-color: #78c51c;
+  color: white;
+}
+
+.donateButton:hover {
+  background-color: #2A6F2B;
+}
+
+.registerButton {
+  background-color: white;
+  color: #043f2e;
+  border: 2px solid #043f2e;
+}
+
+.registerButton:hover {
+  background-color: #f0f0f0;
+}
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+  .aboutUsSection {
+    flex-direction: column;
+    padding: 40px 20px;
+  }
+  
+  .sectionContent {
+    max-width: 100%;
+  }
+  
+  .problemCards {
+    grid-template-columns: 1fr;
+  }
+  
+  .impactGoals {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .ctaButton {
+    width: 100%;
+    max-width: 300px;
+  }
+}

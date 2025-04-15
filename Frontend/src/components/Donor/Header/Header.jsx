@@ -190,7 +190,7 @@ const Header = ({ isAuthenticated, user }) => {
                   </div>
                 )}
               </li>
-              <li><a href="#about">About</a></li>
+              <li><a href="/aboutus">About</a></li>
               <li><a href="#impact">Impact</a></li>
             </ul>
           </nav>
@@ -211,7 +211,7 @@ const Header = ({ isAuthenticated, user }) => {
                       <h3 className="user-dropdown-title">{user?.name || 'User'}</h3>
                     </div>
                     <div className="user-dropdown-items">
-                      <a href="/donations" className="user-dropdown-item">
+                      <a href="/my-donations" className="user-dropdown-item">
                         <div className="icon-wrapper">
                           <span className="icon">📊</span>
                         </div>

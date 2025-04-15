@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
-import Home from './pages/Home';
 import Header from './components/Donor/Header/Header';
 import Footer from './components/Donor/Footer/Footer';
 import DonorRegistration from './components/Donor/DonorRegistration/DonorRegistration';
@@ -24,11 +23,16 @@ import SchoolVerification from './components/Admin/SchoolVerification/SchoolVeri
 import DonationManagement from './components/Admin/DonationManagement/DonationManagement';
 import AnalyticsReports from './components/Admin/AnalyticsReports/AnalyticsReports';
 import AdminSettings from './components/Admin/AdminSettings/AdminSettings';
+import MyDonations from './components/Donor/MyDonations/MyDonations';
+import MessagesPage from './components/Donor/MessagesPage/MessagesPage';
+import ProfilePage from './components/Donor/ProfilePage/ProfilePage';
+import AboutUs from './components/Donor/AboutUs/AboutUs';
+import Home from './components/Donor/Home/Home';
 
 
 const DonorLayout = () => {
   const mockAuthState = {
-    isAuthenticated: false,
+    isAuthenticated: true,
     user: {
       name: "Kisara Sandes"
     }
@@ -72,7 +76,6 @@ const App = () => {
     <Router>
       <Routes>
         <Route element={<DonorLayout />}>
-          <Route path="/" element={<Home />} />
           <Route path="/donor-register" element={<DonorRegistration />} />
           <Route path="/donor-login" element={<DonorLogin />} />
           <Route path='/needs' element={<SchoolsInNeedPage />} />
@@ -80,6 +83,12 @@ const App = () => {
           <Route path='/donate/:id' element={<DonationPage />} />
           <Route path="/school-register" element={<SchoolRegistration />} />
           <Route path="/school-login" element={<SchoolLogin />} />
+          <Route path='/my-donations' element={<MyDonations />} />
+          <Route path="/messages" element={<MessagesPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/" element={<Home />} />
+
         </Route>
 
         <Route element={<SchoolLayout />}>
