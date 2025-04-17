@@ -32,7 +32,7 @@ import Home from './components/Donor/Home/Home';
 
 const DonorLayout = () => {
   const mockAuthState = {
-    isAuthenticated: true,
+    isAuthenticated: false,
     user: {
       name: "Kisara Sandes"
     }

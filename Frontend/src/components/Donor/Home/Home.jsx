@@ -106,11 +106,11 @@ const Home = () => {
             to students who need them most
           </p>
           <div className="hero-buttons">
-            <a href="/donate" className="hero-button primary">
+            <a href="/donor-register" className="hero-button primary">
               Start Donating Today
             </a>
-            <a href="/schools" className="hero-button secondary">
-              Browse Schools in Need
+            <a href="/needs" className="hero-button secondary">
+              Browse School Requests
             </a>
           </div>
         </div>
@@ -157,12 +157,36 @@ const Home = () => {
           </div>
           
           <div className="view-all-container">
-            <a href="/schools" className="view-all-button">
+            <a href="/needs" className="view-all-button">
               View All Requests <ArrowRight size={16} />
             </a>
           </div>
         </div>
       </section>
+
+      {/* Impact Statistics Section */}
+      <section className="impact-section">
+        <div className="impact-background"></div>
+        <div className="section-container">
+          <h2 className="section-title">Our Impact</h2>
+          <p className="section-subtitle">
+            Together, we're creating meaningful change in education across rural Sri Lanka
+          </p>
+          
+          <div className="impact-stats-container">
+            {impactStats.map((stat) => (
+              <div key={stat.id} className="impact-stat-card">
+                <div className="impact-icon-container">
+                  {stat.icon}
+                </div>
+                <div className="impact-stat-count">{stat.count}</div>
+                <div className="impact-stat-label">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
       
       {/* How It Works Section */}
       <section className="how-works-section">
@@ -186,25 +210,23 @@ const Home = () => {
         </div>
       </section>
       
-      {/* Impact Statistics Section */}
-      <section className="impact-section">
-        <div className="impact-background"></div>
+      {/* Get Involved CTA Section */}
+      <section className="get-involved-section">
         <div className="section-container">
-          <h2 className="section-title">Our Impact</h2>
-          <p className="section-subtitle">
-            Together, we're creating meaningful change in education across rural Sri Lanka
-          </p>
-          
-          <div className="impact-stats-container">
-            {impactStats.map((stat) => (
-              <div key={stat.id} className="impact-stat-card">
-                <div className="impact-icon-container">
-                  {stat.icon}
-                </div>
-                <div className="impact-stat-count">{stat.count}</div>
-                <div className="impact-stat-label">{stat.label}</div>
-              </div>
-            ))}
+          <div className="get-involved-content">
+            <h2 className="get-involved-title">Ready to Make a Difference?</h2>
+            <p className="get-involved-description">
+              Join thousands of donors who are helping bridge the education gap in rural Sri Lanka. 
+              Every donation, no matter how small, creates a brighter future for students in need.
+            </p>
+            <div className="get-involved-buttons">
+              <a href="/donor-register" className="primary-button">
+                Start Donating
+              </a>
+              <a href="/needs" className="secondary-button">
+                Browse Requests <ArrowRight size={16} />
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -232,26 +254,7 @@ const Home = () => {
         </div>
       </section>
       
-      {/* Get Involved CTA Section */}
-      <section className="get-involved-section">
-        <div className="section-container">
-          <div className="get-involved-content">
-            <h2 className="get-involved-title">Ready to Make a Difference?</h2>
-            <p className="get-involved-description">
-              Join thousands of donors who are helping bridge the education gap in rural Sri Lanka. 
-              Every donation, no matter how small, creates a brighter future for students in need.
-            </p>
-            <div className="get-involved-buttons">
-              <a href="/donate" className="primary-button">
-                Start Donating
-              </a>
-              <a href="/schools" className="secondary-button">
-                Browse Schools <ArrowRight size={16} />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      
     </div>
   );
 };
