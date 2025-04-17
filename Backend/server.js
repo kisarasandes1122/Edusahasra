@@ -1,11 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path'); // Added for potential static file serving if needed later
+const path = require('path');
 const { connectDB } = require('./config/db');
 const donorRoutes = require('./routes/donorRoutes');
-const schoolRoutes = require('./routes/schoolRoutes'); // Import school routes
-const adminRoutes = require('./routes/adminRoutes');   // Import admin routes
-const donationRequestRoutes = require('./routes/donationRequestRoutes'); // Import donation request routes
+const schoolRoutes = require('./routes/schoolRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const donationRequestRoutes = require('./routes/donationRequestRoutes');
+const donationRoutes = require('./routes/donationRoutes'); // <<< Import new donation routes
 const { errorHandler } = require('./middleware/errorMiddleware');
 const { PORT } = require('./config/config');
 
@@ -16,24 +17,18 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors()); // Enable CORS for all origins
-app.use(express.json()); // Parse JSON bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // --- Routes ---
-
-// Donor Routes
 app.use('/api/donors', donorRoutes);
+app.use('/api/schools', schoolRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/requests', donationRequestRoutes); // Routes for *requesting* donations
+app.use('/api/donations', donationRoutes); // <<< Add routes for *making/tracking* donations
 
-// School Routes
-app.use('/api/schools', schoolRoutes); // Add school routes
-
-// Admin Routes
-app.use('/api/admin', adminRoutes);   // Add admin routes (using /api/admin as base path based on adminRoutes.js)
-
-app.use('/api/requests', donationRequestRoutes); // Add donation request routes <<< NEW LINE
-
-
+// Serve uploaded files (ensure 'uploads' directory exists)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Health check route
@@ -41,7 +36,7 @@ app.get('/health', (req, res) => {
   res.status(200).json({ message: 'Server is running and healthy!' });
 });
 
-// Error handler middleware (should be the last middleware)
+// Error handler middleware
 app.use(errorHandler);
 
 // Start server

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const requestedItemSchema = new mongoose.Schema({
   categoryId: {
-    type: Number, // Matches the ID in the frontend's availableCategories
+    type: Number, 
     required: [true, 'Category ID is required'],
   },
   categoryNameEnglish: {
@@ -15,20 +15,27 @@ const requestedItemSchema = new mongoose.Schema({
     required: [true, 'Sinhala category name is required'],
     trim: true,
   },
-  quantity: {
+  quantity: { 
     type: Number,
-    required: [true, 'Quantity is required'],
-    min: [1, 'Quantity must be at least 1'], // Basic validation, controller will enforce minimum threshold
+    required: [true, 'Requested quantity is required'],
+    min: [1, 'Quantity must be at least 1'],
   },
-}, { _id: false }); // Don't create separate _id for subdocuments unless needed
+
+  quantityReceived: { 
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0,
+  },
+}, { _id: false });
 
 const donationRequestSchema = new mongoose.Schema(
   {
     school: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'School', // Reference to the School model
-      index: true,   // Index for faster lookups by school
+      ref: 'School',
+      index: true,
     },
     requestedItems: {
       type: [requestedItemSchema],
@@ -40,7 +47,7 @@ const donationRequestSchema = new mongoose.Schema(
           },
           message: 'At least one donation item must be requested.',
         },
-        { // Ensure unique category IDs within the same request
+        {
             validator: function(items) {
                 const categoryIds = items.map(item => item.categoryId);
                 return new Set(categoryIds).size === categoryIds.length;
@@ -55,32 +62,40 @@ const donationRequestSchema = new mongoose.Schema(
       default: 'Pending',
       required: true,
     },
-    notes: { // Optional notes from the school
+    notes: {
       type: String,
       trim: true,
       maxlength: [500, 'Notes cannot exceed 500 characters']
     },
-    fulfilledByDonors: [ // Optional: Track which donors fulfilled parts of the request
-      {
-        donor: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Donor',
-        },
-        itemsFulfilled: [
-          {
-            categoryId: Number,
-            quantityFulfilled: Number,
-            fulfilledAt: { type: Date, default: Date.now },
-          }
-        ],
-        // Add more details as needed
-      }
-    ],
-    // Timestamps provided by mongoose option below
+    
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt automatically
+    timestamps: true,
   }
 );
+
+donationRequestSchema.methods.updateRequestStatus = function() {
+    let totalRequested = 0;
+    let totalReceived = 0;
+    let isPartiallyFulfilled = false;
+
+    this.requestedItems.forEach(item => {
+        totalRequested += item.quantity; // Use quantity (requested)
+        totalReceived += item.quantityReceived;
+        if (item.quantityReceived > 0 && item.quantityReceived < item.quantity) {
+            isPartiallyFulfilled = true;
+        }
+    });
+
+    if (totalReceived === 0) {
+        this.status = 'Pending';
+    } else if (totalReceived >= totalRequested) {
+        this.status = 'Fulfilled';
+    } else if (totalReceived > 0) {
+        this.status = 'Partially Fulfilled';
+    } else {
+        this.status = 'Pending'; // Default case
+    }
+};
 
 module.exports = mongoose.model('DonationRequest', donationRequestSchema);
