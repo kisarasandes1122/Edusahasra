@@ -5,6 +5,7 @@ const { connectDB } = require('./config/db');
 const donorRoutes = require('./routes/donorRoutes');
 const schoolRoutes = require('./routes/schoolRoutes'); // Import school routes
 const adminRoutes = require('./routes/adminRoutes');   // Import admin routes
+const donationRequestRoutes = require('./routes/donationRequestRoutes'); // Import donation request routes
 const { errorHandler } = require('./middleware/errorMiddleware');
 const { PORT } = require('./config/config');
 
@@ -29,6 +30,9 @@ app.use('/api/schools', schoolRoutes); // Add school routes
 
 // Admin Routes
 app.use('/api/admin', adminRoutes);   // Add admin routes (using /api/admin as base path based on adminRoutes.js)
+
+app.use('/api/requests', donationRequestRoutes); // Add donation request routes <<< NEW LINE
+
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
