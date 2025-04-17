@@ -13,11 +13,37 @@ const RequestDonations = () => {
 
   // Available categories for the dropdown
   const availableCategories = [
-    { id: 1, nameSinhala: 'සටහන් පොත්', nameEnglish: 'Notebooks' },
-    { id: 2, nameSinhala: 'පෑන්/පැන්සල්', nameEnglish: 'Pens/Pencils' },
-    { id: 3, nameSinhala: 'පාට පෙට්ටි', nameEnglish: 'Color Boxes' },
-    { id: 4, nameSinhala: 'අභ්‍යාස පොත්', nameEnglish: 'Exercise Books' },
-    { id: 5, nameSinhala: 'ගණිත උපකරණ', nameEnglish: 'Math Tools' }
+    { id: 1,  nameSinhala: 'සටහන් පොත්',           nameEnglish: 'Notebooks' },
+    { id: 2,  nameSinhala: 'පෑන්/පැන්සල්',         nameEnglish: 'Pens/Pencils' },
+    { id: 3,  nameSinhala: 'පාට පෙට්ටි',           nameEnglish: 'Color Boxes (Crayons)' },
+    { id: 4,  nameSinhala: 'අභ්‍යාස පොත්',         nameEnglish: 'Exercise Books' },
+    { id: 5,  nameSinhala: 'මකනය',               nameEnglish: 'Erasers' },
+    { id: 6,  nameSinhala: 'කඩාකරු',             nameEnglish: 'Pencil Sharpeners' },
+    { id: 7,  nameSinhala: 'කතුර',               nameEnglish: 'Scissors' },
+    { id: 8,  nameSinhala: 'ගලුව',               nameEnglish: 'Glue Sticks' },
+    { id: 9,  nameSinhala: 'රූලර්',                nameEnglish: 'Rulers' },
+    { id: 10, nameSinhala: 'ජ්‍යෝමැට්‍රි කට්ටලය',  nameEnglish: 'Geometry Sets' },
+    { id: 11, nameSinhala: 'ප්‍රොට්රැක්ටරය',       nameEnglish: 'Protractors' },
+    { id: 12, nameSinhala: 'සම්බියා (කොම්පස්)',    nameEnglish: 'Compasses' },
+    { id: 13, nameSinhala: 'ගණිත උපකරණ',       nameEnglish: 'Counting Cubes/Abacus' },
+    { id: 14, nameSinhala: 'චෝක්',                nameEnglish: 'Chalk' },
+    { id: 15, nameSinhala: 'චෝක් බ්‍රෂ්',         nameEnglish: 'Chalkboard Brush' },
+    { id: 16, nameSinhala: 'සුදුපුවරු',           nameEnglish: 'Whiteboard' },
+    { id: 17, nameSinhala: 'සුදුපුවරු ලේඛක',     nameEnglish: 'Whiteboard Markers' },
+    { id: 18, nameSinhala: 'පෝස්ටර්',             nameEnglish: 'Posters' },
+    { id: 19, nameSinhala: 'සිතියම්',             nameEnglish: 'Maps' },
+    { id: 20, nameSinhala: 'බ්‍රිස්ටල් කඩදාසි',   nameEnglish: 'Art Paper (Bristol Paper)' },
+    { id: 21, nameSinhala: 'කථා පොත්',           nameEnglish: 'Story Books' },
+    { id: 22, nameSinhala: 'පාඨ පොත්',           nameEnglish: 'Textbooks' },
+    { id: 23, nameSinhala: 'පුස්තකාල පොත්',     nameEnglish: 'Library Books' },
+    { id: 24, nameSinhala: 'අධ්‍යාපනමය ක්‍රීඩා', nameEnglish: 'Educational Games/Puzzles' },
+    { id: 25, nameSinhala: 'උගත්කරු මාර්ගෝපදේශ', nameEnglish: 'Teacher’s Guides/Manuals' },
+    { id: 26, nameSinhala: 'පරිගණක/ටැබ්ලට්',    nameEnglish: 'Computers/Tablets' },
+    { id: 27, nameSinhala: 'ප්‍රින්ටර්',          nameEnglish: 'Printers' },
+    { id: 28, nameSinhala: 'ප්‍රොජෙක්ටර්',       nameEnglish: 'Projectors' },
+    { id: 29, nameSinhala: 'රවුටර්/අන්තර්ජාල උපාංග', nameEnglish: 'Routers/Internet Devices' },
+    { id: 30, nameSinhala: 'සූර්ය ආලෝක යන්ත්‍ර',  nameEnglish: 'Solar Study Lamps' }
+
   ];
 
   // Selected supplies - initialize with minimum threshold
