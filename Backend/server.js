@@ -7,6 +7,7 @@ const schoolRoutes = require('./routes/schoolRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const donationRequestRoutes = require('./routes/donationRequestRoutes');
 const donationRoutes = require('./routes/donationRoutes'); // <<< Import new donation routes
+const thankYouRoutes = require('./routes/thankYouRoutes');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const { PORT } = require('./config/config');
 
@@ -25,8 +26,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/donors', donorRoutes);
 app.use('/api/schools', schoolRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/requests', donationRequestRoutes); // Routes for *requesting* donations
-app.use('/api/donations', donationRoutes); // <<< Add routes for *making/tracking* donations
+app.use('/api/requests', donationRequestRoutes);
+app.use('/api/donations', donationRoutes);
+app.use('/api/thankyous', thankYouRoutes); // <<< Add routes for *making/tracking* donations
 
 // Serve uploaded files (ensure 'uploads' directory exists)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
