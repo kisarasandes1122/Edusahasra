@@ -1,9 +1,10 @@
 import React from 'react';
-import { useLanguage, languages } from './LanguageContext';
+import { useLanguage } from './LanguageContext'; // Import languages object is not needed here anymore
 import './LanguageSelector.css';
 
 const LanguageSelector = () => {
-  const { currentLanguage, changeLanguage } = useLanguage();
+  // Destructure languages directly from the useLanguage hook
+  const { currentLanguage, changeLanguage, languages } = useLanguage();
 
   const handleLanguageChange = (e) => {
     changeLanguage(e.target.value);
@@ -11,14 +12,17 @@ const LanguageSelector = () => {
 
   return (
     <div className="Scl-language-selector">
-      <select 
-        value={currentLanguage} 
-        onChange={handleLanguageChange} 
+      {/* Add aria-label for accessibility */}
+      <select
+        value={currentLanguage}
+        onChange={handleLanguageChange}
         className="language-select"
+        aria-label="Select language"
       >
-        {Object.keys(languages).map((langCode) => (
+        {/* Use Object.entries for potentially easier access to code and name */}
+        {Object.entries(languages).map(([langCode, langDetails]) => (
           <option key={langCode} value={langCode}>
-            {languages[langCode].name}
+            {langDetails.name} {/* Display the language name */}
           </option>
         ))}
       </select>

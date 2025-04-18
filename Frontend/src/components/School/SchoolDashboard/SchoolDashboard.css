@@ -17,24 +17,14 @@
   border-bottom: 1px solid #eaeaea;
 }
 
-.dashboard-title {
-  display: flex;
-  flex-direction: column;
-}
 
-.dashboard-title-sinhala {
+.dashboard-title h1 { 
   margin: 0;
   font-size: 22px;
   font-weight: 600;
   color: #043f2e;
 }
 
-.dashboard-title-english {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 500;
-  color: #4a5568;
-}
 
 .dashboard-logout {
   display: flex;
@@ -47,6 +37,7 @@
   color: #043f2e;
   font-weight: 500;
   transition: all 0.2s ease;
+  font-size: 14px; /* Consistent font size */
 }
 
 .dashboard-logout:hover {
@@ -67,8 +58,8 @@
   font-size: 15px;
 }
 
-.dashboard-welcome p{
-  margin: 0px;
+.dashboard-welcome p { /* Target the paragraph */
+  margin: 0;
 }
 
 .dashboard-grid {
@@ -90,40 +81,36 @@
   cursor: pointer;
   text-align: center;
   text-decoration: none; /* Remove default link underline */
+  color: inherit; /* Ensure text color is inherited */
 }
 
 .action-card {
   background-color: #043f2e;
   color: white;
-  min-height: 150px;
+  min-height: 150px; /* Minimum height for consistency */
 }
 
 .action-card:hover {
   background-color: #0a5e45;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px); /* Slightly more lift */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12); /* Enhance shadow */
 }
 
-.card-content {
-  margin-bottom: 8px;
-}
 
-.card-title-sinhala {
+.card-content h3 { /* Target h3 inside card */
   margin: 0 0 8px 0;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 18px; /* Consistent font size */
+  font-weight: 600; /* Bold title */
 }
 
-.card-title-english {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-}
+/* Removed redundant title classes */
+/* .card-title-sinhala { ... } */
+/* .card-title-english { ... } */
 
 .card-icon {
-  font-size: 24px;
-  opacity: 0.8;
-  margin-top: 16px;
+  font-size: 28px; /* Slightly larger icon */
+  opacity: 0.9;
+  margin-bottom: 16px; /* Space below icon */
 }
 
 .dashboard-section {
@@ -136,18 +123,15 @@
 .section-title {
   text-align: center;
   margin-top: 0;
-  margin-bottom: 16px;
+  margin-bottom: 20px; /* Increased bottom margin */
   font-size: 18px;
   color: #043f2e;
+  font-weight: 600; /* Make section titles bolder */
 }
 
-.title-sinhala {
-  font-weight: 500;
-}
-
-.title-english {
-  font-weight: 600;
-}
+/* Removed redundant title classes */
+/* .title-sinhala { ... } */
+/* .title-english { ... } */
 
 .donation-list {
   display: flex;
@@ -156,28 +140,71 @@
 }
 
 .donation-item {
-  background-color: #e8f3ea;
-  padding: 16px;
+  display: flex; /* Use flexbox for alignment */
+  justify-content: space-between; /* Space out content */
+  align-items: center; /* Center items vertically */
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  background-color: white; /* Change background for better contrast */
+  padding: 14px 18px; /* Adjust padding */
   border-radius: 6px;
   transition: background-color 0.2s ease;
+  border-left: 4px solid #78C51C; /* Add a visual indicator */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.donation-item:hover {
-  background-color: #d9eadb;
+/* Removed hover effect for now, can be added back if desired */
+/* .donation-item:hover { ... } */
+
+.donation-item span { /* General styling for spans inside */
+   font-size: 14px;
 }
 
-.donation-sinhala {
-  color: #4a5568;
+.donation-summary {
+   color: #043f2e;
+   font-weight: 500;
+   margin-right: 10px; /* Add space between summary and date */
 }
 
-.donation-english {
-  color: #043f2e;
-  font-weight: 500;
+.donation-date {
+   color: #718096; /* Grey color for date */
+   font-size: 13px; /* Slightly smaller date */
+   white-space: nowrap; /* Prevent date wrapping */
 }
+
+/* Remove old specific classes */
+/* .donation-sinhala { ... } */
+/* .donation-english { ... } */
+
+
+/* --- Loading and Error Styles --- */
+.loading-message, .error-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 15px;
+    color: #4a5568;
+    border-radius: 4px;
+}
+
+.error-message {
+    color: #721c24; /* Darker red for errors */
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    margin: 0 auto 16px auto; /* Center horizontally within its container */
+    max-width: 90%; /* Limit width */
+}
+
+.loading-message .fa-spin { /* Style the spinner icon */
+    margin-right: 8px;
+    font-size: 16px;
+    color: #043f2e;
+}
+/* --- End Loading/Error --- */
 
 .contact {
   text-align: center;
   color: #4a5568;
+  padding-top: 10px; /* Add padding */
+  font-size: 14px;
 }
 
 .contact-number {
@@ -189,17 +216,44 @@
 /* Responsive styles */
 @media (max-width: 768px) {
   .dashboard-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Stack cards */
+    gap: 16px; /* Reduce gap */
+    padding: 0 16px; /* Reduce side padding */
   }
-  
+
   .dashboard-header {
     flex-direction: column;
     text-align: center;
     gap: 12px;
+    padding: 16px; /* Adjust padding */
   }
-  
+
   .dashboard-welcome,
   .dashboard-section {
-    margin: 16px;
+    margin: 16px; /* Consistent margin */
+    padding: 16px; /* Reduce padding */
+  }
+
+  .action-card {
+      min-height: 120px; /* Reduce min-height */
+  }
+
+  .card-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+  }
+
+  .card-content h3 {
+      font-size: 16px;
+  }
+
+  .donation-item {
+      flex-direction: column; /* Stack summary and date */
+      align-items: flex-start; /* Align items left */
+      gap: 5px; /* Space between stacked items */
+  }
+
+  .donation-date {
+       white-space: normal; /* Allow date wrapping */
   }
 }

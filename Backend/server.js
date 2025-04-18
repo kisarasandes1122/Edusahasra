@@ -23,12 +23,13 @@ app.use(cors());
 // --- Static File Serving ---
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Mount routers that handle multipart/form-data BEFORE global body parsers
-app.use('/api/schools', schoolRoutes);
 
 // --- Global Body Parsing Middlewares ---
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Mount routers that handle multipart/form-data BEFORE global body parsers
+app.use('/api/schools', schoolRoutes);
 
 // --- Other API Routes ---
 app.use('/api/donors', donorRoutes);

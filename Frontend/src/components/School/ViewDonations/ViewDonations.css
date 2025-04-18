@@ -21,22 +21,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+
 }
 
-.view-donations-title-sinhala {
+/* Removed specific font-weight overrides here, use h1 for semantic meaning */
+.view-donations-title h1 {
   margin: 0;
   font-size: 22px;
   font-weight: 600;
   color: #043f2e;
 }
 
-.view-donations-title-english {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 500;
-  color: #4a5568;
-}
+/* Removed - let h1 handle the title styling */
+/* .view-donations-title-sinhala { ... } */
+/* .view-donations-title-english { ... } */
+
 
 .view-donations-back-btn-container {
   padding: 16px 24px;
@@ -78,14 +77,6 @@
   color: #043f2e;
 }
 
-.view-donations-title-sinhala {
-  font-weight: 500;
-}
-
-.view-donations-title-english {
-  font-weight: 600;
-}
-
 .view-donations-list {
   display: flex;
   flex-direction: column;
@@ -106,52 +97,69 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex-grow: 1; /* Allow details to take available space */
+  margin-right: 16px; /* Add space between details and status/button */
 }
 
-.view-donations-type {
+/* Renamed for clarity - represents the main info line */
+.view-donations-item-info {
   font-size: 16px;
   font-weight: 500;
   color: #043f2e;
 }
 
-.view-donations-count {
-  color: #4a5568;
+
+.view-donations-item-summary .view-donations-name {
+    font-weight: 600; /* Keep name bold if needed */
 }
 
-.view-donations-name {
-  font-weight: 600;
+.view-donations-count { /* Applied to quantity */
+  color: #4a5568; /* Default color, can be overridden */
 }
+
 
 .view-donations-date {
   font-size: 14px;
   color: #718096;
 }
 
-.view-donations-status {
+/* Status and Button styling */
+.view-donations-status,
+.view-donations-confirm-btn {
   padding: 8px 16px;
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
+  white-space: nowrap; /* Prevent wrapping */
+  text-align: center;
 }
 
-.view-donations-transit {
+
+.view-donations-status.status-transit { /* Use specific class */
   background-color: #043f2e;
   color: white;
 }
 
-.view-donations-preparing {
+.view-donations-status.status-preparing { /* Use specific class */
   background-color: #2A6F2B;
   color: white;
 }
+
+.view-donations-status.status-delivered { /* Add style for Delivered */
+    background-color: #e0a800; /* Example: yellow */
+    color: #333;
+}
+
+.view-donations-status.status-pending { /* Add style for Pending Confirmation */
+    background-color: #6c757d; /* Example: grey */
+    color: white;
+}
+
 
 .view-donations-confirm-btn {
   background-color: #78C51C;
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -160,6 +168,12 @@
   background-color: #69b119;
 }
 
+.view-donations-confirm-btn:disabled { /* Style for disabled button */
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* All Donations section specific styles */
 .view-donations-all-item {
   flex-direction: column;
   align-items: flex-start;
@@ -170,13 +184,23 @@
   width: 100%;
 }
 
+/* Renamed for clarity */
+.view-donations-all-type {
+    font-size: 16px;
+    font-weight: 500;
+    color: #043f2e;
+}
+.view-donations-all-type .view-donations-name {
+    font-weight: 600;
+}
+
 .view-donations-counts {
   font-size: 14px;
   color: #4a5568;
   margin-top: 4px;
 }
 
-.view-donations-summary {
+.view-donations-summary { /* This class seems unused now? */
   color: #718096;
   margin-left: 4px;
 }
@@ -195,6 +219,21 @@
   color: #043f2e;
 }
 
+/* Loading and Error Styles */
+.loading-message, .error-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+    color: #4a5568;
+}
+.error-message {
+    color: #dc3545; /* Red for errors */
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin: 20px;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   .view-donations-item {
@@ -202,13 +241,18 @@
     align-items: flex-start;
     gap: 12px;
   }
-  
+
+  .view-donations-details {
+      margin-right: 0; /* Remove margin on small screens */
+      margin-bottom: 12px; /* Add bottom margin */
+  }
+
   .view-donations-status,
   .view-donations-confirm-btn {
-    align-self: stretch;
+    align-self: stretch; /* Make button/status full width */
     text-align: center;
   }
-  
+
   .view-donations-section,
   .view-donations-contact {
     margin: 0 16px 16px 16px;
