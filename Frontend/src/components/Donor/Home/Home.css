@@ -8,19 +8,19 @@
   font-family: "Inter", sans-serif;
 }
 
-.home-container {
+.home {
   width: 100%;
   overflow-x: hidden;
 }
 
 /* Common section styles */
-.section-container {
+.home__section-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 5rem 1rem;
 }
 
-.section-title {
+.home__section-title {
   text-align: center;
   font-size: 32px;
   font-weight: 700;
@@ -28,7 +28,7 @@
   color: #043f2e;
 }
 
-.section-subtitle {
+.home__section-subtitle {
   text-align: center;
   font-size: 16px;
   color: #666;
@@ -38,7 +38,7 @@
 }
 
 /* Hero Section with Slideshow */
-.hero-section {
+.home__hero {
   position: relative;
   min-height: 600px;
   display: flex;
@@ -49,7 +49,7 @@
   overflow: hidden;
 }
 
-.hero-slideshow {
+.home__hero-slideshow {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -57,7 +57,7 @@
   left: 0;
 }
 
-.slide {
+.home__hero-slide {
   position: absolute;
   top: 0;
   left: 0;
@@ -66,22 +66,22 @@
   background-size: cover;
   background-position: center;
   opacity: 0;
-  animation: slideshow 15s infinite;
+  animation: home-slideshow 15s infinite;
 }
 
-.slide:nth-child(1) {
+.home__hero-slide:nth-child(1) {
   animation-delay: 0s;
 }
 
-.slide:nth-child(2) {
+.home__hero-slide:nth-child(2) {
   animation-delay: 5s;
 }
 
-.slide:nth-child(3) {
+.home__hero-slide:nth-child(3) {
   animation-delay: 10s;
 }
 
-@keyframes slideshow {
+@keyframes home-slideshow {
   0%, 28%, 100% {
     opacity: 0;
     transform: scale(1.1);
@@ -96,7 +96,7 @@
   }
 }
 
-.hero-overlay {
+.home__hero-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -106,14 +106,14 @@
   z-index: 1;
 }
 
-.hero-content {
+.home__hero-content {
   position: relative;
   z-index: 2;
   max-width: 800px;
   padding: 0 20px;
 }
 
-.hero-title {
+.home__hero-title {
   font-size: 48px;
   font-weight: 800;
   margin-bottom: 24px;
@@ -121,7 +121,7 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.hero-subtitle {
+.home__hero-subtitle {
   font-size: 20px;
   margin-bottom: 36px;
   line-height: 1.6;
@@ -129,14 +129,14 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.hero-buttons {
+.home__hero-buttons {
   display: flex;
   justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
 }
 
-.hero-button {
+.home__button {
   padding: 16px 32px;
   border-radius: 8px;
   font-weight: 600;
@@ -146,43 +146,43 @@
   display: inline-block;
 }
 
-.hero-button.primary {
+.home__button--primary {
   background-color: #78C51C;
   color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.hero-button.primary:hover {
+.home__button--primary:hover {
   background-color: #69b119;
   transform: translateY(-3px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.hero-button.secondary {
+.home__button--secondary {
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
   border: 2px solid white;
 }
 
-.hero-button.secondary:hover {
+.home__button--secondary:hover {
   background-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-3px);
 }
 
-/* Schools Donations Section - Updated to match design */
-.schools-donations-section {
+/* Schools Donations Section */
+.home__schools {
   background-color: #f8faf9;
   padding: 4rem 0;
 }
 
-.schools-grid {
+.home__schools-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
   margin-bottom: 40px;
 }
 
-.school-card {
+.home__school-card {
   background: white;
   border-radius: 12px;
   padding: 24px;
@@ -191,7 +191,7 @@
   flex-direction: column;
 }
 
-.school-name {
+.home__school-name {
   color: #043f2e;
   font-size: 18px;
   font-weight: 600;
@@ -199,14 +199,14 @@
   text-align: center;
 }
 
-.school-info {
+.home__school-info {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
 }
 
-.school-location, .school-students {
+.home__school-location, .home__school-students {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -214,18 +214,18 @@
   color: #555;
 }
 
-.school-location svg, .school-students svg {
+.home__school-location svg, .home__school-students svg {
   color: #043f2e;
   min-width: 16px;
 }
 
-.school-needs-list {
+.home__school-needs-list {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.needs-header {
+.home__needs-header {
   font-weight: 500;
   font-size: 14px;
   color: #555;
@@ -233,28 +233,28 @@
   align-items: center;
 }
 
-.needs-items {
+.home__needs-items {
   font-size: 14px;
   color: #555;
 }
 
-.progress-section {
+.home__progress-section {
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
   font-size: 14px;
 }
 
-.progress-label {
+.home__progress-label {
   color: #555;
 }
 
-.progress-percentage {
+.home__progress-percentage {
   color: #555;
   font-weight: 500;
 }
 
-.progress-bar-container {
+.home__progress-bar-container {
   height: 8px;
   background-color: #e0e0e0;
   border-radius: 4px;
@@ -262,13 +262,13 @@
   overflow: hidden;
 }
 
-.progress-bar {
+.home__progress-bar {
   height: 100%;
   background-color: #4CAF50;
   border-radius: 4px;
 }
 
-.donate-now-button {
+.home__donate-button {
   padding: 12px;
   background-color: #4CAF50;
   color: white;
@@ -283,16 +283,16 @@
   margin-top: auto;
 }
 
-.donate-now-button:hover {
+.home__donate-button:hover {
   background-color: #3d9c40;
   transform: translateY(-2px);
 }
 
-.view-all-container {
+.home__view-all-container {
   text-align: center;
 }
 
-.view-all-button {
+.home__view-all-button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -306,25 +306,25 @@
   transition: all 0.3s ease;
 }
 
-.view-all-button:hover {
+.home__view-all-button:hover {
   background-color: #043f2e;
   color: white;
   gap: 12px;
 }
 
 /* How It Works Section */
-.how-works-section {
+.home__how-works {
   background-color: white;
   padding: 2rem 0;
 }
 
-.how-works-grid {
+.home__how-works-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
 }
 
-.how-works-card {
+.home__how-works-card {
   background: #f8faf9;
   border-radius: 12px;
   padding: 24px;
@@ -333,12 +333,12 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.how-works-card:hover {
+.home__how-works-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.how-works-icon-container {
+.home__how-works-icon-container {
   background-color: rgba(120, 197, 28, 0.1);
   width: 60px;
   height: 60px;
@@ -349,27 +349,27 @@
   margin: 0 auto 16px auto;
 }
 
-.how-works-icon {
+.home__how-works-icon {
   width: 30px;
   height: 30px;
   color: #78C51C;
 }
 
-.how-works-title {
+.home__how-works-title {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 12px;
   color: #043f2e;
 }
 
-.how-works-description {
+.home__how-works-description {
   font-size: 14px;
   color: #666;
   line-height: 1.5;
 }
 
 /* Impact Statistics Section */
-.impact-section {
+.home__impact {
   position: relative;
   background-color: #043f2e;
   color: white;
@@ -377,12 +377,12 @@
   overflow: hidden;
 }
 
-.impact-section .section-title,
-.impact-section .section-subtitle {
+.home__impact .home__section-title,
+.home__impact .home__section-subtitle {
   color: white;
 }
 
-.impact-background {
+.home__impact-background {
   position: absolute;
   top: 0;
   left: 0;
@@ -392,18 +392,18 @@
   z-index: 0;
 }
 
-.impact-section .section-container {
+.home__impact .home__section-container {
   position: relative;
   z-index: 1;
 }
 
-.impact-stats-container {
+.home__impact-stats-container {
   display: flex;
   justify-content: space-between;
   gap: 20px;
 }
 
-.impact-stat-card {
+.home__impact-stat-card {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 24px;
@@ -412,45 +412,45 @@
   transition: transform 0.3s ease;
 }
 
-.impact-stat-card:hover {
+.home__impact-stat-card:hover {
   transform: translateY(-5px);
 }
 
-.impact-icon-container {
+.home__impact-icon-container {
   margin-bottom: 16px;
 }
 
-.impact-icon {
+.home__impact-icon {
   width: 32px;
   height: 32px;
   color: #78C51C;
 }
 
-.impact-stat-count {
+.home__impact-stat-count {
   font-size: 36px;
   font-weight: 700;
   margin-bottom: 8px;
   color: #78C51C;
 }
 
-.impact-stat-label {
+.home__impact-stat-label {
   font-size: 16px;
   font-weight: 500;
 }
 
 /* Testimonials Section */
-.testimonials-section {
+.home__testimonials {
   background-color: white;
   padding: 2rem 0;
 }
 
-.testimonials-grid {
+.home__testimonials-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
-.testimonial-card {
+.home__testimonial-card {
   background: #f8faf9;
   border-radius: 12px;
   padding: 32px;
@@ -459,11 +459,11 @@
   transition: transform 0.3s ease;
 }
 
-.testimonial-card:hover {
+.home__testimonial-card:hover {
   transform: translateY(-5px);
 }
 
-.quote-icon {
+.home__quote-icon {
   position: absolute;
   top: 16px;
   left: 20px;
@@ -474,7 +474,7 @@
   line-height: 1;
 }
 
-.testimonial-quote {
+.home__testimonial-quote {
   font-size: 16px;
   line-height: 1.6;
   color: #333;
@@ -483,55 +483,55 @@
   z-index: 1;
 }
 
-.testimonial-author {
+.home__testimonial-author {
   border-top: 1px solid #e1e1e1;
   padding-top: 16px;
 }
 
-.testimonial-name {
+.home__testimonial-name {
   font-weight: 600;
   color: #043f2e;
   margin-bottom: 4px;
 }
 
-.testimonial-role {
+.home__testimonial-role {
   font-size: 14px;
   color: #666;
 }
 
 /* Get Involved CTA Section */
-.get-involved-section {
+.home__get-involved {
   background: linear-gradient(to right, #78C51C, #2A6F2B);
   color: white;
   padding: 4rem 0;
 }
 
-.get-involved-content {
+.home__get-involved-content {
   text-align: center;
   max-width: 700px;
   margin: 0 auto;
 }
 
-.get-involved-title {
+.home__get-involved-title {
   font-size: 36px;
   font-weight: 700;
   margin-bottom: 16px;
 }
 
-.get-involved-description {
+.home__get-involved-description {
   font-size: 18px;
   margin-bottom: 32px;
   line-height: 1.6;
 }
 
-.get-involved-buttons {
+.home__get-involved-buttons {
   display: flex;
   justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
 }
 
-.primary-button {
+.home__button--get-involved-primary {
   background-color: white;
   color: #043f2e;
   padding: 14px 32px;
@@ -543,12 +543,12 @@
   display: inline-block;
 }
 
-.primary-button:hover {
+.home__button--get-involved-primary:hover {
   background-color: #f0f0f0;
   transform: translateY(-2px);
 }
 
-.secondary-button {
+.home__button--get-involved-secondary {
   background-color: rgba(255, 255, 255, 0.2);
   color: white;
   padding: 14px 32px;
@@ -562,7 +562,7 @@
   gap: 8px;
 }
 
-.secondary-button:hover {
+.home__button--get-involved-secondary:hover {
   background-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
   gap: 12px;
@@ -570,95 +570,96 @@
 
 /* Responsive styles */
 @media screen and (max-width: 1024px) {
-  .how-works-grid {
+  .home__how-works-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .impact-stats-container {
+  .home__impact-stats-container {
     flex-wrap: wrap;
   }
   
-  .impact-stat-card {
+  .home__impact-stat-card {
     flex-basis: 45%;
     margin-bottom: 16px;
   }
   
-  .testimonials-grid {
+  .home__testimonials-grid {
     grid-template-columns: repeat(2, 1fr);
   }
     
-  .hero-title {
+  .home__hero-title {
     font-size: 42px;
   }
 }
 
 @media screen and (max-width: 768px) {
-  .section-title {
+  .home__section-title {
     font-size: 28px;
   }
   
-  .impact-stats-container {
+  .home__impact-stats-container {
     flex-direction: column;
   }
   
-  .impact-stat-card {
+  .home__impact-stat-card {
     flex-basis: 100%;
   }
   
-  .testimonials-grid {
+  .home__testimonials-grid {
     grid-template-columns: 1fr;
   }
   
-  .get-involved-title {
+  .home__get-involved-title {
     font-size: 28px;
   }
   
-  .get-involved-description {
+  .home__get-involved-description {
     font-size: 16px;
   }
   
-  .hero-title {
+  .home__hero-title {
     font-size: 36px;
   }
   
-  .hero-subtitle {
+  .home__hero-subtitle {
     font-size: 18px;
   }
 }
 
 @media screen and (max-width: 480px) {
-  .how-works-grid {
+  .home__how-works-grid {
     grid-template-columns: 1fr;
   }
   
-  .section-container {
+  .home__section-container {
     padding: 3rem 1rem;
   }
   
-  .get-involved-buttons {
+  .home__get-involved-buttons {
     flex-direction: column;
     gap: 12px;
   }
   
-  .primary-button, .secondary-button {
+  .home__button--get-involved-primary, 
+  .home__button--get-involved-secondary {
     width: 100%;
   }
   
-  .hero-buttons {
+  .home__hero-buttons {
     flex-direction: column;
     gap: 12px;
     width: 100%;
   }
   
-  .hero-button {
+  .home__button {
     width: 100%;
   }
   
-  .hero-title {
+  .home__hero-title {
     font-size: 28px;
   }
   
-  .hero-subtitle {
+  .home__hero-subtitle {
     font-size: 16px;
   }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaUser, FaLock, FaPhone, FaMapMarkerAlt, FaLocationArrow } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
+import api from '../../../api'; // Correct import for our custom API instance
 import './DonorRegistration.css';
 
 const DonorRegistration = () => {
@@ -24,6 +25,11 @@ const DonorRegistration = () => {
 
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [isLocationLoading, setIsLocationLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [registrationStatus, setRegistrationStatus] = useState({
+    success: false,
+    message: ''
+  });
   const passwordRef = useRef(null);
 
   const [passwordStrength, setPasswordStrength] = useState({
@@ -172,7 +178,7 @@ const DonorRegistration = () => {
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!isPasswordValid()) {
@@ -182,7 +188,7 @@ const DonorRegistration = () => {
       }));
       return;
     }
-
+  
     if (formData.password !== formData.confirmPassword) {
       setErrors(prev => ({
         ...prev,
@@ -190,8 +196,45 @@ const DonorRegistration = () => {
       }));
       return;
     }
-
-    console.log('Form submitted:', formData);
+  
+    // Check for required location data
+    if (!formData.latitude || !formData.longitude) {
+      setErrors(prev => ({
+        ...prev,
+        location: 'Please share your location to continue'
+      }));
+      return;
+    }
+  
+    try {
+      setIsSubmitting(true);
+      
+      const response = await api.post('/api/donors/register', formData);
+      
+      if (response.data) {
+        // Store the token and user data in localStorage
+        localStorage.setItem('donorInfo', JSON.stringify(response.data));
+        
+        setRegistrationStatus({
+          success: true,
+          message: 'Registration successful!'
+        });
+        
+        // Show alert and navigate on OK
+        alert('Registration successful! Click OK to proceed to login.');
+        window.location.href = '/donor-login';
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
+      
+      setRegistrationStatus({
+        success: false,
+        message: errorMessage
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -201,6 +244,12 @@ const DonorRegistration = () => {
         Join us in making a difference! Register now to donate educational supplies and
         support students in need
       </p>
+
+      {registrationStatus.message && (
+        <div className={`status-message ${registrationStatus.success ? 'success' : 'error'}`}>
+          {registrationStatus.message}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -348,9 +397,13 @@ const DonorRegistration = () => {
         <button 
           type="submit" 
           className="submit-button"
-          disabled={!isPasswordValid() || formData.password !== formData.confirmPassword}
+          disabled={
+            !isPasswordValid() || 
+            formData.password !== formData.confirmPassword || 
+            isSubmitting
+          }
         >
-          Register as a Donor
+          {isSubmitting ? 'Registering...' : 'Register as a Donor'}
         </button>
       </form>
 

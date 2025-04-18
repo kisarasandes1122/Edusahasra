@@ -9,9 +9,9 @@ import rural3 from '../../../assets/images/image3.jpg';
 
 const Home = () => {
   const impactStats = [
-    { id: 1, icon: <School className="impact-icon" />, count: '70+', label: 'Schools Supported' },
-    { id: 2, icon: <Users className="impact-icon" />, count: '12,000+', label: 'Students Reached' },
-    { id: 3, icon: <Gift className="impact-icon" />, count: '3,200+', label: 'Donations Made' }
+    { id: 1, icon: <School className="home__impact-icon" />, count: '70+', label: 'Schools Supported' },
+    { id: 2, icon: <Users className="home__impact-icon" />, count: '12,000+', label: 'Students Reached' },
+    { id: 3, icon: <Gift className="home__impact-icon" />, count: '3,200+', label: 'Donations Made' }
   ];
 
   const testimonials = [
@@ -38,25 +38,25 @@ const Home = () => {
   const howItWorks = [
     {
       id: 1,
-      icon: <School className="how-works-icon" />,
+      icon: <School className="home__how-works-icon" />,
       title: "Schools Request",
       description: "Verified schools list their specific resource needs on our platform."
     },
     {
       id: 2,
-      icon: <Users className="how-works-icon" />,
+      icon: <Users className="home__how-works-icon" />,
       title: "Donors Choose",
       description: "Donors browse needs and select schools or specific supplies to support."
     },
     {
       id: 3,
-      icon: <Gift className="how-works-icon" />,
+      icon: <Gift className="home__how-works-icon" />,
       title: "Resources Delivered",
       description: "Donations are delivered via our logistics network or self-delivery by donors."
     },
     {
       id: 4,
-      icon: <Clock className="how-works-icon" />,
+      icon: <Clock className="home__how-works-icon" />,
       title: "Track Impact",
       description: "Follow your donation journey and see the difference you're making."
     }
@@ -90,26 +90,26 @@ const Home = () => {
   ];
 
   return (
-    <div className="home-container">
+    <div className="home">
       {/* Hero Section with Slideshow */}
-      <section className="hero-section">
-        <div className="hero-slideshow">
-          <div className="slide" style={{ backgroundImage: `url(${rural1})` }}></div>
-          <div className="slide" style={{ backgroundImage: `url(${rural2})` }}></div>
-          <div className="slide" style={{ backgroundImage: `url(${rural3})` }}></div>
-          <div className="hero-overlay"></div>
+      <section className="home__hero">
+        <div className="home__hero-slideshow">
+          <div className="home__hero-slide" style={{ backgroundImage: `url(${rural1})` }}></div>
+          <div className="home__hero-slide" style={{ backgroundImage: `url(${rural2})` }}></div>
+          <div className="home__hero-slide" style={{ backgroundImage: `url(${rural3})` }}></div>
+          <div className="home__hero-overlay"></div>
         </div>
-        <div className="hero-content">
-          <h1 className="hero-title">Bridge the Education Gap in Rural Sri Lanka</h1>
-          <p className="hero-subtitle">
+        <div className="home__hero-content">
+          <h1 className="home__hero-title">Bridge the Education Gap in Rural Sri Lanka</h1>
+          <p className="home__hero-subtitle">
             Connect directly with schools in need and provide essential educational resources
             to students who need them most
           </p>
-          <div className="hero-buttons">
-            <a href="/donor-register" className="hero-button primary">
+          <div className="home__hero-buttons">
+            <a href="/donor-register" className="home__button home__button--primary">
               Start Donating Today
             </a>
-            <a href="/needs" className="hero-button secondary">
+            <a href="/needs" className="home__button home__button--secondary">
               Browse School Requests
             </a>
           </div>
@@ -117,47 +117,47 @@ const Home = () => {
       </section>
       
       {/* Schools Donation Section */}
-      <section className="schools-donations-section">
-        <div className="section-container">
-          <h2 className="section-title">Schools Currently Seeking Support</h2>
-          <p className="section-subtitle">
+      <section className="home__schools">
+        <div className="home__section-container">
+          <h2 className="home__section-title">Schools Currently Seeking Support</h2>
+          <p className="home__section-subtitle">
             These schools have verified needs waiting for your support. Every donation makes a difference in a student's education journey.
           </p>
           
-          <div className="schools-grid">
+          <div className="home__schools-grid">
             {schoolDonations.map((school) => (
-              <div key={school.id} className="school-card">
-                <h3 className="school-name">{school.name}</h3>
-                <div className="school-info">
-                  <div className="school-location">
+              <div key={school.id} className="home__school-card">
+                <h3 className="home__school-name">{school.name}</h3>
+                <div className="home__school-info">
+                  <div className="home__school-location">
                     <MapPin size={16} />
                     <span>{school.location}</span>
                   </div>
-                  <div className="school-students">
+                  <div className="home__school-students">
                     <User size={16} />
                     <span>{school.studentCount} Students in need</span>
                   </div>
-                  <div className="school-needs-list">
-                    <div className="needs-header">Needs:</div>
-                    <div className="needs-items">{school.needs.join(', ')}</div>
+                  <div className="home__school-needs-list">
+                    <div className="home__needs-header">Needs:</div>
+                    <div className="home__needs-items">{school.needs.join(', ')}</div>
                   </div>
                 </div>
-                <div className="progress-section">
-                  <div className="progress-label">Progress</div>
-                  <div className="progress-percentage">{school.progress}% Done</div>
+                <div className="home__progress-section">
+                  <div className="home__progress-label">Progress</div>
+                  <div className="home__progress-percentage">{school.progress}% Done</div>
                 </div>
-                <div className="progress-bar-container">
-                  <div className="progress-bar" style={{ width: `${school.progress}%` }}></div>
+                <div className="home__progress-bar-container">
+                  <div className="home__progress-bar" style={{ width: `${school.progress}%` }}></div>
                 </div>
-                <a href={`/donate/${school.id}`} className="donate-now-button">
+                <a href={`/donate/${school.id}`} className="home__donate-button">
                   Donate Now
                 </a>
               </div>
             ))}
           </div>
           
-          <div className="view-all-container">
-            <a href="/needs" className="view-all-button">
+          <div className="home__view-all-container">
+            <a href="/needs" className="home__view-all-button">
               View All Requests <ArrowRight size={16} />
             </a>
           </div>
@@ -165,22 +165,22 @@ const Home = () => {
       </section>
 
       {/* Impact Statistics Section */}
-      <section className="impact-section">
-        <div className="impact-background"></div>
-        <div className="section-container">
-          <h2 className="section-title">Our Impact</h2>
-          <p className="section-subtitle">
+      <section className="home__impact">
+        <div className="home__impact-background"></div>
+        <div className="home__section-container">
+          <h2 className="home__section-title">Our Impact</h2>
+          <p className="home__section-subtitle">
             Together, we're creating meaningful change in education across rural Sri Lanka
           </p>
           
-          <div className="impact-stats-container">
+          <div className="home__impact-stats-container">
             {impactStats.map((stat) => (
-              <div key={stat.id} className="impact-stat-card">
-                <div className="impact-icon-container">
+              <div key={stat.id} className="home__impact-stat-card">
+                <div className="home__impact-icon-container">
                   {stat.icon}
                 </div>
-                <div className="impact-stat-count">{stat.count}</div>
-                <div className="impact-stat-label">{stat.label}</div>
+                <div className="home__impact-stat-count">{stat.count}</div>
+                <div className="home__impact-stat-label">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -189,21 +189,21 @@ const Home = () => {
       
       
       {/* How It Works Section */}
-      <section className="how-works-section">
-        <div className="section-container">
-          <h2 className="section-title">How EduSahasra Works</h2>
-          <p className="section-subtitle">
+      <section className="home__how-works">
+        <div className="home__section-container">
+          <h2 className="home__section-title">How EduSahasra Works</h2>
+          <p className="home__section-subtitle">
             Our platform makes it easy to connect donors with schools in need through a simple, transparent process
           </p>
           
-          <div className="how-works-grid">
+          <div className="home__how-works-grid">
             {howItWorks.map((item) => (
-              <div key={item.id} className="how-works-card">
-                <div className="how-works-icon-container">
+              <div key={item.id} className="home__how-works-card">
+                <div className="home__how-works-icon-container">
                   {item.icon}
                 </div>
-                <h3 className="how-works-title">{item.title}</h3>
-                <p className="how-works-description">{item.description}</p>
+                <h3 className="home__how-works-title">{item.title}</h3>
+                <p className="home__how-works-description">{item.description}</p>
               </div>
             ))}
           </div>
@@ -211,19 +211,19 @@ const Home = () => {
       </section>
       
       {/* Get Involved CTA Section */}
-      <section className="get-involved-section">
-        <div className="section-container">
-          <div className="get-involved-content">
-            <h2 className="get-involved-title">Ready to Make a Difference?</h2>
-            <p className="get-involved-description">
+      <section className="home__get-involved">
+        <div className="home__section-container">
+          <div className="home__get-involved-content">
+            <h2 className="home__get-involved-title">Ready to Make a Difference?</h2>
+            <p className="home__get-involved-description">
               Join thousands of donors who are helping bridge the education gap in rural Sri Lanka. 
               Every donation, no matter how small, creates a brighter future for students in need.
             </p>
-            <div className="get-involved-buttons">
-              <a href="/donor-register" className="primary-button">
+            <div className="home__get-involved-buttons">
+              <a href="/donor-register" className="home__button--get-involved-primary">
                 Start Donating
               </a>
-              <a href="/needs" className="secondary-button">
+              <a href="/needs" className="home__button--get-involved-secondary">
                 Browse Requests <ArrowRight size={16} />
               </a>
             </div>
@@ -232,29 +232,27 @@ const Home = () => {
       </section>
       
       {/* Testimonials Section */}
-      <section className="testimonials-section">
-        <div className="section-container">
-          <h2 className="section-title">What People Say</h2>
-          <p className="section-subtitle">
+      <section className="home__testimonials">
+        <div className="home__section-container">
+          <h2 className="home__section-title">What People Say</h2>
+          <p className="home__section-subtitle">
             Hear from donors and schools about their experience with EduSahasra
           </p>
           
-          <div className="testimonials-grid">
+          <div className="home__testimonials-grid">
             {testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="testimonial-card">
-                <div className="quote-icon">"</div>
-                <p className="testimonial-quote">{testimonial.quote}</p>
-                <div className="testimonial-author">
-                  <p className="testimonial-name">{testimonial.name}</p>
-                  <p className="testimonial-role">{testimonial.role}</p>
+              <div key={testimonial.id} className="home__testimonial-card">
+                <div className="home__quote-icon">"</div>
+                <p className="home__testimonial-quote">{testimonial.quote}</p>
+                <div className="home__testimonial-author">
+                  <p className="home__testimonial-name">{testimonial.name}</p>
+                  <p className="home__testimonial-role">{testimonial.role}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
-      
-      
     </div>
   );
 };

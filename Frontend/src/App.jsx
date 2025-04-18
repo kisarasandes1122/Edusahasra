@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
-import Header from './components/Donor/Header/Header';
+import Header from './components/Donor/Header/Header'; 
 import Footer from './components/Donor/Footer/Footer';
 import DonorRegistration from './components/Donor/DonorRegistration/DonorRegistration';
 import DonorLogin from './components/Donor/DonorLogin/DonorLogin';
@@ -31,19 +31,9 @@ import Home from './components/Donor/Home/Home';
 
 
 const DonorLayout = () => {
-  const mockAuthState = {
-    isAuthenticated: false,
-    user: {
-      name: "Kisara Sandes"
-    }
-  };
-
   return (
     <>
-      <Header 
-        isAuthenticated={mockAuthState.isAuthenticated}
-        user={mockAuthState.user}
-      />
+      <Header /> 
       <Outlet /> 
       <Footer />
     </>
@@ -81,32 +71,32 @@ const App = () => {
           <Route path='/needs' element={<SchoolsInNeedPage />} />
           <Route path='/needs/:id' element={<NeedPage />} />
           <Route path='/donate/:id' element={<DonationPage />} />
-          <Route path="/school-register" element={<SchoolRegistration />} />
-          <Route path="/school-login" element={<SchoolLogin />} />
-          <Route path='/my-donations' element={<MyDonations />} />
-          <Route path="/messages" element={<MessagesPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/school-register" element={<SchoolRegistration />} /> {/* Consider moving school reg/login */}
+          <Route path="/school-login" element={<SchoolLogin />} />         {/* Consider moving school reg/login */}
+          <Route path='/my-donations' element={<MyDonations />} />          {/* Should likely be protected */}
+          <Route path="/messages" element={<MessagesPage />} />            {/* Should likely be protected */}
+          <Route path="/profile" element={<ProfilePage />} />              {/* Should likely be protected */}
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/" element={<Home />} />
-
         </Route>
+
 
         <Route element={<SchoolLayout />}>
-          <Route path="/Dashboard" element={<SchoolDashboard />} />
-          <Route path="/view-donations" element={<ViewDonations />} />
-          <Route path="/request-donations" element={<RequestDonations />} />
-          <Route path="/send-thanks" element={<SendThanks />} />
-          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/Dashboard" element={<SchoolDashboard />} /> {/* Should be protected */}
+          <Route path="/view-donations" element={<ViewDonations />} /> {/* Should be protected */}
+          <Route path="/request-donations" element={<RequestDonations />} /> {/* Should be protected */}
+          <Route path="/send-thanks" element={<SendThanks />} /> {/* Should be protected */}
+          <Route path="/edit-profile" element={<EditProfile />} /> {/* Should be protected */}
         </Route>
 
-        <Route path="/admin-login" element={<AdminLogin />} />
 
-        <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/school-verification" element={<SchoolVerification />} />
-          <Route path="/admin/donation-management" element={<DonationManagement />} />
-          <Route path="/admin/analytics-reports" element={<AnalyticsReports />} />
-          <Route path="/admin/settings" element={<AdminSettings />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route element={<AdminLayout />}> {/* This layout implies admin is logged in */}
+          <Route path="/admin" element={<AdminDashboard />} />                 {/* Should be protected */}
+          <Route path="/admin/school-verification" element={<SchoolVerification />} /> {/* Should be protected */}
+          <Route path="/admin/donation-management" element={<DonationManagement />} /> {/* Should be protected */}
+          <Route path="/admin/analytics-reports" element={<AnalyticsReports />} />   {/* Should be protected */}
+          <Route path="/admin/settings" element={<AdminSettings />} />           {/* Should be protected */}
         </Route>
       </Routes>
     </Router>
