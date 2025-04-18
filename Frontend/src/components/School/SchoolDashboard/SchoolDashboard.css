@@ -1,205 +1,205 @@
 /* SchoolDashboard.css */
 .dashboard-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    font-family: 'Roboto', 'Arial', sans-serif;
-    background-color: #f9fafb;
-    min-height: 100vh;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Roboto', 'Arial', sans-serif;
+  background-color: #f8faf9;
+  min-height: 100vh;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: white;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.dashboard-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-title-sinhala {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #043f2e;
+}
+
+.dashboard-title-english {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.dashboard-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  color: #043f2e;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.dashboard-logout:hover {
+  color: #0a5e45;
+}
+
+.dashboard-logout-icon {
+  font-size: 16px;
+}
+
+.dashboard-welcome {
+  background-color: #f1f8f4;
+  padding: 16px 24px;
+  margin: 24px;
+  border-radius: 8px;
+  text-align: center;
+  color: #4a5568;
+  font-size: 15px;
+}
+
+.dashboard-welcome p{
+  margin: 0px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding: 0 24px;
+  margin-bottom: 24px;
+}
+
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none; /* Remove default link underline */
+}
+
+.action-card {
+  background-color: #043f2e;
+  color: white;
+  min-height: 150px;
+}
+
+.action-card:hover {
+  background-color: #0a5e45;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-content {
+  margin-bottom: 8px;
+}
+
+.card-title-sinhala {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.card-title-english {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.card-icon {
+  font-size: 24px;
+  opacity: 0.8;
+  margin-top: 16px;
+}
+
+.dashboard-section {
+  background-color: #f1f8f4;
+  margin: 0 24px 24px 24px;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.section-title {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: #043f2e;
+}
+
+.title-sinhala {
+  font-weight: 500;
+}
+
+.title-english {
+  font-weight: 600;
+}
+
+.donation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.donation-item {
+  background-color: #e8f3ea;
+  padding: 16px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.donation-item:hover {
+  background-color: #d9eadb;
+}
+
+.donation-sinhala {
+  color: #4a5568;
+}
+
+.donation-english {
+  color: #043f2e;
+  font-weight: 500;
+}
+
+.contact {
+  text-align: center;
+  color: #4a5568;
+}
+
+.contact-number {
+  font-weight: 600;
+  color: #043f2e;
+  margin-left: 4px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
   }
   
   .dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background-color: white;
-    border-bottom: 1px solid #eaeaea;
-  }
-  
-  .dashboard-title {
-    display: flex;
     flex-direction: column;
-  }
-  
-  .dashboard-title-sinhala {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 600;
-    color: #2d3748;
-  }
-  
-  .dashboard-title-english {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 500;
-    color: #4a5568;
-  }
-  
-  .dashboard-logout {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 8px 12px;
-    color: #2d3748;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  .dashboard-logout:hover {
-    color: #1a202c;
-  }
-  
-  .dashboard-logout-icon {
-    font-size: 16px;
-  }
-  
-  .dashboard-welcome {
-    background-color: #edf2f7;
-    padding: 16px 24px;
-    margin: 24px;
-    border-radius: 8px;
     text-align: center;
-    color: #4a5568;
-    font-size: 15px;
-  }
-
-  .dashboard-welcome p{
-    margin: 0px;
-  }
-  
-  .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    padding: 0 24px;
-    margin-bottom: 24px;
-  }
-  
-  .dashboard-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none; /* Remove default link underline */
-  }
-  
-  .action-card {
-    background-color: #1a365d;
-    color: white;
-    min-height: 150px;
-  }
-  
-  .action-card:hover {
-    background-color: #2a4365;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .card-content {
-    margin-bottom: 8px;
-  }
-  
-  .card-title-sinhala {
-    margin: 0 0 8px 0;
-    font-size: 18px;
-    font-weight: 500;
-  }
-  
-  .card-title-english {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-  }
-  
-  .card-icon {
-    font-size: 24px;
-    opacity: 0.8;
-    margin-top: 16px;
-  }
-  
-  .dashboard-section {
-    background-color: #edf2f7;
-    margin: 0 24px 24px 24px;
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  .section-title {
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 16px;
-    font-size: 18px;
-    color: #2d3748;
-  }
-  
-  .title-sinhala {
-    font-weight: 500;
-  }
-  
-  .title-english {
-    font-weight: 600;
-  }
-  
-  .donation-list {
-    display: flex;
-    flex-direction: column;
     gap: 12px;
   }
   
-  .donation-item {
-    background-color: #e2e8f0;
-    padding: 16px;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
+  .dashboard-welcome,
+  .dashboard-section {
+    margin: 16px;
   }
-  
-  .donation-item:hover {
-    background-color: #cbd5e0;
-  }
-  
-  .donation-sinhala {
-    color: #4a5568;
-  }
-  
-  .donation-english {
-    color: #2d3748;
-    font-weight: 500;
-  }
-  
-  .contact {
-    text-align: center;
-    color: #4a5568;
-  }
-  
-  .contact-number {
-    font-weight: 600;
-    color: #2d3748;
-    margin-left: 4px;
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-    .dashboard-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .dashboard-header {
-      flex-direction: column;
-      text-align: center;
-      gap: 12px;
-    }
-    
-    .dashboard-welcome,
-    .dashboard-section {
-      margin: 16px;
-    }
-  }
+}

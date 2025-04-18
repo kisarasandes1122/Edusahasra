@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   font-family: 'Roboto', 'Arial', sans-serif;
-  background-color: #f9fafb;
+  background-color: #f8faf9;
   min-height: 100vh;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
 }
@@ -26,7 +26,7 @@
   margin: 0;
   font-size: 24px;
   font-weight: 600;
-  color: #2d3748;
+  color: #043f2e;
 }
 
 .profile-back-btn-container {
@@ -37,18 +37,18 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #e2e8f0;
+  background-color: #e8f3ea;
   border: none;
   border-radius: 20px;
   padding: 8px 16px;
   cursor: pointer;
-  color: #4a5568;
+  color: #043f2e;
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
 .profile-back-btn:hover {
-  background-color: #cbd5e0;
+  background-color: #d9eadb;
 }
 
 .back-icon {
@@ -56,7 +56,7 @@
 }
 
 .profile-section {
-  background-color: #edf2f7;
+  background-color: #f1f8f4;
   margin: 0 24px 24px 24px;
   padding: 20px;
   border-radius: 8px;
@@ -67,7 +67,7 @@
   margin-bottom: 16px;
   font-size: 18px;
   font-weight: 600;
-  color: #2d3748;
+  color: #043f2e;
 }
 
 .profile-form {
@@ -92,7 +92,7 @@
 .form-textarea {
   width: 100%;
   padding: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e8f3ea;
   border-radius: 6px;
   font-size: 16px;
   color: #2d3748;
@@ -103,8 +103,8 @@
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+  border-color: #78C51C;
+  box-shadow: 0 0 0 3px rgba(120, 197, 28, 0.15);
 }
 
 .form-textarea {
@@ -121,7 +121,7 @@
 
 .location-display {
   background-color: white;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e8f3ea;
   border-radius: 6px;
   padding: 12px;
   min-height: 48px;
@@ -146,7 +146,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #4299e1;
+  background-color: #78C51C;
   color: white;
   border: none;
   border-radius: 6px;
@@ -159,7 +159,7 @@
 }
 
 .get-location-btn:hover {
-  background-color: #3182ce;
+  background-color: #69b119;
 }
 
 .get-location-btn:disabled {
@@ -198,8 +198,8 @@
 }
 
 .image-upload-label:hover {
-  border-color: #4299e1;
-  background-color: #ebf8ff;
+  border-color: #78C51C;
+  background-color: rgba(120, 197, 28, 0.1);
 }
 
 .upload-icon {
@@ -250,7 +250,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #172b4d;
+  background: linear-gradient(to right, #78C51C, #2A6F2B);
   border: none;
   border-radius: 6px;
   padding: 12px 24px;
@@ -260,7 +260,7 @@
 }
 
 .profile-save-btn:hover {
-  background-color: #1a365d;
+  background: linear-gradient(to right, #69b119, #245f24);
 }
 
 .save-text {
@@ -270,7 +270,7 @@
 }
 
 .profile-contact {
-  background-color: #edf2f7;
+  background-color: #f1f8f4;
   margin: 0 24px 24px 24px;
   padding: 16px;
   border-radius: 8px;
@@ -284,7 +284,7 @@
 
 .contact-number {
   font-weight: 600;
-  color: #2d3748;
+  color: #043f2e;
 }
 
 /* Responsive styles */

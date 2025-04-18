@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   font-family: 'Roboto', 'Arial', sans-serif;
-  background-color: #f9fafb;
+  background-color: #f8faf9;
   min-height: 100vh;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
 }
@@ -27,7 +27,7 @@
   margin: 0;
   font-size: 22px;
   font-weight: 600;
-  color: #2d3748;
+  color: #043f2e;
 }
 
 .send-thanks-title-english {
@@ -44,8 +44,8 @@
 .back-button {
   display: inline-flex;
   align-items: center;
-  background-color: #e2e8f0;
-  color: #4a5568;
+  background-color: #e8f3ea;
+  color: #043f2e;
   border: none;
   border-radius: 6px;
   padding: 8px 16px;
@@ -61,7 +61,7 @@
 }
 
 .instruction-box {
-  background-color: #edf2f7;
+  background-color: #f1f8f4;
   padding: 16px 24px;
   border-radius: 8px;
   margin-bottom: 24px;
@@ -74,13 +74,13 @@
 }
 
 .instruction-english {
-  color: #2d3748;
+  color: #043f2e;
   margin: 0;
   line-height: 1.5;
 }
 
 .thankyou-form-container {
-  background-color: #edf2f7;
+  background-color: #f1f8f4;
   border-radius: 8px;
   padding: 24px;
   margin-bottom: 24px;
@@ -100,7 +100,7 @@
 
 .heading-english {
   font-weight: 600;
-  color: #2d3748;
+  color: #043f2e;
 }
 
 .donor-selection-section,
@@ -116,7 +116,7 @@
 
 .selection-heading-english,
 .message-heading-english {
-  color: #2d3748;
+  color: #043f2e;
   font-weight: 600;
   margin-top: 0;
   margin-bottom: 16px;
@@ -144,7 +144,7 @@
 }
 
 .donor-item.selected {
-  border: 2px solid #1a365d;
+  border: 2px solid #043f2e;
 }
 
 .donor-name {
@@ -172,8 +172,8 @@
 }
 
 .select-circle.selected {
-  background-color: #1a365d;
-  border-color: #1a365d;
+  background-color: #043f2e;
+  border-color: #043f2e;
 }
 
 .check-icon {
@@ -203,7 +203,7 @@
 }
 
 .message-option.selected {
-  border: 2px solid #1a365d;
+  border: 2px solid #043f2e;
 }
 
 .message-content {
@@ -245,7 +245,7 @@
   width: 100%;
   min-height: 80px;
   padding: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e8f3ea;
   border-radius: 6px;
   resize: vertical;
   font-family: inherit;
@@ -289,7 +289,7 @@
 }
 
 .add-button-text-english {
-  color: #2d3748;
+  color: #043f2e;
   font-size: 14px;
   font-weight: 500;
 }
@@ -353,7 +353,7 @@
 
 .send-thanks-button {
   width: 100%;
-  background-color: #1a365d;
+  background-color: #043f2e;
   color: white;
   border: none;
   border-radius: 8px;
@@ -366,7 +366,7 @@
 }
 
 .send-thanks-button:hover {
-  background-color: #2a4365;
+  background-color: #0a5e45;
 }
 
 .send-thanks-button:disabled {
@@ -375,7 +375,7 @@
 }
 
 .support-contact {
-  background-color: #edf2f7;
+  background-color: #f1f8f4;
   border-radius: 8px;
   padding: 16px;
   text-align: center;
@@ -384,7 +384,7 @@
 
 .contact-number {
   font-weight: 600;
-  color: #2d3748;
+  color: #043f2e;
   margin-left: 4px;
 }
 
