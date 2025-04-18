@@ -83,5 +83,20 @@
   "received_on": "Received on",
   "loading_recent_donations": "Loading recent donations...",
   "error_fetching_recent_donations": "Failed to load recent donations.",
-  "no_recent_donations_received": "No recent donations have been confirmed yet."
+  "no_recent_donations_received": "No recent donations have been confirmed yet.",
+  "error_fetching_eligible_donors": "Failed to load donors eligible for thanks.",
+  "loading_eligible_donors": "Loading eligible donors...",
+  "sendthanks_select_donor_to_thank": "1. Select Donor to Thank",
+  "sendthanks_say_thank_you": "2. Choose or Write Message",
+  "sendthanks_add_photos_optional": "3. Add Photos (Optional)",
+  "please_select_donor": "Please select a donor to thank.",
+  "please_select_message": "Please select or write a thank you message.",
+  "please_enter_custom_message": "Please enter your custom message.",
+  "error_sending_thank_you": "Failed to send thank you message.",
+  "sendthanks_your_message": "Your Message",
+  "preview": "Preview",
+  "remove_image": "Remove image",
+  "upload_photos_area": "Upload photos area, click or drag and drop",
+  "max_files_limit": "You can upload a maximum of 5 images. Some files were ignored."
+  
 }

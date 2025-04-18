@@ -291,7 +291,7 @@ const SendThanks = () => {
                   <div className="thankyou-form-container">
                     {/* Donor Selection */}
                     <div className="donor-selection-section">
-                      <h3 className="selection-heading-english">{translations.select_donor_to_thank || '1. Select Donor to Thank'}</h3>
+                      <h3 className="selection-heading-english">{translations.sendthanks_select_donor_to_thank || '1. Select Donor to Thank'}</h3>
                       <div className="donors-list">
                         {eligibleDonors.map((donorData, index) => (
                           <div
@@ -319,7 +319,7 @@ const SendThanks = () => {
 
                     {/* Message Selection */}
                     <div className="message-selection-section">
-                       <h3 className="message-heading-english">{translations.say_thank_you || '2. Choose or Write Message'}</h3>
+                       <h3 className="message-heading-english">{translations.sendthanks_say_thank_you || '2. Choose or Write Message'}</h3>
                       <div className="message-options">
                         {/* Predefined Messages */}
                         {thankYouMessages.map((msg, index) => (
@@ -357,7 +357,7 @@ const SendThanks = () => {
                       {/* Custom Message Textarea */}
                       {isCustomMessage && (
                         <div className="custom-message-container">
-                          <label htmlFor="customMessage" className="input-label">{translations.your_message || 'Your Message'}:</label>
+                          <label htmlFor="customMessage" className="input-label">{translations.sendthanks_your_message || 'Your Message'}:</label>
                           <textarea
                             id="customMessage"
                             className="custom-message-textarea"
@@ -373,7 +373,7 @@ const SendThanks = () => {
 
                     {/* Photo Upload */}
                     <div className="photo-upload-section">
-                      <h3 className="selection-heading-english">{translations.add_photos_optional || '3. Add Photos (Optional)'}</h3>
+                      <h3 className="selection-heading-english">{translations.sendthanks_add_photos_optional || '3. Add Photos (Optional)'}</h3>
                       <input
                         type="file"
                         accept="image/jpeg, image/png, image/gif" // Be specific

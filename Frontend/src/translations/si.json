@@ -83,5 +83,19 @@
   "received_on": "ලැබුණු දිනය",
   "loading_recent_donations": "මෑත පරිත්‍යාග පූරණය කරමින්...",
   "error_fetching_recent_donations": "මෑත පරිත්‍යාග ලබාගැනීමට නොහැකි විය.",
-  "no_recent_donations_received": "මෑතකදී පරිත්‍යාග තහවුරු කර නොමැත."
+  "no_recent_donations_received": "මෑතකදී පරිත්‍යාග තහවුරු කර නොමැත.",
+  "error_fetching_eligible_donors": "ස්තුති කිරීමට සුදුසු පරිත්‍යාගශීලීන් ලැයිස්තුව ලබාගැනීමට නොහැකි විය.",
+  "loading_eligible_donors": "සුදුසු පරිත්‍යාගශීලීන් පූරණය කරමින්...",
+  "sendthanks_select_donor_to_thank": "1. ස්තුති කිරීමට පරිත්‍යාගශීලියෙකු තෝරන්න",
+  "sendthanks_say_thank_you": "2. පණිවිඩයක් තෝරන්න හෝ ලියන්න",
+  "sendthanks_add_photos_optional": "3. ඡායාරූප එක් කරන්න (විකල්ප)",
+  "please_select_donor": "කරුණාකර ස්තුති කිරීමට පරිත්‍යාගශීලියෙකු තෝරන්න.",
+  "please_select_message": "කරුණාකර ස්තුති පණිවිඩයක් තෝරන්න හෝ ලියන්න.",
+  "please_enter_custom_message": "කරුණාකර ඔබගේ අභිරුචි පණිවිඩය ඇතුළත් කරන්න.",
+  "error_sending_thank_you": "ස්තුති පණිවිඩය යැවීමට නොහැකි විය.",
+  "sendthanks_your_message": "ඔබගේ පණිවිඩය",
+  "preview": "පෙරදසුන",
+  "remove_image": "ඡායාරූපය ඉවත් කරන්න",
+  "upload_photos_area": "ඡායාරූප උඩුගත කිරීමේ ප්‍රදේශය, ක්ලික් කරන්න හෝ ඇද දමන්න",
+  "max_files_limit": "ඔබට උපරිම ඡායාරූප 5ක් උඩුගත කළ හැක. සමහර ගොනු නොසලකා හරින ලදී."
 }
