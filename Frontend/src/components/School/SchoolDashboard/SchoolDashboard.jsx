@@ -1,10 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaSignOutAlt, FaEye, FaHandHoldingHeart, FaThumbsUp, FaUserCircle } from 'react-icons/fa';
 import { useLanguage } from '../../LanguageSelector/LanguageContext';
 import './SchoolDashboard.css';
 
 const SchoolDashboard = () => {
   const { translations } = useLanguage();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Remove school authentication data from localStorage
+    localStorage.removeItem('schoolInfo');
+    
+    // Navigate to root path
+    navigate('/');
+  };
 
   return (
     <div className="dashboard-container">
@@ -12,7 +22,10 @@ const SchoolDashboard = () => {
         <div className="dashboard-title">
           <h1>{translations.dashboard}</h1>
         </div>
-        <button className="dashboard-logout">
+        <button 
+          className="dashboard-logout" 
+          onClick={handleLogout}
+        >
           <FaSignOutAlt className="dashboard-logout-icon" />
           <span>{translations.logout}</span>
         </button>

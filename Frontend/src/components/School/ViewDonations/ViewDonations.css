@@ -1,5 +1,5 @@
 /* ViewDonations.css */
-.donations-container {
+.view-donations-container {
   max-width: 1200px;
   margin: 0 auto;
   font-family: 'Roboto', 'Arial', sans-serif;
@@ -8,7 +8,7 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
 }
 
-.donations-header {
+.view-donations-header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,31 +17,32 @@
   border-bottom: 1px solid #eaeaea;
 }
 
-.donations-title {
+.view-donations-title {
   display: flex;
   flex-direction: column;
   align-items: center;
+  
 }
 
-.donations-title-sinhala {
+.view-donations-title-sinhala {
   margin: 0;
   font-size: 22px;
   font-weight: 600;
   color: #043f2e;
 }
 
-.donations-title-english {
+.view-donations-title-english {
   margin: 0;
   font-size: 18px;
   font-weight: 500;
   color: #4a5568;
 }
 
-.donations-back-btn-container {
+.view-donations-back-btn-container {
   padding: 16px 24px;
 }
 
-.donations-back-btn {
+.view-donations-back-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -55,43 +56,43 @@
   transition: all 0.2s ease;
 }
 
-.donations-back-btn:hover {
+.view-donations-back-btn:hover {
   background-color: #d9eadb;
 }
 
-.back-icon {
+.view-donations-back-icon {
   font-size: 14px;
 }
 
-.donations-section {
+.view-donations-section {
   background-color: #f1f8f4;
   margin: 0 24px 24px 24px;
   padding: 20px;
   border-radius: 8px;
 }
 
-.section-title {
+.view-donations-section-title {
   margin-top: 0;
   margin-bottom: 16px;
   font-size: 18px;
   color: #043f2e;
 }
 
-.title-sinhala {
+.view-donations-title-sinhala {
   font-weight: 500;
 }
 
-.title-english {
+.view-donations-title-english {
   font-weight: 600;
 }
 
-.donation-list {
+.view-donations-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.donation-item {
+.view-donations-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -101,49 +102,49 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.donation-details {
+.view-donations-details {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.donation-type {
+.view-donations-type {
   font-size: 16px;
   font-weight: 500;
   color: #043f2e;
 }
 
-.donation-count {
+.view-donations-count {
   color: #4a5568;
 }
 
-.donation-name {
+.view-donations-name {
   font-weight: 600;
 }
 
-.donation-date {
+.view-donations-date {
   font-size: 14px;
   color: #718096;
 }
 
-.donation-status {
+.view-donations-status {
   padding: 8px 16px;
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
 }
 
-.transit {
+.view-donations-transit {
   background-color: #043f2e;
   color: white;
 }
 
-.preparing {
+.view-donations-preparing {
   background-color: #2A6F2B;
   color: white;
 }
 
-.donation-confirm-btn {
+.view-donations-confirm-btn {
   background-color: #78C51C;
   color: white;
   border: none;
@@ -155,32 +156,32 @@
   transition: background-color 0.2s ease;
 }
 
-.donation-confirm-btn:hover {
+.view-donations-confirm-btn:hover {
   background-color: #69b119;
 }
 
-.all-donation {
+.view-donations-all-item {
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
 }
 
-.all-donation-details {
+.view-donations-all-details {
   width: 100%;
 }
 
-.donation-counts {
+.view-donations-counts {
   font-size: 14px;
   color: #4a5568;
   margin-top: 4px;
 }
 
-.donation-summary {
+.view-donations-summary {
   color: #718096;
   margin-left: 4px;
 }
 
-.donations-contact {
+.view-donations-contact {
   background-color: #f1f8f4;
   margin: 0 24px 24px 24px;
   padding: 16px;
@@ -189,27 +190,27 @@
   color: #4a5568;
 }
 
-.contact-number {
+.view-donations-contact-number {
   font-weight: 600;
   color: #043f2e;
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
-  .donation-item {
+  .view-donations-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
   
-  .donation-status,
-  .donation-confirm-btn {
+  .view-donations-status,
+  .view-donations-confirm-btn {
     align-self: stretch;
     text-align: center;
   }
   
-  .donations-section,
-  .donations-contact {
+  .view-donations-section,
+  .view-donations-contact {
     margin: 0 16px 16px 16px;
   }
 }

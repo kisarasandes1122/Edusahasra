@@ -76,52 +76,52 @@ const ViewDonations = () => {
   };
 
   return (
-    <div className="donations-container">
-      <header className="donations-header">
-        <div className="donations-title">
+    <div className="view-donations-container">
+      <header className="view-donations-header">
+        <div className="view-donations-title">
           <h1>{translations.view_donations}</h1>
         </div>
       </header>
 
-      <div className="donations-back-btn-container">
-        <button className="donations-back-btn" onClick={handleBack}>
-          <FaArrowLeft className="back-icon" />
+      <div className="view-donations-back-btn-container">
+        <button className="view-donations-back-btn" onClick={handleBack}>
+          <FaArrowLeft className="view-donations-back-icon" />
           <span>{translations.back}</span>
         </button>
       </div>
 
-      <div className="donations-section">
-        <h3 className="section-title">
+      <div className="view-donations-section">
+        <h3 className="view-donations-section-title">
           {translations.upcoming_donations}
         </h3>
 
-        <div className="donation-list">
-          <div className="donation-item">
-            <div className="donation-details">
-              <div className="donation-type">
+        <div className="view-donations-list">
+          <div className="view-donations-item">
+            <div className="view-donations-details">
+              <div className="view-donations-type">
                 {/* Keep the English name directly instead of translating */}
-                <span className="donation-count">30 Notebooks</span>
+                <span className="view-donations-count">30 Notebooks</span>
               </div>
-              <div className="donation-date">
+              <div className="view-donations-date">
                 {translations.expected_to_receive}: {translations.june} 24, 2025
               </div>
             </div>
-            <div className="donation-status transit">
+            <div className="view-donations-status view-donations-transit">
               <span>{translations.in_transit}</span>
             </div>
           </div>
 
-          <div className="donation-item">
-            <div className="donation-details">
-              <div className="donation-type">
+          <div className="view-donations-item">
+            <div className="view-donations-details">
+              <div className="view-donations-type">
                 {/* Keep the English name directly instead of translating */}
-                <span className="donation-count">40 Pens/Pencils</span>
+                <span className="view-donations-count">40 Pens/Pencils</span>
               </div>
-              <div className="donation-date">
+              <div className="view-donations-date">
                 {translations.expected_to_receive}: {translations.june} 24, 2025
               </div>
             </div>
-            <div className="donation-status preparing">
+            <div className="view-donations-status view-donations-preparing">
               <span>{translations.preparing}</span>
             </div>
           </div>
@@ -129,24 +129,24 @@ const ViewDonations = () => {
       </div>
 
       {pendingConfirmations.length > 0 && (
-        <div className="donations-section">
-          <h3 className="section-title">
+        <div className="view-donations-section">
+          <h3 className="view-donations-section-title">
             {translations.confirm_donations}
           </h3>
 
-          <div className="donation-list">
+          <div className="view-donations-list">
             {pendingConfirmations.map(donation => (
-              <div className="donation-item" key={donation.id}>
-                <div className="donation-details">
-                  <div className="donation-type">
-                    <span className="donation-count">
+              <div className="view-donations-item" key={donation.id}>
+                <div className="view-donations-details">
+                  <div className="view-donations-type">
+                    <span className="view-donations-count">
                       {/* Simply use the type as is, without translation */}
                       {donation.count} {donation.type}
                     </span>
                   </div>
                 </div>
                 <button 
-                  className="donation-confirm-btn"
+                  className="view-donations-confirm-btn"
                   onClick={() => handleConfirmDonation(donation.id)}
                 >
                   <span>{translations.confirm}</span>
@@ -157,22 +157,22 @@ const ViewDonations = () => {
         </div>
       )}
 
-      <div className="donations-section">
-        <h3 className="section-title">
+      <div className="view-donations-section">
+        <h3 className="view-donations-section-title">
           {translations.all_donations}
         </h3>
 
-        <div className="donation-list">
+        <div className="view-donations-list">
           {allDonations.map(donation => (
-            <div className="donation-item all-donation" key={donation.id}>
-              <div className="all-donation-details">
-                <div className="donation-type">
-                  <span className="donation-name">
+            <div className="view-donations-item view-donations-all-item" key={donation.id}>
+              <div className="view-donations-all-details">
+                <div className="view-donations-type">
+                  <span className="view-donations-name">
                     {/* Use the English type directly */}
                     {donation.type}
                   </span>
                 </div>
-                <div className="donation-counts">
+                <div className="view-donations-counts">
                   <span>{translations.requested_amount}: {donation.requested} | </span>
                   <span>{translations.received_amount}: {donation.received}</span>
                 </div>
@@ -182,10 +182,10 @@ const ViewDonations = () => {
         </div>
       </div>
 
-      <div className="donations-contact">
+      <div className="view-donations-contact">
         <p style={{ textAlign: 'center', padding: '15px 0' }}>
           <span>{translations.need_help_contact_us} </span>
-          <span className="contact-number">0789200730</span>
+          <span className="view-donations-contact-number">0789200730</span>
         </p>
       </div>
     </div>

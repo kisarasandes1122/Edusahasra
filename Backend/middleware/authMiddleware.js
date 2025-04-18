@@ -5,7 +5,6 @@ const School = require('../models/schoolModel');
 const Admin = require('../models/adminModel');
 const { JWT_SECRET } = require('../config/config');
 
-
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
@@ -27,7 +26,6 @@ const protect = asyncHandler(async (req, res, next) => {
 
       next();
     } catch (error) {
-      console.error(error);
       res.status(401);
       throw new Error('Not authorized, token failed');
     }
@@ -45,31 +43,31 @@ const protectSchool = asyncHandler(async (req, res, next) => {
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
-      // Get token from header
       token = req.headers.authorization.split(' ')[1];
 
-      // Verify token
       const decoded = jwt.verify(token, JWT_SECRET);
 
-      // Get school from the token (exclude password)
-      req.school = await School.findById(decoded.id).select('-password');
+      // Get school from the token
+      const schoolUser = await School.findById(decoded.id).select('-password');
 
-      if (!req.school) {
+      if (!schoolUser) {
         res.status(401);
-        throw new Error('Not authorized, school not found');
+        throw new Error('Not authorized, school not found for token');
       }
 
       // Check if school is approved
-      if (!req.school.isApproved) {
-        res.status(403);
-        throw new Error('Your school registration is pending approval by an administrator');
+      if (!schoolUser.isApproved) {
+        res.status(403); // Forbidden
+        throw new Error('Your school registration is pending approval or has been rejected');
       }
 
+      // Attach school to request object
+      req.school = schoolUser;
       next();
+
     } catch (error) {
-      console.error(error);
       res.status(401);
-      throw new Error('Not authorized, token failed');
+      throw new Error('Not authorized, token failed or invalid');
     }
   }
 
@@ -101,7 +99,6 @@ const protectAdmin = asyncHandler(async (req, res, next) => {
 
       next();
     } catch (error) {
-      console.error(error);
       res.status(401);
       throw new Error('Not authorized, token failed');
     }
@@ -124,4 +121,3 @@ const isSuperAdmin = asyncHandler(async (req, res, next) => {
 });
 
 module.exports = { protect, protectSchool, protectAdmin, isSuperAdmin };
-
