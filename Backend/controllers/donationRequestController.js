@@ -1,14 +1,15 @@
-// controllers/donationRequestController.js
+// backend/controllers/donationRequestController.js
 const asyncHandler = require('express-async-handler');
 const DonationRequest = require('../models/donationRequestModel');
 const School = require('../models/schoolModel'); // Needed for verification
+const mongoose = require('mongoose');
 
 // Define the minimum threshold consistent with the frontend
 const MINIMUM_THRESHOLD = 25;
 
 // @desc    Create a new donation request
-// @route   POST /api/requests
-// @access  Private (School)
+// @route   POST /api/requests/create
+// @access  Private (School) - Note: Route updated in routes file example below
 const createDonationRequest = asyncHandler(async (req, res) => {
   const { requestedItems, notes } = req.body;
   const schoolId = req.school._id; // Get school ID from authenticated user (protectSchool middleware)
@@ -57,6 +58,7 @@ const createDonationRequest = asyncHandler(async (req, res) => {
       categoryNameEnglish: String(categoryNameEnglish).trim(),
       categoryNameSinhala: String(categoryNameSinhala).trim(),
       quantity: numQuantity,
+       quantityReceived: 0, // Ensure quantityReceived is initialized
     });
   }
    // --- End Validation ---
@@ -89,8 +91,6 @@ const createDonationRequest = asyncHandler(async (req, res) => {
 });
 
 
-// --- Placeholder for future functions ---
-
 // @desc    Get donation requests for the logged-in school
 // @route   GET /api/requests/my-requests
 // @access  Private (School)
@@ -100,21 +100,29 @@ const getSchoolDonationRequests = asyncHandler(async (req, res) => {
   res.json(requests);
 });
 
-// @desc    Get a specific donation request by ID (for school or admin)
+// @desc    Get a specific donation request by ID (for school, donor, or admin)
 // @route   GET /api/requests/:id
-// @access  Private (School or Admin - needs logic to check ownership or role)
+// @access  Public (or check auth inside if needed later)
 const getDonationRequestById = asyncHandler(async (req, res) => {
     const requestId = req.params.id;
-    const request = await DonationRequest.findById(requestId).populate('school', 'schoolName schoolEmail city'); // Populate school details
+
+    if (!mongoose.Types.ObjectId.isValid(requestId)) {
+      res.status(400);
+      throw new Error('Invalid Donation Request ID format.');
+    }
+
+    // ***** CHANGE HERE: Populate more fields from the school *****
+    const request = await DonationRequest.findById(requestId)
+        .populate('school', 'schoolName schoolEmail city district province description images'); // <-- Added description and images
 
     if (!request) {
         res.status(404);
         throw new Error('Donation request not found.');
     }
 
-    // Optional: Add authorization check - does the logged-in user (school/admin) have permission to view this?
-    // For school: if (req.school && request.school.toString() !== req.school._id.toString()) { ... }
-    // For admin: Add admin check if implementing admin view
+    // Optional: Add authorization check here if needed in the future
+    // (e.g., if only specific users should view specific requests)
+    // For now, it's public as per the routes file.
 
     res.json(request);
 });
@@ -138,6 +146,11 @@ const deleteDonationRequest = asyncHandler(async (req, res) => {
      const requestId = req.params.id;
      const schoolId = req.school._id;
 
+      if (!mongoose.Types.ObjectId.isValid(requestId)) {
+        res.status(400);
+        throw new Error('Invalid Donation Request ID format.');
+      }
+
      const request = await DonationRequest.findById(requestId);
 
      if (!request) {
@@ -157,16 +170,171 @@ const deleteDonationRequest = asyncHandler(async (req, res) => {
          throw new Error(`Cannot delete request with status "${request.status}". Consider cancelling instead.`);
      }
 
-     await request.remove(); // Or findByIdAndDelete(requestId)
+     // Use deleteOne() or findByIdAndDelete()
+     await DonationRequest.deleteOne({ _id: requestId });
 
     res.json({ message: 'Donation request deleted successfully.' });
 });
 
 
+// @desc    Get publicly available donation requests (active, filterable, paginated)
+// @route   GET /api/requests
+// @access  Public
+const getPublicDonationRequests = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 6; // Match frontend default
+  const skip = (page - 1) * limit;
+
+  const locationQuery = req.query.location ? req.query.location.toLowerCase() : '';
+  const categoriesQuery = req.query.categories ? req.query.categories.split(',') : []; // Expect comma-separated string like "books,stationery"
+  const sortBy = req.query.sortBy || 'highest'; // 'highest' or 'lowest' progress
+
+  // --- Build Filter Criteria ---
+  const filterCriteria = {
+      status: { $in: ['Pending', 'Partially Fulfilled'] }, // Only show active requests
+      // We need to filter based on the *school's* location
+      // This requires populating school first or a more complex query/aggregation
+  };
+
+  // --- Prepare Category Matching (case-insensitive) ---
+   // Updated regex for better matching, including partial words and plurals
+  const categoryMatchers = categoriesQuery.map(cat => {
+      switch(cat.toLowerCase().trim()) { // Normalize input
+          case 'books': return /book|books|textbook|textbooks/i;
+          case 'stationery': return /stationer|pen|pencil|bag|bags|notebook|notebooks|rule|eraser/i; // Expanded
+          case 'uniform': return /uniform|uniforms|clothe|clothing|shoe|shoes/i; // Expanded
+          case 'equipment': return /equipment|computer|computers|library|lab|projector|furniture/i; // Expanded
+          case 'sportsgear': return /sport|gear|ball|bat|net|athletic/i; // Expanded
+          case 'other': return /other|resource|miscellaneous|supply|supplies/i; // Expanded
+          default: return new RegExp(cat.trim().replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'i'); // Escape special chars & case-insensitive
+      }
+  });
+
+
+  // --- Perform Query (Using Aggregation for location filtering and progress calculation) ---
+  const aggregationPipeline = [
+      // Match basic request status first (optimizes)
+      { $match: { status: { $in: ['Pending', 'Partially Fulfilled'] } } },
+      // Lookup school details
+      {
+          $lookup: {
+              from: 'schools', // The actual name of the schools collection in MongoDB
+              localField: 'school',
+              foreignField: '_id',
+              as: 'schoolDetails'
+          }
+      },
+      // Deconstruct the schoolDetails array (should only have one element)
+      { $unwind: '$schoolDetails' },
+      // Match based on school location (case-insensitive)
+      {
+          $match: {
+              ...(locationQuery && { // Only add location match if query exists
+                  $or: [
+                      { 'schoolDetails.city': { $regex: locationQuery, $options: 'i' } },
+                      { 'schoolDetails.district': { $regex: locationQuery, $options: 'i' } },
+                      { 'schoolDetails.province': { $regex: locationQuery, $options: 'i' } }
+                  ]
+              })
+          }
+      },
+       // Match based on categories if specified
+       ...(categoryMatchers.length > 0 ? [{
+           $match: {
+               'requestedItems': {
+                   $elemMatch: {
+                       // Check against both English and Sinhala names for broader matching
+                       $or: [
+                            { 'categoryNameEnglish': { $in: categoryMatchers } },
+                            // Optional: Add Sinhala matching if needed and if names are predictable
+                            // { 'categoryNameSinhala': { $in: categoryMatchers } } // Adjust regex if needed for Sinhala
+                        ]
+                    }
+               }
+           }
+       }] : []),
+      // Calculate total requested and received quantities for progress
+      {
+          $addFields: {
+              totalQuantityRequested: { $sum: '$requestedItems.quantity' },
+              totalQuantityReceived: { $sum: '$requestedItems.quantityReceived' },
+              // Include school data directly in the root for easier access
+              schoolInfo: {
+                  _id: '$schoolDetails._id',
+                  schoolName: '$schoolDetails.schoolName',
+                  city: '$schoolDetails.city',
+                  district: '$schoolDetails.district',
+                  province: '$schoolDetails.province',
+                  // ***** ADD IMAGES HERE for the list view *****
+                  // Take only the first image for the card display, if available
+                  firstImage: { $arrayElemAt: ['$schoolDetails.images', 0] }
+                  // Add other needed school fields here (e.g., description for tooltip/preview)
+                   // description: '$schoolDetails.description' // Example
+              }
+          }
+      },
+      // Calculate progress percentage (handle division by zero)
+      {
+          $addFields: {
+              progress: {
+                  $cond: {
+                      if: { $gt: ['$totalQuantityRequested', 0] },
+                      then: {
+                          $round: [ // Round the progress
+                             {
+                                $multiply: [
+                                    { $divide: ['$totalQuantityReceived', '$totalQuantityRequested'] },
+                                    100
+                                ]
+                             },
+                             0 // Round to 0 decimal places
+                          ]
+                      },
+                      else: 0 // Progress is 0 if nothing was requested
+                  }
+              }
+          }
+      },
+       // Remove the temporary schoolDetails field if not needed later
+      { $project: { schoolDetails: 0 } },
+      // --- Sorting ---
+      {
+          $sort: {
+              progress: sortBy === 'lowest' ? 1 : -1, // 1 for ascending (lowest first), -1 for descending (highest first)
+              createdAt: -1 // Secondary sort by newest
+          }
+      },
+      // --- Pagination (must be applied *after* filtering/sorting) ---
+      // We need total count *before* skip/limit for pagination metadata
+      {
+         $facet: {
+              metadata: [ { $count: "totalRequests" } ],
+              data: [ { $skip: skip }, { $limit: limit } ]
+          }
+      }
+  ];
+
+  const results = await DonationRequest.aggregate(aggregationPipeline);
+
+  const requests = results[0]?.data || []; // Handle cases where results might be empty
+  const totalRequests = results[0]?.metadata[0]?.totalRequests || 0;
+  const totalPages = Math.ceil(totalRequests / limit);
+
+  res.json({
+      requests,
+      currentPage: page,
+      totalPages,
+      totalRequests,
+  });
+});
+
+
 module.exports = {
-  createDonationRequest,
-  getSchoolDonationRequests, // Export if implemented
-  getDonationRequestById,   // Export if implemented
-  updateDonationRequestStatus, // Export if implemented
-  deleteDonationRequest      // Export if implemented
+createDonationRequest,
+getSchoolDonationRequests,
+getDonationRequestById,
+updateDonationRequestStatus,
+deleteDonationRequest,
+getPublicDonationRequests, // <-- Export it
+
 };

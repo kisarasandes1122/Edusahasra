@@ -1,20 +1,17 @@
 import axios from 'axios';
 
-// Set default base URL - Make sure this matches your backend server address
-axios.defaults.baseURL = 'http://localhost:5000'; // Or your actual backend URL
+axios.defaults.baseURL = 'http://localhost:5000';
 
-// Create an axios instance with default configurations
 const api = axios.create({
-  baseURL: 'http://localhost:5000', // Or your actual backend URL
+  baseURL: 'http://localhost:5000', 
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
-// Add request interceptor to include auth token for protected routes
+
 api.interceptors.request.use(
   (config) => {
-    // Check if we're sending FormData and remove Content-Type header if so
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type'];
     }
@@ -81,22 +78,29 @@ api.interceptors.response.use(
         console.log("Received 401 Unauthorized, clearing tokens."); // Debug log
         // Check which token might have caused the 401
         if (localStorage.getItem('schoolInfo')) {
-             localStorage.removeItem('schoolInfo');
-             // Optional: Redirect school to login
-             // window.location.href = '/school-login';
+            localStorage.removeItem('schoolInfo');
+            window.location.href = '/school-login';
+
         } else if (localStorage.getItem('donorInfo')) {
             localStorage.removeItem('donorInfo');
-             // Optional: Redirect donor to login
-             // window.location.href = '/donor-login';
+            window.location.href = '/donor-login';
         }
-        // General redirect if unsure which token failed or if both are relevant
-        // if (!window.location.pathname.includes('/login')) {
-        //     // Redirect to a generic login or home page
-        //     // window.location.href = '/login';
-        // }
     }
     return Promise.reject(error);
   }
 );
+
+export const getFullImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    
+    // If already a full URL, return as is
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    
+    // Make sure path starts with a slash
+    const path = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `${axios.defaults.baseURL}${path}`;
+  };
 
 export default api;

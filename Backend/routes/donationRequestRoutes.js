@@ -4,27 +4,30 @@ const router = express.Router();
 const {
   createDonationRequest,
   getSchoolDonationRequests,
-  getDonationRequestById,
-  // updateDonationRequestStatus, // Uncomment when implemented
-  deleteDonationRequest,      // Uncomment when implemented
+  getDonationRequestById, // Keep the controller function
+  // updateDonationRequestStatus,
+  deleteDonationRequest,
+  getPublicDonationRequests,
 } = require('../controllers/donationRequestController');
-const { protectSchool } = require('../middleware/authMiddleware'); // School must be logged in and approved
-// const { protectAdmin } = require('../middleware/authMiddleware'); // Needed for admin-specific routes if any
+const { protectSchool } = require('../middleware/authMiddleware'); // Keep for school-specific actions
+// const { protect } = require('../middleware/authMiddleware'); // Import if you want donor protection
 
-// === School Routes ===
+// === Public Routes ===
+router.get('/', getPublicDonationRequests); // For listing requests
 
-// Create a new donation request
-router.post('/', protectSchool, createDonationRequest);
+// --- CHANGE THIS ROUTE ---
+// Remove protectSchool to allow public/donor access to view details
+router.get('/:id', getDonationRequestById);
+// --- END CHANGE ---
 
-// Get all requests made by the logged-in school
+
+// === School Routes (Keep protected) ===
+router.post('/create', protectSchool, createDonationRequest);
 router.get('/my-requests', protectSchool, getSchoolDonationRequests);
-
-// Get a specific request by ID (school viewing their own)
-// Note: Might overlap with admin view if not careful with authorization in controller
-router.get('/:id', protectSchool, getDonationRequestById);
-
-// Delete a request (e.g., if pending)
+// You might need a separate route if a school needs to get THEIR request with specific auth checks
+// Example: router.get('/school/:id', protectSchool, getOwnDonationRequestById);
 router.delete('/:id', protectSchool, deleteDonationRequest);
+// router.put('/:id/status', protectSchool, updateDonationRequestStatus); // Example if school updates status
 
 
 module.exports = router;

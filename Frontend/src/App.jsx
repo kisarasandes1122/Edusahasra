@@ -69,7 +69,7 @@ const App = () => {
           <Route path="/donor-register" element={<DonorRegistration />} />
           <Route path="/donor-login" element={<DonorLogin />} />
           <Route path='/needs' element={<SchoolsInNeedPage />} />
-          <Route path='/needs/:id' element={<NeedPage />} />
+          <Route path='/requests/:requestId' element={<NeedPage />} />
           <Route path='/donate/:id' element={<DonationPage />} />
           <Route path="/school-register" element={<SchoolRegistration />} /> {/* Consider moving school reg/login */}
           <Route path="/school-login" element={<SchoolLogin />} />         {/* Consider moving school reg/login */}

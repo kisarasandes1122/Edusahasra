@@ -1,0 +1,42 @@
+.spinner-overlay {
+    /* Optional: Use an overlay to cover the content area while loading */
+    /* position: absolute; */ /* Use absolute/fixed if you want it to overlay */
+    /* top: 0;
+    left: 0; */
+    /* width: 100%;
+    height: 100%; */
+    /* background-color: rgba(255, 255, 255, 0.7); */ /* Semi-transparent white */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top if using overlay */
+    padding: 40px 20px; /* Add padding if not using overlay */
+    min-height: 200px; /* Give it some height */
+  }
+  
+  .spinner-container {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3; /* Light grey border */
+    border-top: 5px solid #78C51C; /* Your theme green */
+    border-radius: 50%;
+    animation: spin 1s linear infinite; /* Animation definition */
+  }
+  
+  .spinner-message {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #555;
+    font-weight: 500;
+  }
+  
+  /* Spin Animation */
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }

@@ -1,108 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // <-- Import useNavigate
 import { FaSchool, FaMapMarkerAlt, FaUsers, FaListUl, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import api from '../../../api'; // <-- Import axios instance
 import './SchoolsInNeedPage.css';
+import LoadingSpinner from '../../Common/LoadingSpinner/LoadingSpinner'; // Assuming you have a spinner component
 
 const SchoolsInNeedPage = () => {
-  // Mock school data with diverse locations  
-  const allSchools = [
-    {
-      id: 1,
-      name: "Galle Central College",
-      location: "Galle, Southern Province",
-      students: 200,
-      needs: ["Textbooks", "Pens", "Pencils", "Bags"],
-      progress: 35
-    },
-    {
-      id: 2,
-      name: "Kandy Girls' High School",
-      location: "Kandy, Central Province",
-      students: 175,
-      needs: ["Books", "Stationery", "Equipment"],
-      progress: 60
-    },
-    {
-      id: 3,
-      name: "Jaffna Hindu College",
-      location: "Jaffna, Northern Province",
-      students: 220,
-      needs: ["Books", "Uniform", "Sports Gear"],
-      progress: 25
-    },
-    {
-      id: 4,
-      name: "Matara Rahula College",
-      location: "Matara, Southern Province",
-      students: 190,
-      needs: ["Textbooks", "Equipment", "Other"],
-      progress: 40
-    },
-    {
-      id: 5,
-      name: "Matale Girls' School",
-      location: "Matale, Central Province",
-      students: 165,
-      needs: ["Books", "Stationery", "Uniform"],
-      progress: 55
-    },
-    {
-      id: 6,
-      name: "Richmond College",
-      location: "Galle, Southern Province",
-      students: 210,
-      needs: ["Books", "Sports Gear", "Equipment"],
-      progress: 30
-    },
-    {
-      id: 7,
-      name: "Anuradhapura Central College",
-      location: "Anuradhapura, North Central Province",
-      students: 180,
-      needs: ["Books", "Uniforms", "Sports Equipment"],
-      progress: 45
-    },
-    {
-      id: 8,
-      name: "Badulla Mahinda College",
-      location: "Badulla, Uva Province",
-      students: 160,
-      needs: ["Books", "Stationery", "Library Resources"],
-      progress: 50
-    },
-    {
-      id: 9,
-      name: "Trincomalee Hindu College",
-      location: "Trincomalee, Eastern Province",
-      students: 230,
-      needs: ["Books", "Computers", "Uniforms"],
-      progress: 20
-    },
-    {
-      id: 10,
-      name: "Negombo St. Mary's College",
-      location: "Negombo, Western Province",
-      students: 195,
-      needs: ["Textbooks", "Sports Gear", "Other"],
-      progress: 38
-    },
-    {
-      id: 11,
-      name: "Ratnapura Royal College",
-      location: "Ratnapura, Sabaragamuwa Province",
-      students: 175,
-      needs: ["Books", "Pencils", "Bags"],
-      progress: 52
-    },
-    {
-      id: 12,
-      name: "Kurunegala Maliyadeva College",
-      location: "Kurunegala, North Western Province",
-      students: 215,
-      needs: ["Stationery", "Computers", "Library Books"],
-      progress: 33
-    }
-  ];
+  const navigate = useNavigate(); // <-- Get navigate function
 
+  // --- State for Filters ---
   const [location, setLocation] = useState('');
   const [itemCategories, setItemCategories] = useState({
     books: false,
@@ -110,64 +16,80 @@ const SchoolsInNeedPage = () => {
     uniform: false,
     equipment: false,
     sportsGear: false,
-    other: false
+    other: false,
   });
-  const [sortBy, setSortBy] = useState('highest');
-  const [filteredSchools, setFilteredSchools] = useState(allSchools);
-  
-  // Pagination states
+  const [sortBy, setSortBy] = useState('highest'); // 'highest' or 'lowest' progress
+
+  // --- State for Data and Pagination ---
+  const [donationRequests, setDonationRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [schoolsPerPage] = useState(6);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRequests, setTotalRequests] = useState(0);
+  const [requestsPerPage] = useState(6); // Keep this consistent with backend limit if possible
 
-  // Effect to filter schools based on selected filters
+  // --- Fetch Data Effect ---
   useEffect(() => {
-    let result = [...allSchools];
-    
-    // Filter by location
-    if (location) {
-      const locationFilter = location.toLowerCase();
-      result = result.filter(school => 
-        school.location.toLowerCase().includes(locationFilter)
-      );
-    }
-    
-    // Filter by item categories
-    const activeCategories = Object.entries(itemCategories)
-      .filter(([_, isChecked]) => isChecked)
-      .map(([category]) => category);
-    
-    if (activeCategories.length > 0) {
-      result = result.filter(school => {
-        return school.needs.some(need => {
-          const needLower = need.toLowerCase();
-          if (itemCategories.books && (needLower.includes('book') || needLower.includes('textbook'))) return true;
-          if (itemCategories.stationery && (needLower.includes('stationery') || needLower.includes('pen') || needLower.includes('pencil'))) return true;
-          if (itemCategories.uniform && needLower.includes('uniform')) return true;
-          if (itemCategories.equipment && needLower.includes('equipment')) return true;
-          if (itemCategories.sportsGear && (needLower.includes('sports') || needLower.includes('gear'))) return true;
-          if (itemCategories.other && needLower.includes('other')) return true;
-          return false;
-        });
-      });
-    }
-    
-    // Sort by progress
-    if (sortBy === 'highest') {
-      result.sort((a, b) => b.progress - a.progress);
-    } else if (sortBy === 'lowest') {
-      result.sort((a, b) => a.progress - b.progress);
-    }
-    
-    setFilteredSchools(result);
-    setCurrentPage(1); // Reset to first page when filters change
-  }, [location, itemCategories, sortBy]);
+    const fetchDonationRequests = async () => {
+      setLoading(true);
+      setError(null);
 
+      // Prepare query parameters
+      const activeCategories = Object.entries(itemCategories)
+        .filter(([_, isChecked]) => isChecked)
+        .map(([category]) => category)
+        .join(','); // Join active categories into a comma-separated string
+
+      const params = {
+        page: currentPage,
+        limit: requestsPerPage,
+        sortBy: sortBy,
+        ...(location && { location: location }), // Add location if selected
+        ...(activeCategories && { categories: activeCategories }), // Add categories if selected
+      };
+
+      try {
+        console.log('Fetching donation requests with params:', params); // Debug log
+        const response = await api.get('/api/requests', { params });
+        console.log('API Response:', response.data); // Debug log
+
+        setDonationRequests(response.data.requests || []);
+        setTotalPages(response.data.totalPages || 1);
+        setTotalRequests(response.data.totalRequests || 0);
+
+      } catch (err) {
+        console.error("Error fetching donation requests:", err);
+        setError(err.response?.data?.message || err.message || 'Failed to fetch donation requests.');
+        setDonationRequests([]); // Clear data on error
+        setTotalPages(1);
+        setTotalRequests(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDonationRequests();
+  }, [location, itemCategories, sortBy, currentPage, requestsPerPage]); // Re-fetch when filters or page change
+
+  // --- Filter Handlers ---
   const handleCategoryChange = (category) => {
-    setItemCategories({
-      ...itemCategories,
-      [category]: !itemCategories[category]
-    });
+    setItemCategories((prev) => ({
+      ...prev,
+      [category]: !prev[category],
+    }));
+    setCurrentPage(1); // Reset to first page when filters change
   };
+
+  const handleLocationChange = (e) => {
+    setLocation(e.target.value);
+    setCurrentPage(1); // Reset to first page
+  }
+
+  const handleSortChange = (e) => {
+      setSortBy(e.target.value);
+      setCurrentPage(1); // Reset to first page
+  }
 
   const resetFilters = () => {
     setLocation('');
@@ -177,131 +99,105 @@ const SchoolsInNeedPage = () => {
       uniform: false,
       equipment: false,
       sportsGear: false,
-      other: false
+      other: false,
     });
     setSortBy('highest');
     setCurrentPage(1);
   };
 
-  // Get current schools for pagination
-  const indexOfLastSchool = currentPage * schoolsPerPage;
-  const indexOfFirstSchool = indexOfLastSchool - schoolsPerPage;
-  const currentSchools = filteredSchools.slice(indexOfFirstSchool, indexOfLastSchool);
-
-  // Calculate total pages
-  const totalPages = Math.ceil(filteredSchools.length / schoolsPerPage);
-
-  // Change page
+  // --- Pagination Handlers ---
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  
-  // Navigate to next page
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
-  
-  // Navigate to previous page
   const prevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
+  // Calculate display range for summary
+  const indexOfLastRequest = currentPage * requestsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+
+
+  // --- Helper to format location ---
+  const formatLocation = (school) => {
+      const parts = [school.city, school.district, school.province].filter(Boolean); // Filter out null/empty values
+      return parts.join(', ');
+  }
+
+  // --- Render Logic ---
   return (
     <div className="sin-container">
       <header className="sin-header">
         <h1 className="sin-title">Find Schools in Need</h1>
         <p className="sin-subtitle">
-          Connect with schools across Sri Lanka and help them acquire essential educational 
-          resource they need most
+          Connect with schools across Sri Lanka and help them acquire essential educational
+          resource they need most through active donation requests.
         </p>
       </header>
 
       <div className="sin-content">
         <aside className="sin-sidebar">
+          {/* --- Filters --- */}
           <div className="sin-filter-section">
             <h2 className="sin-filter-title">Location</h2>
-            <select 
+            {/* Improve Location Filter - maybe use distinct locations from data? For now, manual */}
+            <select
               className="sin-select"
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={handleLocationChange} // Use specific handler
             >
               <option value="">All Locations</option>
-              <option value="galle">Galle</option>
-              <option value="kandy">Kandy</option>
-              <option value="jaffna">Jaffna</option>
-              <option value="matara">Matara</option>
-              <option value="matale">Matale</option>
+              {/* Add more locations as needed or fetch dynamically */}
+              <option value="Galle">Galle</option>
+              <option value="Kandy">Kandy</option>
+              <option value="Jaffna">Jaffna</option>
+              <option value="Matara">Matara</option>
+              <option value="Matale">Matale</option>
+              <option value="Anuradhapura">Anuradhapura</option>
+              <option value="Badulla">Badulla</option>
+              <option value="Trincomalee">Trincomalee</option>
+              <option value="Negombo">Negombo</option>
+              <option value="Ratnapura">Ratnapura</option>
+              <option value="Kurunegala">Kurunegala</option>
             </select>
           </div>
 
           <div className="sin-filter-section">
             <h2 className="sin-filter-title">Item Category</h2>
             <div className="sin-checkbox-group">
+              {/* Checkbox labels remain the same */}
               <label className="sin-checkbox-label">
-                <input 
-                  type="checkbox"
-                  checked={itemCategories.books}
-                  onChange={() => handleCategoryChange('books')}
-                  className="sin-checkbox"
-                />
-                Books
+                <input type="checkbox" checked={itemCategories.books} onChange={() => handleCategoryChange('books')} className="sin-checkbox"/> Books
               </label>
               <label className="sin-checkbox-label">
-                <input 
-                  type="checkbox"
-                  checked={itemCategories.stationery}
-                  onChange={() => handleCategoryChange('stationery')}
-                  className="sin-checkbox"
-                />
-                Stationery
+                <input type="checkbox" checked={itemCategories.stationery} onChange={() => handleCategoryChange('stationery')} className="sin-checkbox"/> Stationery
               </label>
               <label className="sin-checkbox-label">
-                <input 
-                  type="checkbox"
-                  checked={itemCategories.uniform}
-                  onChange={() => handleCategoryChange('uniform')}
-                  className="sin-checkbox" 
-                />
-                Uniform/ Clothes
+                 <input type="checkbox" checked={itemCategories.uniform} onChange={() => handleCategoryChange('uniform')} className="sin-checkbox" /> Uniform/ Clothes
               </label>
               <label className="sin-checkbox-label">
-                <input 
-                  type="checkbox"
-                  checked={itemCategories.equipment}
-                  onChange={() => handleCategoryChange('equipment')}
-                  className="sin-checkbox"
-                />
-                Equipment
+                 <input type="checkbox" checked={itemCategories.equipment} onChange={() => handleCategoryChange('equipment')} className="sin-checkbox" /> Equipment
               </label>
-              <label className="sin-checkbox-label">
-                <input 
-                  type="checkbox"
-                  checked={itemCategories.sportsGear}
-                  onChange={() => handleCategoryChange('sportsGear')}
-                  className="sin-checkbox"
-                />
-                Sports Gear
+               <label className="sin-checkbox-label">
+                 <input type="checkbox" checked={itemCategories.sportsGear} onChange={() => handleCategoryChange('sportsGear')} className="sin-checkbox" /> Sports Gear
               </label>
-              <label className="sin-checkbox-label">
-                <input 
-                  type="checkbox"
-                  checked={itemCategories.other}
-                  onChange={() => handleCategoryChange('other')}
-                  className="sin-checkbox"
-                />
-                Other
-              </label>
+               <label className="sin-checkbox-label">
+                 <input type="checkbox" checked={itemCategories.other} onChange={() => handleCategoryChange('other')} className="sin-checkbox" /> Other
+               </label>
             </div>
           </div>
 
           <div className="sin-filter-section">
             <h2 className="sin-filter-title">Sort By Progress</h2>
-            <select 
+            <select
               className="sin-select"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={handleSortChange} // Use specific handler
             >
               <option value="highest">Highest Progress First</option>
               <option value="lowest">Lowest Progress First</option>
@@ -314,68 +210,90 @@ const SchoolsInNeedPage = () => {
         </aside>
 
         <main className="sin-main-content">
-          <div className="sin-school-grid">
-            {currentSchools.length > 0 ? (
-              currentSchools.map((school) => (
-                <div className="sin-school-card" key={school.id}>
+          {loading ? (
+             <LoadingSpinner /> // Display loading spinner
+          ) : error ? (
+            <div className="sin-error-message">Error: {error}</div> // Display error
+          ) : donationRequests.length > 0 ? (
+            <div className="sin-school-grid">
+              {donationRequests.map((request) => (
+                <div className="sin-school-card" key={request._id}> {/* Use request._id */}
                   <div className="sin-school-header">
                     <FaSchool className="sin-school-icon" />
-                    <h3 className="sin-school-name">{school.name}</h3>
+                     {/* Display school name from populated data */}
+                    <h3 className="sin-school-name">{request.schoolInfo?.schoolName || 'School Name Unavailable'}</h3>
                   </div>
-                  
+
                   <div className="sin-school-location">
                     <FaMapMarkerAlt className="sin-location-icon" />
-                    <span className="sin-location-text">{school.location}</span>
+                    {/* Display formatted location */}
+                    <span className="sin-location-text">{formatLocation(request.schoolInfo)}</span>
                   </div>
-                  
-                  <div className="sin-school-students">
+
+                  {/* Removed student count as it's not in the base request/school model */}
+                  {/* <div className="sin-school-students">
                     <FaUsers className="sin-students-icon" />
-                    <span className="sin-students-text">{school.students} Students in need</span>
-                  </div>
-                  
+                    <span className="sin-students-text">{request.schoolInfo?.studentCount || 'N/A'} Students potentially benefit</span>
+                  </div> */}
+
                   <div className="sin-school-needs">
                     <FaListUl className="sin-needs-icon" />
                     <div className="sin-needs-container">
-                      <span className="sin-needs-label">Needs:</span>
-                      <span className="sin-needs-text">{school.needs.join(', ')}</span>
+                      <span className="sin-needs-label">Needs Summary:</span>
+                       {/* Display summarized requested items */}
+                      <span className="sin-needs-text">
+                        {request.requestedItems
+                            .map(item => `${item.quantity} ${item.categoryNameEnglish}`)
+                            .slice(0, 3) // Show first 3 items for brevity
+                            .join(', ')}
+                        {request.requestedItems.length > 3 ? '...' : ''}
+                      </span>
                     </div>
                   </div>
-                  
+
                   <div className="sin-progress-section">
                     <div className="sin-progress-text">
                       <span>Progress</span>
-                      <span>{school.progress}% Done</span>
+                      {/* Display calculated progress */}
+                      <span>{Math.round(request.progress || 0)}% Done</span>
                     </div>
                     <div className="sin-progress-bar">
-                      <div 
-                        className="sin-progress-fill" 
-                        style={{ width: `${school.progress}%` }}
+                      <div
+                        className="sin-progress-fill"
+                        style={{ width: `${request.progress || 0}%` }}
                       ></div>
                     </div>
                   </div>
-                  
-                  <button className="sin-donate-button">Donate Now</button>
+
+                  {/* Update Button Navigation */}
+                  <button
+                    className="sin-donate-button"
+                    onClick={() => navigate(`/requests/${request._id}`)} // Navigate to request detail page
+                  >
+                    View Details & Donate
+                  </button>
                 </div>
-              ))
-            ) : (
-              <div className="sin-no-results">
-                <p>No schools match your current filters.</p>
-              </div>
-            )}
-          </div>
-          
-          {/* Pagination */}
-          {filteredSchools.length > 0 && (
+              ))}
+            </div>
+          ) : (
+            <div className="sin-no-results">
+              <p>No donation requests match your current filters.</p>
+            </div>
+          )}
+
+          {/* Pagination - Use totalPages from state */}
+          {totalRequests > 0 && !loading && (
             <div className="sin-pagination">
-              <button 
+              <button
                 className="sin-pagination-button"
                 onClick={prevPage}
                 disabled={currentPage === 1}
               >
                 <FaChevronLeft />
               </button>
-              
+
               <div className="sin-pagination-numbers">
+                 {/* Generate page numbers based on totalPages */}
                 {Array.from({ length: totalPages }, (_, i) => (
                   <button
                     key={i + 1}
@@ -386,8 +304,8 @@ const SchoolsInNeedPage = () => {
                   </button>
                 ))}
               </div>
-              
-              <button 
+
+              <button
                 className="sin-pagination-button"
                 onClick={nextPage}
                 disabled={currentPage === totalPages}
@@ -396,11 +314,16 @@ const SchoolsInNeedPage = () => {
               </button>
             </div>
           )}
-          
-          {/* Results summary */}
-          <div className="sin-results-summary">
-            Showing {indexOfFirstSchool + 1}-{Math.min(indexOfLastSchool, filteredSchools.length)} of {filteredSchools.length} schools
-          </div>
+
+          {/* Results summary - Use totalRequests from state */}
+          {!loading && (
+             <div className="sin-results-summary">
+                {totalRequests > 0
+                  ? `Showing ${indexOfFirstRequest + 1}-${Math.min(indexOfLastRequest, totalRequests)} of ${totalRequests} requests`
+                  : 'No requests found'
+                }
+             </div>
+          )}
         </main>
       </div>
     </div>

@@ -1,100 +1,167 @@
+/* --- DonationModal.css --- */
+
+:root { /* Define variables if not already global */
+  --font-primary: 'Inter', sans-serif;
+  --color-text: #111827;
+  --color-text-secondary: #6B7280;
+  --color-primary-action: #2A6F2B;
+  --color-primary-action-hover: #225a23;
+  --color-modal-bg: white;
+  --color-modal-section-bg: #F9FAFB;
+  --color-modal-border: #e5e7eb; /* Lighter border for modal sections */
+  --color-login-button-text: var(--color-primary-action);
+  --color-login-button-bg: white;
+  --color-login-button-border: var(--color-primary-action); /* Use primary action color for border */
+  --color-login-button-hover-bg: var(--color-primary-action); /* Green background on hover */
+  --color-login-button-hover-text: white; /* White text on hover */
+  --border-radius-large: 20px;
+  --border-radius-medium: 12px;
+  --border-radius-small: 8px;
+}
+
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.856);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal-container {
+  background-color: var(--color-modal-bg);
+  border-radius: var(--border-radius-large);
+  padding: 32px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  margin: auto;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-title {
+  font-family: var(--font-primary);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text);
+  text-align: center;
+  margin: 0;
+}
+
+.modal-subtitle {
+  font-family: var(--font-primary);
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin: -10px 0 5px 0; /* Adjust margin slightly */
+  line-height: 1.5;
+}
+
+.registration-section,
+.login-section {
+  background-color: var(--color-modal-section-bg);
+  border-radius: var(--border-radius-medium);
+  padding: 24px;
+  border: 1px solid var(--color-modal-border); /* Optional: add subtle border */
+}
+
+.section-title {
+  font-family: var(--font-primary);
+  font-size: 18px;
+  font-weight: 700;
+  /* Use the primary action color for section titles to match buttons */
+  color: var(--color-primary-action);
+  margin: 0 0 8px 0;
+}
+
+.section-description {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+/* --- Updated Button Styles --- */
+.modal-button {
+  display: inline-block; /* Ensure consistent block behavior */
+  width: 100%;
+  padding: 12px 24px;
+  /* Apply the border-radius */
+  border-radius: var(--border-radius-small); /* Should be 8px */
+  font-family: var(--font-primary);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; /* Refine transition */
+  border: 1px solid transparent;
+  text-align: center;
+  text-decoration: none !important; /* Remove underline from Link */
+  box-sizing: border-box; /* Include padding/border in width */
+}
+
+/* Style for Register button */
+.modal-button.register-button { /* Use compound selector for specificity */
+  background-color: var(--color-primary-action);
+  color: white;
+  border-color: var(--color-primary-action);
+}
+
+.modal-button.register-button:hover {
+  background-color: var(--color-primary-action-hover);
+  border-color: var(--color-primary-action-hover);
+  color: white;
+}
+
+/* Style for Login button */
+.modal-button.login-button { /* Use compound selector for specificity */
+  background-color: var(--color-login-button-bg); /* White background */
+  color: var(--color-login-button-text); /* Green text */
+  border: 1px solid var(--color-login-button-border); /* Green border */
+}
+
+/* Hover style for Login button */
+.modal-button.login-button:hover {
+  background-color: var(--color-login-button-hover-bg); /* Green background */
+  color: var(--color-login-button-hover-text);      /* White text */
+  border-color: var(--color-login-button-hover-bg);  /* Green border */
+}
+
+/* Responsive Modal */
+@media (max-width: 640px) {
   .modal-container {
-    background-color: white;
-    border-radius: 20px;
-    padding: 32px;
-    width: 100%;
-    max-width: 630px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    max-width: 95%;
   }
-  
-  .modal-content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
   .modal-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 24px;
-    font-weight: 800;
-    color: #111827;
-    text-align: center;
-    margin: 0;
+    font-size: 20px;
   }
-  
   .modal-subtitle {
-    font-family: 'Inter', sans-serif;
-    font-size: 16px;
-    color: #6B7280;
-    text-align: center;
-    margin: 0;
-    margin-top: -11px;
+    font-size: 14px;
   }
-  
+  .section-title {
+    font-size: 17px;
+  }
+  .section-description {
+    font-size: 13px;
+  }
+  .modal-button {
+    font-size: 15px;
+    padding: 11px 20px;
+  }
   .registration-section,
   .login-section {
-    background-color: #F9FAFB;
-    border-radius: 12px;
-    padding: 24px;
+    padding: 20px;
   }
-  
-  .section-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: #12263A;
-    margin: 0 0 8px 0;
-  }
-  
-  .section-description {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    color: #6B7280;
-    margin: 0 0 16px 0;
-  }
-  
-  .modal-button {
-    width: 100%;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-  }
-  
-  .register-button {
-    background-color: #2A6F2B;
-    color: white;
-  }
-  
-  .register-button:hover {
-    background-color: #2A6F2B;
-  }
-  
-  .login-button {
-    background-color: white;
-    color: #2A6F2B;
-    border: 1px solid #12263A;
-  }
-  
-  .login-button:hover {
-    background-color: #2A6F2B;
-    color: white;
-  }
+}
