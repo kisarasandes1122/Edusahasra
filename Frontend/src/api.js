@@ -12,6 +12,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    // Check if we're sending FormData and remove Content-Type header if so
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type'];
     }
