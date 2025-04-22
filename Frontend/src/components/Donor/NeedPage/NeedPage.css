@@ -13,7 +13,7 @@
 .need-header {
   display: flex;
   justify-content: space-between; /* Keep space between text and button */
-  align-items: flex-start; /* Align items to the top */
+  align-items: stretch; /* This helps align items vertically */
   margin-bottom: 30px;
   padding-bottom: 20px; /* Add some padding below the header content */
   border-bottom: 1px solid #eee; /* Optional: Add a subtle separator line */
@@ -23,6 +23,8 @@
 .need-title-section {
   flex: 1; /* Allow text section to take available space */
   min-width: 0; /* Prevent overflow issues in flex child */
+  display: flex;
+  flex-direction: column;
 }
 
 .need-title {
@@ -48,39 +50,49 @@
   color: #777; /* Slightly muted icon color */
 }
 
-/* **** START CSS CHANGES **** */
-/* Container for description and notes */
-.need-description-wrapper {
-  margin-top: 15px; /* Space above description */
+/* Content containers wrapper - helps with alignment */
+.content-containers {
+  flex: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  width: 1195px;/* Distribute space to push notes to bottom */
+}
+
+/* School info container */
+.school-info-container {
   background-color: #f9f9f9; /* Subtle background */
   padding: 15px;
   border-radius: 6px;
   border: 1px solid #efefef;
+  margin-bottom: 10px; /* Space between containers */
 }
 
 .need-description {
   line-height: 1.6; /* Improved readability */
-  margin: 0 0 10px 0; /* Space below description */
+  margin: 0; /* No bottom margin needed */
   font-size: 15px;
   color: #444; /* Slightly darker text */
 }
-/* Remove default margin if it's the last element */
-.need-description:last-child {
-  margin-bottom: 0;
+
+/* Request notes as separate container */
+.request-notes-container {
+  background-color: #f3f8f3; /* Different subtle background color */
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #e5f0e5; /* Slightly different border color */
+  margin-top: auto; /* Push to bottom when possible */
 }
 
-
 .need-request-note {
-    margin: 10px 0 0 0; /* Space above notes */
-    padding-top: 10px; /* Space above notes */
-    border-top: 1px dashed #ddd; /* Separator line */
-    font-size: 14px;
-    line-height: 1.5;
-    color: #555;
+  margin: 0; /* Reset margin */
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
 }
 
 .need-request-note strong {
-    color: #333;
+  color: #333;
 }
 
 .donate-btn-wrapper {
@@ -89,6 +101,7 @@
   align-items: flex-end; /* Align button/message to the right */
   margin-left: 20px; /* Ensure some space from text on wider screens */
   flex-shrink: 0; /* Prevent button wrapper from shrinking */
+  justify-content: flex-start; /* Align button to top */
 }
 
 .donate-now-btn {
@@ -110,19 +123,17 @@
 
 /* Status message styling (Fulfilled/Cancelled) */
 .request-status-message {
-    font-weight: bold;
-    margin-top: 10px; /* Space between button (if shown) and message */
-    text-align: right;
-    font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px; /* Space between button (if shown) and message */
+  text-align: right;
+  font-size: 14px;
 }
 .request-status-message.fulfilled {
-    color: #2e7d32; /* Green */
+  color: #2e7d32; /* Green */
 }
 .request-status-message.cancelled {
-    color: #c62828; /* Red */
+  color: #c62828; /* Red */
 }
-
-/* **** END CSS CHANGES **** */
 
 /* Image gallery styling */
 .gallery-title {
@@ -223,7 +234,6 @@
   display: flex;
   padding: 15px 0; /* Vertical padding */
   border-bottom: 1px solid #eaf3eb ;
-  /* background-color: #eaf3eb; Removed background from row */
   transition: background-color 0.2s ease; /* Hover effect */
 }
 .table-row:hover {
@@ -279,13 +289,25 @@
   .need-header {
     flex-direction: column;
     align-items: stretch; /* Stretch items full width */
-    border-bottom: none; /* Remove border on mobile? */
+    border-bottom: none; /* Remove border on mobile */
     padding-bottom: 0;
   }
 
   .need-title-section {
     max-width: 100%;
     margin-bottom: 20px;
+  }
+  
+  .content-containers {
+    margin-bottom: 15px;
+  }
+
+  .school-info-container {
+    margin-bottom: 15px;
+  }
+
+  .request-notes-container {
+    margin-top: 15px; /* Fixed space on mobile */
   }
 
   .donate-btn-wrapper {
@@ -296,7 +318,6 @@
   .request-status-message {
     text-align: left; /* Align status text left */
   }
-
 
   .photo-gallery {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust for smaller screens */
@@ -377,5 +398,4 @@
          width: 100%; /* Full width status */
          text-align: center;
     }
-
 }

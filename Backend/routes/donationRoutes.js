@@ -1,5 +1,3 @@
-// routes/donationRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const {
@@ -12,28 +10,25 @@ const {
     updateDonationStatusByAdmin,
     confirmDonationReceipt,
 } = require('../controllers/donationController');
-const { protect } = require('../middleware/authMiddleware');      // Donor protection
-const { protectSchool } = require('../middleware/authMiddleware'); // School protection
-const { protectAdmin } = require('../middleware/authMiddleware');  // Admin protection
+const { protect } = require('../middleware/authMiddleware');    
+const { protectSchool } = require('../middleware/authMiddleware'); 
+const { protectAdmin } = require('../middleware/authMiddleware'); 
 
 // === Donor Routes ===
 router.post('/', protect, createDonation);
 router.get('/my-donations', protect, getMyDonations);
 router.put('/:id/status', protect, updateDonationStatusByDonor);
-// Donor gets their specific donation
-router.get('/donor/:id', protect, getDonationById); // <<< CHANGED URL & uses protect
+router.get('/donor/:id', protect, getDonationById); 
 
 // === School Routes ===
 router.get('/school-donations', protectSchool, getSchoolDonations);
 router.put('/:id/confirm-receipt', protectSchool, confirmDonationReceipt);
-// School gets a specific donation intended for them
-router.get('/school/:id', protectSchool, getDonationById); // <<< NEW ROUTE for School
+router.get('/school/:id', protectSchool, getDonationById);
 
 // === Admin Routes ===
 router.get('/admin-view', protectAdmin, getAdminDonations);
 router.put('/:id/admin-status', protectAdmin, updateDonationStatusByAdmin);
-// Admin gets any specific donation
-router.get('/admin/:id', protectAdmin, getDonationById); // <<< NEW ROUTE for Admin
+router.get('/admin/:id', protectAdmin, getDonationById);
 
 
 module.exports = router;
