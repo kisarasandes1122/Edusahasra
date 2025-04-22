@@ -1,13 +1,74 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react'; // Import hooks
+import { useNavigate } from 'react-router-dom';    // Import useNavigate
 import { ArrowRight, School, Users, Gift, TrendingUp, Clock, BookOpen, GraduationCap, Heart, MapPin, User } from 'lucide-react';
+import api from '../../../api'; // Import your api instance
 import './Home.css';
+import LoadingSpinner from '../../Common/LoadingSpinner/LoadingSpinner'; // Optional: if you have one
 
-// Import images
+// Import images (keep these)
 import rural1 from '../../../assets/images/image1.jpg';
 import rural2 from '../../../assets/images/image2.webp';
 import rural3 from '../../../assets/images/image3.jpg';
 
+// Helper function to shuffle an array (Fisher-Yates shuffle)
+function shuffleArray(array) {
+  let currentIndex = array.length, randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+  return array;
+}
+
+// Helper function to format location (similar to SchoolsInNeedPage)
+const formatLocation = (school) => {
+    if (!school) return 'Location Unavailable';
+    const parts = [school.city, school.district, school.province].filter(Boolean);
+    return parts.join(', ') || 'Location details missing';
+}
+
+
 const Home = () => {
+  const navigate = useNavigate(); // Initialize navigate
+
+  // --- State for fetched requests ---
+  const [featuredRequests, setFeaturedRequests] = useState([]);
+  const [loadingRequests, setLoadingRequests] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+
+  // --- Fetch featured requests on component mount ---
+  useEffect(() => {
+    const fetchRequests = async () => {
+      setLoadingRequests(true);
+      setFetchError(null);
+      try {
+        // Fetch a few requests (e.g., 9 lowest progress ones) to get a pool
+        const response = await api.get('/api/requests', {
+          params: { limit: 9, sortBy: 'lowest' } // Fetch 9 lowest progress requests
+        });
+
+        if (response.data && response.data.requests) {
+          // Shuffle the fetched requests and take the first 3
+          const shuffled = shuffleArray([...response.data.requests]);
+          setFeaturedRequests(shuffled.slice(0, 3));
+        } else {
+          setFeaturedRequests([]);
+        }
+      } catch (err) {
+        console.error("Error fetching featured requests:", err);
+        setFetchError("Could not load school requests.");
+        setFeaturedRequests([]);
+      } finally {
+        setLoadingRequests(false);
+      }
+    };
+
+    fetchRequests();
+  }, []); // Empty dependency array means run once on mount
+
+  // --- Keep other static data ---
   const impactStats = [
     { id: 1, icon: <School className="home__impact-icon" />, count: '70+', label: 'Schools Supported' },
     { id: 2, icon: <Users className="home__impact-icon" />, count: '12,000+', label: 'Students Reached' },
@@ -62,38 +123,14 @@ const Home = () => {
     }
   ];
 
-  const schoolDonations = [
-    {
-      id: 1,
-      name: "Mahasen Primary School",
-      location: "Anuradhapura, North Central Province",
-      studentCount: 150,
-      needs: ["Textbooks", "Pens", "Pencils", "Notebooks"],
-      progress: 45
-    },
-    {
-      id: 2,
-      name: "Galle Central College",
-      location: "Galle, Southern Province",
-      studentCount: 200,
-      needs: ["Textbooks", "Pens", "Pencils", "Bags"],
-      progress: 35
-    },
-    {
-      id: 3,
-      name: "Vidyaloka College",
-      location: "Galle, Southern Province",
-      studentCount: 180,
-      needs: ["Science Equipment", "Library Books", "Stationery"],
-      progress: 65
-    }
-  ];
+  // REMOVED the static schoolDonations array
 
   return (
     <div className="home">
-      {/* Hero Section with Slideshow */}
+      {/* Hero Section */}
       <section className="home__hero">
-        <div className="home__hero-slideshow">
+        {/* ... hero content ... */}
+         <div className="home__hero-slideshow">
           <div className="home__hero-slide" style={{ backgroundImage: `url(${rural1})` }}></div>
           <div className="home__hero-slide" style={{ backgroundImage: `url(${rural2})` }}></div>
           <div className="home__hero-slide" style={{ backgroundImage: `url(${rural3})` }}></div>
@@ -115,47 +152,70 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
-      {/* Schools Donation Section */}
+
+      {/* Schools Donation Section - NOW DYNAMIC */}
       <section className="home__schools">
         <div className="home__section-container">
           <h2 className="home__section-title">Schools Currently Seeking Support</h2>
           <p className="home__section-subtitle">
             These schools have verified needs waiting for your support. Every donation makes a difference in a student's education journey.
           </p>
-          
-          <div className="home__schools-grid">
-            {schoolDonations.map((school) => (
-              <div key={school.id} className="home__school-card">
-                <h3 className="home__school-name">{school.name}</h3>
-                <div className="home__school-info">
-                  <div className="home__school-location">
-                    <MapPin size={16} />
-                    <span>{school.location}</span>
+
+          {loadingRequests ? (
+            <LoadingSpinner /> // Show loading spinner while fetching
+          ) : fetchError ? (
+            <p className="home__error-message">{fetchError}</p> // Show error message
+          ) : featuredRequests.length > 0 ? (
+            <div className="home__schools-grid">
+              {/* Map over the fetched featuredRequests */}
+              {featuredRequests.map((request) => (
+                <div key={request._id} className="home__school-card"> {/* Use request._id */}
+                  <h3 className="home__school-name">{request.schoolInfo?.schoolName || 'School Name Unavailable'}</h3>
+                  <div className="home__school-info">
+                    <div className="home__school-location">
+                      <MapPin size={16} />
+                      {/* Use helper function for location */}
+                      <span>{formatLocation(request.schoolInfo)}</span>
+                    </div>
+                    {/* Removed student count as it's not reliably in the request data */}
+                    {/* <div className="home__school-students">
+                      <User size={16} />
+                      <span>{request.schoolInfo?.studentCount} Students in need</span>
+                    </div> */}
+                    <div className="home__school-needs-list">
+                      <div className="home__needs-header">Needs Summary:</div>
+                       {/* Summarize requested items */}
+                      <div className="home__needs-items">
+                          {request.requestedItems
+                              ?.map(item => item.categoryNameEnglish) // Just show names for brevity
+                              .slice(0, 3) // Show first 3
+                              .join(', ')}
+                          {request.requestedItems?.length > 3 ? '...' : ''}
+                      </div>
+                    </div>
                   </div>
-                  <div className="home__school-students">
-                    <User size={16} />
-                    <span>{school.studentCount} Students in need</span>
+                  <div className="home__progress-section">
+                    <div className="home__progress-label">Progress</div>
+                    {/* Use progress from fetched data */}
+                    <div className="home__progress-percentage">{Math.round(request.progress || 0)}% Done</div>
                   </div>
-                  <div className="home__school-needs-list">
-                    <div className="home__needs-header">Needs:</div>
-                    <div className="home__needs-items">{school.needs.join(', ')}</div>
+                  <div className="home__progress-bar-container">
+                    <div className="home__progress-bar" style={{ width: `${request.progress || 0}%` }}></div>
                   </div>
+                  {/* Link to the Request Details page */}
+                  <button
+                      onClick={() => navigate(`/requests/${request._id}`)} // Use navigate
+                      className="home__donate-button"
+                    >
+                      View Details & Donate
+                  </button>
                 </div>
-                <div className="home__progress-section">
-                  <div className="home__progress-label">Progress</div>
-                  <div className="home__progress-percentage">{school.progress}% Done</div>
-                </div>
-                <div className="home__progress-bar-container">
-                  <div className="home__progress-bar" style={{ width: `${school.progress}%` }}></div>
-                </div>
-                <a href={`/donate/${school.id}`} className="home__donate-button">
-                  Donate Now
-                </a>
-              </div>
-            ))}
-          </div>
-          
+              ))}
+            </div>
+          ) : (
+            <p>No active donation requests found at the moment.</p> // Message if no requests fetched
+          )}
+
           <div className="home__view-all-container">
             <a href="/needs" className="home__view-all-button">
               View All Requests <ArrowRight size={16} />
@@ -166,36 +226,38 @@ const Home = () => {
 
       {/* Impact Statistics Section */}
       <section className="home__impact">
-        <div className="home__impact-background"></div>
-        <div className="home__section-container">
-          <h2 className="home__section-title">Our Impact</h2>
-          <p className="home__section-subtitle">
-            Together, we're creating meaningful change in education across rural Sri Lanka
-          </p>
-          
-          <div className="home__impact-stats-container">
-            {impactStats.map((stat) => (
-              <div key={stat.id} className="home__impact-stat-card">
-                <div className="home__impact-icon-container">
-                  {stat.icon}
+         {/* ... impact content ... */}
+          <div className="home__impact-background"></div>
+          <div className="home__section-container">
+            <h2 className="home__section-title">Our Impact</h2>
+            <p className="home__section-subtitle">
+              Together, we're creating meaningful change in education across rural Sri Lanka
+            </p>
+
+            <div className="home__impact-stats-container">
+              {impactStats.map((stat) => (
+                <div key={stat.id} className="home__impact-stat-card">
+                  <div className="home__impact-icon-container">
+                    {stat.icon}
+                  </div>
+                  <div className="home__impact-stat-count">{stat.count}</div>
+                  <div className="home__impact-stat-label">{stat.label}</div>
                 </div>
-                <div className="home__impact-stat-count">{stat.count}</div>
-                <div className="home__impact-stat-label">{stat.label}</div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
       </section>
-      
-      
+
+
       {/* How It Works Section */}
       <section className="home__how-works">
-        <div className="home__section-container">
+         {/* ... how it works content ... */}
+         <div className="home__section-container">
           <h2 className="home__section-title">How EduSahasra Works</h2>
           <p className="home__section-subtitle">
             Our platform makes it easy to connect donors with schools in need through a simple, transparent process
           </p>
-          
+
           <div className="home__how-works-grid">
             {howItWorks.map((item) => (
               <div key={item.id} className="home__how-works-card">
@@ -209,14 +271,15 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Get Involved CTA Section */}
       <section className="home__get-involved">
-        <div className="home__section-container">
+         {/* ... get involved content ... */}
+          <div className="home__section-container">
           <div className="home__get-involved-content">
             <h2 className="home__get-involved-title">Ready to Make a Difference?</h2>
             <p className="home__get-involved-description">
-              Join thousands of donors who are helping bridge the education gap in rural Sri Lanka. 
+              Join thousands of donors who are helping bridge the education gap in rural Sri Lanka.
               Every donation, no matter how small, creates a brighter future for students in need.
             </p>
             <div className="home__get-involved-buttons">
@@ -230,15 +293,16 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Testimonials Section */}
       <section className="home__testimonials">
-        <div className="home__section-container">
+         {/* ... testimonials content ... */}
+         <div className="home__section-container">
           <h2 className="home__section-title">What People Say</h2>
           <p className="home__section-subtitle">
             Hear from donors and schools about their experience with EduSahasra
           </p>
-          
+
           <div className="home__testimonials-grid">
             {testimonials.map((testimonial) => (
               <div key={testimonial.id} className="home__testimonial-card">

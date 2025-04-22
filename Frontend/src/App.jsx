@@ -1,3 +1,5 @@
+// frontend/src/App.jsx
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
 import Header from './components/Donor/Header/Header';
@@ -6,7 +8,7 @@ import DonorRegistration from './components/Donor/DonorRegistration/DonorRegistr
 import DonorLogin from './components/Donor/DonorLogin/DonorLogin';
 import SchoolsInNeedPage from './components/Donor/SchoolInNeeds/SchoolsInNeedPage';
 import NeedPage from './components/Donor/NeedPage/NeedPage';
-import DonationPage from './components/Donor/DonationPage/DonationPage'; // The page to protect
+import DonationPage from './components/Donor/DonationPage/DonationPage';
 import SchoolRegistration from './components/School/SchoolRegistration/SchoolRegistration';
 import SchoolLogin from './components/School/SchoolLogin/SchoolLogin';
 import SchoolDashboard from './components/School/SchoolDashboard/SchoolDashboard';
@@ -23,38 +25,40 @@ import SchoolVerification from './components/Admin/SchoolVerification/SchoolVeri
 import DonationManagement from './components/Admin/DonationManagement/DonationManagement';
 import AnalyticsReports from './components/Admin/AnalyticsReports/AnalyticsReports';
 import AdminSettings from './components/Admin/AdminSettings/AdminSettings';
-import MyDonations from './components/Donor/MyDonations/MyDonations';       // Protect this too
-import MessagesPage from './components/Donor/MessagesPage/MessagesPage';   // Protect this too
-import ProfilePage from './components/Donor/ProfilePage/ProfilePage';      // Protect this too
+import MyDonations from './components/Donor/MyDonations/MyDonations';
+import MessagesPage from './components/Donor/MessagesPage/MessagesPage';
+import ProfilePage from './components/Donor/ProfilePage/ProfilePage';
 import AboutUs from './components/Donor/AboutUs/AboutUs';
 import Home from './components/Donor/Home/Home';
 
-// Import the protected route component
-import DonorRoute from './components/Common/Auth/DonorRoute'; // Adjust path if needed
+// Import the protected route components
+import DonorRoute from './components/Common/Auth/DonorRoute';
+import SchoolRoute from './components/Common/Auth/SchoolRoute'; // <-- Import SchoolRoute
 
 const DonorLayout = () => {
-  return (
-    <>
-      <Header />
-      <Outlet />
-      <Footer />
-    </>
-  );
+    // ... (same as before)
+    return (
+      <>
+        <Header />
+        <Outlet />
+        <Footer />
+      </>
+    );
 };
 
 
 const SchoolLayout = () => {
-  // ... (same as before)
+    // ... (same as before)
     return (
       <LanguageProvider>
         <LanguageSelector />
-        <Outlet />
+        <Outlet /> {/* Outlet for nested routes (including SchoolRoute) */}
       </LanguageProvider>
     );
 };
 
 const AdminLayout = () => {
-  // ... (same as before)
+    // ... (same as before)
     return (
       <div className="edusahasra-app">
         <AdminNavigation />
@@ -69,42 +73,36 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* Routes within DonorLayout */}
         <Route element={<DonorLayout />}>
-          {/* Public Donor Routes */}
           <Route path="/donor-register" element={<DonorRegistration />} />
           <Route path="/donor-login" element={<DonorLogin />} />
           <Route path='/needs' element={<SchoolsInNeedPage />} />
-          <Route path='/requests/:requestId' element={<NeedPage />} /> {/* NeedPage itself is public */}
+          <Route path='/requests/:requestId' element={<NeedPage />} />
           <Route path="/school-register" element={<SchoolRegistration />} />
           <Route path="/school-login" element={<SchoolLogin />} />
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/" element={<Home />} />
 
-          {/* Protected Donor Routes - Wrap these with DonorRoute */}
           <Route element={<DonorRoute />}>
-             <Route path='/donate/:requestId' element={<DonationPage />} /> {/* Now protected */}
-             <Route path='/my-donations' element={<MyDonations />} />       {/* Now protected */}
-             <Route path="/messages" element={<MessagesPage />} />         {/* Now protected */}
-             <Route path="/profile" element={<ProfilePage />} />           {/* Now protected */}
-             {/* Add any other donor-only routes here */}
+             <Route path='/donate/:requestId' element={<DonationPage />} />
+             <Route path='/my-donations' element={<MyDonations />} />
+             <Route path="/messages" element={<MessagesPage />} />
+             <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Route>
 
-        {/* Routes within SchoolLayout (Should also be protected, similar pattern) */}
         <Route element={<SchoolLayout />}>
-          {/* TODO: Add a SchoolRoute protector here */}
-          <Route path="/Dashboard" element={<SchoolDashboard />} />
-          <Route path="/view-donations" element={<ViewDonations />} />
-          <Route path="/request-donations" element={<RequestDonations />} />
-          <Route path="/send-thanks" element={<SendThanks />} />
-          <Route path="/edit-profile" element={<EditProfile />} />
+            <Route element={<SchoolRoute />}>
+                <Route path="/Dashboard" element={<SchoolDashboard />} />
+                <Route path="/view-donations" element={<ViewDonations />} />
+                <Route path="/request-donations" element={<RequestDonations />} />
+                <Route path="/send-thanks" element={<SendThanks />} />
+                <Route path="/edit-profile" element={<EditProfile />} />
+            </Route>
         </Route>
 
-        {/* Admin Routes */}
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route element={<AdminLayout />}>
-          {/* TODO: Add an AdminRoute protector here */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/school-verification" element={<SchoolVerification />} />
           <Route path="/admin/donation-management" element={<DonationManagement />} />
