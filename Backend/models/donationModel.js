@@ -74,7 +74,7 @@ const donationSchema = new mongoose.Schema(
         'Received by School',   // School explicitly confirmed receipt - FINAL state
         'Cancelled',            // Donation cancelled
       ],
-      default: 'Pending Confirmation',
+      default: 'Preparing',
     },
     statusLastUpdatedAt: {
       type: Date,

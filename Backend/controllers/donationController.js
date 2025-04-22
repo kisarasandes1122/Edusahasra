@@ -109,7 +109,7 @@ const createDonation = asyncHandler(async (req, res) => {
         donorAddress: deliveryMethod === 'Courier' ? donorAddress : undefined,
         donorRemarks,
         shippingCostEstimate,
-        trackingStatus: 'Pending Confirmation', // Initial status
+        trackingStatus: 'Preparing', // Initial status
         statusLastUpdatedAt: Date.now(),
         schoolConfirmation: false, // Not confirmed yet
     });

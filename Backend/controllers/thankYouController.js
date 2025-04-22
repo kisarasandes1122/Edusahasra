@@ -1,3 +1,5 @@
+// backend/controllers/thankYouController.js
+
 const asyncHandler = require('express-async-handler');
 const Donation = require('../models/donationModel');
 const ThankYou = require('../models/thankYouModel');
@@ -45,28 +47,39 @@ const getEligibleDonationsForThanks = asyncHandler(async (req, res) => {
   const schoolId = req.school._id;
 
   // 1. Find confirmed donations for this school
+  // Use .populate('donor') without specific fields first to ensure the donor object (or null) is there
   const confirmedDonations = await Donation.find({
     school: schoolId,
-    schoolConfirmation: true, // Donation must be confirmed by the school
-    trackingStatus: 'Received by School', // Belt-and-suspenders check
+    schoolConfirmation: true,
+    trackingStatus: 'Received by School',
   })
-    .populate('donor', 'fullName') // Get donor's name
-    .select('donor itemsDonated schoolConfirmationAt createdAt') // Select necessary fields
+    .populate('donor') // Populate the whole donor object (or null)
+    .select('donor itemsDonated schoolConfirmationAt createdAt')
     .lean(); // Use lean for performance if not modifying
 
   // 2. Find donations that already have a ThankYou sent
   const thankedDonationIds = (await ThankYou.find({ school: schoolId }).select('donation -_id')).map(t => t.donation.toString());
   const thankedSet = new Set(thankedDonationIds);
 
-  // 3. Filter out donations that have already been thanked
+  // 3. Filter out donations that have already been thanked AND filter out donations where the donor no longer exists
   const eligibleDonations = confirmedDonations.filter(
-    donation => !thankedSet.has(donation._id.toString())
+    donation => {
+        // Check if donation has already been thanked
+        const alreadyThanked = thankedSet.has(donation._id.toString());
+        // Check if the donor is null (meaning the donor was deleted)
+        const donorExists = donation.donor !== null; // Check if populated donor is not null
+
+        // Only include donations that haven't been thanked AND whose donor still exists
+        return !alreadyThanked && donorExists;
+    }
   );
+
 
   // 4. Format the response for the frontend dropdown
   const formattedEligibleList = eligibleDonations.map(donation => ({
     donationId: donation._id,
-    donorId: donation.donor._id, // Include donorId if needed frontend side
+    // Safely access donor properties - they are guaranteed to exist here due to the filter above
+    donorId: donation.donor._id,
     donorName: donation.donor.fullName,
     // Create a summary of donated items
     donatedItemsSummary: donation.itemsDonated
@@ -75,7 +88,11 @@ const getEligibleDonationsForThanks = asyncHandler(async (req, res) => {
     confirmationDate: donation.schoolConfirmationAt || donation.createdAt, // Use confirmation date or creation date as fallback
   }));
 
-  res.json(formattedEligibleList);
+  // --- REMOVE THE TYPO'D LINE ---
+  // res.json(formattedEligableList); // <-- DELETE THIS LINE
+
+  // --- KEEP ONLY THE CORRECT LINE ---
+  res.json(formattedEligibleList); // <-- KEEP THIS LINE
 });
 
 

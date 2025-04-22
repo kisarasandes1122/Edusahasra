@@ -4,30 +4,37 @@ const router = express.Router();
 const {
   createDonationRequest,
   getSchoolDonationRequests,
-  getDonationRequestById, // Keep the controller function
-  // updateDonationRequestStatus,
+  getDonationRequestById,
+  updateDonationRequestStatus,
   deleteDonationRequest,
   getPublicDonationRequests,
 } = require('../controllers/donationRequestController');
-const { protectSchool } = require('../middleware/authMiddleware'); // Keep for school-specific actions
-// const { protect } = require('../middleware/authMiddleware'); // Import if you want donor protection
+const { protectSchool } = require('../middleware/authMiddleware');
 
 // === Public Routes ===
-router.get('/', getPublicDonationRequests); // For listing requests
+// Order matters! Define more specific routes before less specific ones (like /:id)
 
-// --- CHANGE THIS ROUTE ---
-// Remove protectSchool to allow public/donor access to view details
-router.get('/:id', getDonationRequestById);
-// --- END CHANGE ---
-
+// Route to get all public requests (no ID param)
+router.get('/', getPublicDonationRequests);
 
 // === School Routes (Keep protected) ===
+// Route for the logged-in school's requests (no ID param)
+router.get('/my-requests', protectSchool, getSchoolDonationRequests); // <-- Define this before /:id
+
+// Route to create a new request (no ID param)
 router.post('/create', protectSchool, createDonationRequest);
-router.get('/my-requests', protectSchool, getSchoolDonationRequests);
-// You might need a separate route if a school needs to get THEIR request with specific auth checks
-// Example: router.get('/school/:id', protectSchool, getOwnDonationRequestById);
-router.delete('/:id', protectSchool, deleteDonationRequest);
-// router.put('/:id/status', protectSchool, updateDonationRequestStatus); // Example if school updates status
+
+
+// === Routes with ID Parameter ===
+// Route to get a specific request by ID (can be public/donor/school/admin depending on needs and auth checks *inside* the controller, but the route definition itself is /:id)
+// Keep this after routes that might be accidentally matched by /:id (like /my-requests, /create)
+router.get('/:id', getDonationRequestById); // <-- Define this AFTER /my-requests
+
+// Route to delete a request by ID (protected for school)
+router.delete('/:id', protectSchool, deleteDonationRequest); // <-- Define this AFTER /my-requests
+
+
+router.put('/:id/status', protectSchool, updateDonationRequestStatus); // Example if school updates status
 
 
 module.exports = router;
