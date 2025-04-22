@@ -8,12 +8,12 @@
   --color-primary-action-hover: #225a23;
   --color-modal-bg: white;
   --color-modal-section-bg: #F9FAFB;
-  --color-modal-border: #e5e7eb; /* Lighter border for modal sections */
+  --color-modal-border: #e5e7eb;
   --color-login-button-text: var(--color-primary-action);
   --color-login-button-bg: white;
-  --color-login-button-border: var(--color-primary-action); /* Use primary action color for border */
-  --color-login-button-hover-bg: var(--color-primary-action); /* Green background on hover */
-  --color-login-button-hover-text: white; /* White text on hover */
+  --color-login-button-border: var(--color-primary-action);
+  --color-login-button-hover-bg: var(--color-primary-action);
+  --color-login-button-hover-text: white;
   --border-radius-large: 20px;
   --border-radius-medium: 12px;
   --border-radius-small: 8px;
@@ -42,12 +42,14 @@
   max-width: 600px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   margin: auto;
+  text-align: center; /* Center all text content */
 }
 
 .modal-content {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  align-items: center; /* Center flex items horizontally */
 }
 
 .modal-title {
@@ -57,6 +59,7 @@
   color: var(--color-text);
   text-align: center;
   margin: 0;
+  width: 100%; /* Full width for proper centering */
 }
 
 .modal-subtitle {
@@ -64,8 +67,9 @@
   font-size: 15px;
   color: var(--color-text-secondary);
   text-align: center;
-  margin: -10px 0 5px 0; /* Adjust margin slightly */
+  margin: -10px 0 5px 0;
   line-height: 1.5;
+  width: 100%; /* Full width for proper centering */
 }
 
 .registration-section,
@@ -73,16 +77,18 @@
   background-color: var(--color-modal-section-bg);
   border-radius: var(--border-radius-medium);
   padding: 24px;
-  border: 1px solid var(--color-modal-border); /* Optional: add subtle border */
+  border: 1px solid var(--color-modal-border);
+  width: 100%; /* Full width for proper centering */
+  text-align: center; /* Center content within sections */
 }
 
 .section-title {
   font-family: var(--font-primary);
   font-size: 18px;
   font-weight: 700;
-  /* Use the primary action color for section titles to match buttons */
   color: var(--color-primary-action);
   margin: 0 0 8px 0;
+  text-align: center;
 }
 
 .section-description {
@@ -91,28 +97,28 @@
   color: var(--color-text-secondary);
   margin: 0 0 16px 0;
   line-height: 1.5;
+  text-align: center;
 }
 
-/* --- Updated Button Styles --- */
+/* Button Styles - Updated for centered look */
 .modal-button {
-  display: inline-block; /* Ensure consistent block behavior */
+  display: inline-block;
   width: 100%;
   padding: 12px 24px;
-  /* Apply the border-radius */
-  border-radius: var(--border-radius-small); /* Should be 8px */
+  border-radius: var(--border-radius-small);
   font-family: var(--font-primary);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; /* Refine transition */
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   border: 1px solid transparent;
   text-align: center;
-  text-decoration: none !important; /* Remove underline from Link */
-  box-sizing: border-box; /* Include padding/border in width */
+  text-decoration: none !important;
+  box-sizing: border-box;
 }
 
 /* Style for Register button */
-.modal-button.register-button { /* Use compound selector for specificity */
+.modal-button.register-button {
   background-color: var(--color-primary-action);
   color: white;
   border-color: var(--color-primary-action);
@@ -125,23 +131,23 @@
 }
 
 /* Style for Login button */
-.modal-button.login-button { /* Use compound selector for specificity */
-  background-color: var(--color-login-button-bg); /* White background */
-  color: var(--color-login-button-text); /* Green text */
-  border: 1px solid var(--color-login-button-border); /* Green border */
+.modal-button.login-button {
+  background-color: var(--color-login-button-bg);
+  color: var(--color-login-button-text);
+  border: 1px solid var(--color-login-button-border);
 }
 
 /* Hover style for Login button */
 .modal-button.login-button:hover {
-  background-color: var(--color-login-button-hover-bg); /* Green background */
-  color: var(--color-login-button-hover-text);      /* White text */
-  border-color: var(--color-login-button-hover-bg);  /* Green border */
+  background-color: var(--color-login-button-hover-bg);
+  color: var(--color-login-button-hover-text);
+  border-color: var(--color-login-button-hover-bg);
 }
 
 /* Responsive Modal */
 @media (max-width: 640px) {
   .modal-container {
-    padding: 24px;
+    padding: 24px 20px;
     max-width: 95%;
   }
   .modal-title {
@@ -162,6 +168,22 @@
   }
   .registration-section,
   .login-section {
-    padding: 20px;
+    padding: 20px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-container {
+    padding: 20px 15px;
+  }
+  .modal-title {
+    font-size: 18px;
+  }
+  .modal-subtitle {
+    font-size: 13px;
+  }
+  .modal-button {
+    font-size: 14px;
+    padding: 10px 16px;
   }
 }

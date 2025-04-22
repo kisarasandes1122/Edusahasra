@@ -2,7 +2,7 @@
 
 .header {
   background-color: #ffffff;
-  padding: 10px 20px;
+  padding: 10px 0; /* Removed horizontal padding */
   border-bottom: 1px solid #ffffff;
   font-family: 'Inter', sans-serif;
 }
@@ -14,6 +14,13 @@
   max-width: 1200px;
   margin: 0 auto;
   height: 80px;
+  padding: 0; /* Removed padding completely */
+}
+
+
+.logo {
+  margin-left: 0; /* Ensure logo is flush with left edge */
+  padding-left: 8px; /* Small padding for visual buffer */
 }
 
 .logo img {
@@ -47,7 +54,7 @@
   color: #12263A;
 }
 
-/* Existing dropdown styles */
+/* Dropdown styles */
 .dropdown-container {
   position: relative;
 }
@@ -155,8 +162,7 @@
   line-height: 1.4;
 }
 
-
-/* User dropdown specific styles */
+/* User dropdown styles */
 .user-dropdown-container {
   position: relative;
 }
@@ -310,4 +316,265 @@
   background-color: #78c51c !important;
   color: #ffffff !important;
   border-color: #78c51c !important;
+}
+
+/* Mobile menu controls */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #000000;
+  margin-right: 0; /* Ensure toggle is flush with right edge */
+  padding-right: 8px; /* Small padding for visual buffer */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 1024px) {
+  .nav ul li {
+    margin: 0 10px;
+  }
+  
+  .nav ul li a, .dropdown-trigger {
+    font-size: 16px;
+  }
+  
+  .btn {
+    padding: 10px 15px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* Mobile menu visibility and desktop/mobile button toggling */
+.mobile-only-buttons {
+  display: none; /* Hidden by default */
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: block;
+    position: relative;
+    z-index: 5001;
+    font-size: 24px;
+    color: #000000;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+  }
+  
+  .header-content {
+    height: 70px;
+  }
+
+  .header-res{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 20px;
+  }
+  
+  
+  .logo img {
+    height: 60px;
+    width: 60px;
+  }
+  
+  /* Improved mobile menu positioning and styling */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100vh;
+    width: 85%;
+    max-width: 320px;
+    background-color: white;
+    z-index: 5000;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    padding: 70px 24px 24px;
+    overflow-y: auto;
+  }
+  
+  .nav.open {
+    left: 0;
+    padding-right: 0px;
+  }
+  
+  /* Improved navigation items spacing */
+  .nav ul {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    width: -webkit-fill-available;
+    padding: 20px 20px;
+  }
+  
+  .nav ul li {
+    margin: 0;
+    width: 100%;
+  }
+  
+  .nav ul li a {
+    font-size: 17px;
+    padding: 8px 0;
+    width: 100%;
+  }
+  
+  /* Fix for dropdowns in mobile view */
+  .dropdown-container {
+    width: 100%;
+  }
+  
+  .dropdown-trigger {
+    width: 100%;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 17px;
+  }
+  
+  .dropdown-menu {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    border-radius: 12px;
+    margin-top: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+  }
+  
+  /* Mobile only buttons */
+  .mobile-only-buttons {
+    display: block;
+    margin-top: 32px;
+    width: 100%;
+  }
+  
+  .mobile-only-buttons .header-buttons {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  .mobile-only-buttons .btn {
+    width: 100%;
+    text-align: center;
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+  }
+  
+  .desktop-only-buttons {
+    display: none; /* Hide desktop buttons on mobile */
+  }
+  
+  /* Mobile menu overlay */
+  .mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 4999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  .mobile-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Prevent body scrolling when mobile menu is open */
+  body.menu-open {
+    overflow: hidden;
+  }
+  
+  /* User dropdown positioning */
+  .user-dropdown-menu {
+    width: 260px;
+    right: -10px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Remove horizontal padding completely for small screens */
+  .header {
+    padding: 10px 0;
+  }
+
+  .header-content {
+    height: 60px;
+    padding: 0; /* Remove all padding */
+  }
+
+  .header-res{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 20px;
+  }
+  
+  
+  .logo {
+    padding-left: 8px; /* Small padding buffer */
+  }
+  
+  .mobile-menu-toggle {
+    font-size: 22px;
+    padding-right: 8px; /* Small padding buffer */
+  }
+  
+  .logo img {
+    height: 50px;
+    width: 50px;
+  }
+  
+  .nav {
+    padding: 60px 20px 20px;
+  }
+  
+  .btn {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+  }
+  
+  .header-buttons {
+    gap: 6px;
+  }
+  
+  .user-dropdown-menu {
+    width: 230px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .header-content {
+    padding: 0;
+  }
+  
+  .logo {
+    padding-left: 4px; /* Minimal padding */
+  }
+  
+  .mobile-menu-toggle {
+    padding-right: 4px; /* Minimal padding */
+    font-size: 20px;
+  }
+  
+  .logo img {
+    height: 45px;
+    width: 45px;
+  }
+  
+  .nav {
+    width: 90%;
+    padding: 55px 16px 16px;
+  }
 }

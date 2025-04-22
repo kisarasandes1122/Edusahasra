@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import './Header.css';
 import './DonationModal.css';
-import logo from '../../../assets/images/Edusahasra.png'; // Ensure this path is correct
+import logo from '../../../assets/images/Edusahasra.png';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { FiTool } from 'react-icons/fi';
 import { IoIosArrowDown } from 'react-icons/io';
 import { IoChatbox } from "react-icons/io5";
+import { FiMenu, FiX } from 'react-icons/fi'; // Added icons for mobile menu
 
-// --- DonationModal Component (keep as is) ---
+// --- DonationModal Component (unchanged) ---
 const DonationModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
 
@@ -50,7 +51,7 @@ const DonationModal = ({ isOpen, onClose }) => {
   );
 };
 
-// --- RequestModal Component (keep as is) ---
+// --- RequestModal Component (unchanged) ---
 const RequestModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
 
@@ -93,39 +94,52 @@ const RequestModal = ({ isOpen, onClose }) => {
 };
 
 
-// --- Updated Header Component ---
-const Header = () => { // Removed isAuthenticated, user props
+// --- Updated Header Component with Mobile Support ---
+const Header = () => {
   const [isDonorsDropdownOpen, setIsDonorsDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State for auth status
-  const [currentUser, setCurrentUser] = useState(null); // State for user info
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const donorsDropdownRef = useRef(null);
   const userDropdownRef = useRef(null);
-  const navigate = useNavigate(); // Hook for navigation
+  const mobileMenuRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Check login status on component mount and when localStorage changes
+  // Toggle body class when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.classList.add('menu-open');
+    } else {
+      document.body.classList.remove('menu-open');
+    }
+    
+    return () => {
+      document.body.classList.remove('menu-open');
+    };
+  }, [mobileMenuOpen]);
+
+  // Check login status on component mount
   useEffect(() => {
     const checkAuthStatus = () => {
       const storedUserInfo = localStorage.getItem('donorInfo');
       if (storedUserInfo) {
         try {
           const userData = JSON.parse(storedUserInfo);
-          // You might want to add a check for token validity/expiry here later
           if (userData && userData.token) {
             setCurrentUser(userData);
             setIsLoggedIn(true);
           } else {
-            // Invalid data structure, clear it
             localStorage.removeItem('donorInfo');
             setCurrentUser(null);
             setIsLoggedIn(false);
           }
         } catch (error) {
           console.error("Failed to parse donorInfo from localStorage", error);
-          localStorage.removeItem('donorInfo'); // Clear corrupted data
+          localStorage.removeItem('donorInfo');
           setCurrentUser(null);
           setIsLoggedIn(false);
         }
@@ -135,78 +149,120 @@ const Header = () => { // Removed isAuthenticated, user props
       }
     };
 
-    // Initial check
     checkAuthStatus();
-
-    // Listen for storage changes (e.g., logout in another tab)
     window.addEventListener('storage', checkAuthStatus);
 
-    // Listen for custom login/logout events (optional, but good for immediate UI updates)
-    // Example: window.addEventListener('authChange', checkAuthStatus);
-
-    // Cleanup listener on component unmount
     return () => {
       window.removeEventListener('storage', checkAuthStatus);
-      // Example: window.removeEventListener('authChange', checkAuthStatus);
     };
-  }, []); // Empty dependency array means this runs once on mount and cleanup on unmount
+  }, []);
 
-
+  // Handle clicks outside dropdowns and mobile menu
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Handle dropdowns
       if (donorsDropdownRef.current && !donorsDropdownRef.current.contains(event.target)) {
         setIsDonorsDropdownOpen(false);
       }
       if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
         setIsUserDropdownOpen(false);
       }
+      
+      // Handle mobile menu - close menu when clicking outside
+      // But don't close it if we click the menu toggle button
+      if (mobileMenuOpen && 
+          mobileMenuRef.current && 
+          !mobileMenuRef.current.contains(event.target) &&
+          !event.target.closest('.mobile-menu-toggle')) {
+        setMobileMenuOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    
+    // Close mobile menu when window is resized beyond mobile breakpoint
+    const handleResize = () => {
+      if (window.innerWidth > 768 && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [mobileMenuOpen]);
 
   const toggleDonorsDropdown = (e) => {
     e.stopPropagation();
     setIsDonorsDropdownOpen(!isDonorsDropdownOpen);
-    setIsUserDropdownOpen(false); // Close user dropdown if open
+    setIsUserDropdownOpen(false);
   };
 
   const toggleUserDropdown = (e) => {
     e.stopPropagation();
     setIsUserDropdownOpen(!isUserDropdownOpen);
-    setIsDonorsDropdownOpen(false); // Close donors dropdown if open
+    setIsDonorsDropdownOpen(false);
+  };
+
+  const toggleMobileMenu = (e) => {
+    e.stopPropagation();
+    setMobileMenuOpen(!mobileMenuOpen);
   };
 
   const handleStartDonate = () => {
     setIsDonationModalOpen(true);
+    setMobileMenuOpen(false); // Close mobile menu if open
   };
 
   const handleRequestDonation = () => {
     setIsRequestModalOpen(true);
+    setMobileMenuOpen(false); // Close mobile menu if open
   };
 
   const handleLogout = () => {
     localStorage.removeItem('donorInfo');
-
     setCurrentUser(null);
     setIsLoggedIn(false);
-    setIsUserDropdownOpen(false); 
-    navigate('/'); 
-    window.location.reload(); 
+    setIsUserDropdownOpen(false);
+    setMobileMenuOpen(false); // Close mobile menu if open
+    navigate('/');
+    window.location.reload();
+  };
+
+  // Close mobile menu when clicking nav links
+  const handleNavLinkClick = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
     <>
       <header className="header">
         <div className="header-content">
+          <div className="header-res">
           <div className="logo">
-            <a href="/"><img src={logo} alt="EdukaShare Logo" /></a>
+            <a href="/"><img src={logo} alt="EduSahasra Logo" /></a>
           </div>
 
-          <nav className="nav">
+          {/* Mobile menu toggle button */}
+          <button 
+            className="mobile-menu-toggle" 
+            onClick={toggleMobileMenu}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileMenuOpen ? <FiX /> : <FiMenu />}
+          </button>
+          </div>
+
+          {/* Mobile menu overlay - improves UX */}
+          <div className={`mobile-menu-overlay ${mobileMenuOpen ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
+
+          {/* Main navigation */}
+          <nav className={`nav ${mobileMenuOpen ? 'open' : ''}`} ref={mobileMenuRef}>
             <ul>
-              <li><a href="/">Home</a></li>
+              <li><a href="/" onClick={handleNavLinkClick}>Home</a></li>
               <li className="dropdown-container" ref={donorsDropdownRef}>
                 <button
                   className="dropdown-trigger"
@@ -218,23 +274,22 @@ const Header = () => { // Removed isAuthenticated, user props
                   <div className="dropdown-menu">
                     <h3 className="dropdown-title">For Donors</h3><hr />
                     <div className="dropdown-items">
-                      <a href="/needs" className="dropdown-item">
+                      <a href="/needs" className="dropdown-item" onClick={handleNavLinkClick}>
                         <IoCalendarOutline className="dropdown-icon" />
                         <div className="dropdown-content">
                           <span className="dropdown-item-title">Browse Needs</span>
                           <span className="dropdown-item-description">Filter Requests by location, needs, or urgency</span>
                         </div>
                       </a>
-                      {/* Add other donor links here if needed */}
-                      <a href="/howitworks" className="dropdown-item">
+                      <a href="/howitworks" className="dropdown-item" onClick={handleNavLinkClick}>
                         <FiTool className="dropdown-icon" />
                         <div className="dropdown-content">
                           <span className="dropdown-item-title">How It Works</span>
                           <span className="dropdown-item-description">Step-by-step donation process</span>
                         </div>
                       </a>
-                      <a href="/feedbacks" className="dropdown-item">
-                        <IoChatbox  className="dropdown-icon" />
+                      <a href="/feedbacks" className="dropdown-item" onClick={handleNavLinkClick}>
+                        <IoChatbox className="dropdown-icon" />
                         <div className="dropdown-content">
                           <span className="dropdown-item-title">Feedbacks</span>
                           <span className="dropdown-item-description">See what others say about their experience</span>
@@ -244,30 +299,39 @@ const Header = () => { // Removed isAuthenticated, user props
                   </div>
                 )}
               </li>
-              <li><a href="/aboutus">About</a></li>
-              <li><a href="#impact">Impact</a></li> {/* Make sure you have an element with id="impact" or change href */}
+              <li><a href="/aboutus" onClick={handleNavLinkClick}>About</a></li>
+              <li><a href="#impact" onClick={handleNavLinkClick}>Impact</a></li>
+              
+              {/* Mobile-only buttons (visible in mobile menu) */}
+              {!isLoggedIn && (
+                <li className="mobile-only-buttons">
+                  <div className="header-buttons">
+                    <button className="btn btn-secondary" onClick={handleStartDonate}>
+                      Start Donate
+                    </button>
+                    <button className="btn btn-primary" onClick={handleRequestDonation}>
+                      Request Donation
+                    </button>
+                  </div>
+                </li>
+              )}
             </ul>
           </nav>
 
           <div className="header-user">
-            {/* Use internal isLoggedIn state for conditional rendering */}
             {isLoggedIn && currentUser ? (
               <div className="user-dropdown-container" ref={userDropdownRef}>
                 <button
                   className="user-dropdown-trigger"
                   onClick={toggleUserDropdown}
                 >
-                  {/* Use fullName from stored user data */}
                   <span className="user-name">{currentUser.fullName || 'User'}</span>
                   <IoIosArrowDown className={`dropdown-arrow ${isUserDropdownOpen ? 'rotated' : ''}`} />
                 </button>
                 {isUserDropdownOpen && (
                   <div className="user-dropdown-menu">
                     <div className="user-dropdown-header">
-                       {/* Use fullName from stored user data */}
                       <h3 className="user-dropdown-title">{currentUser.fullName || 'User'}</h3>
-                      {/* Optionally display email */}
-                      {/* <p className="user-dropdown-email">{currentUser.email}</p> */}
                     </div>
                     <div className="user-dropdown-items">
                       <a href="/my-donations" className="user-dropdown-item">
@@ -291,7 +355,6 @@ const Header = () => { // Removed isAuthenticated, user props
                           <span className="item-description">Manage account & preferences</span>
                         </div>
                       </a>
-                      {/* Logout Button */}
                       <button onClick={handleLogout} className="user-dropdown-item logout-button">
                         <div className="icon-wrapper"><span className="icon">🚪</span></div>
                         <div className="dropdown-content">
@@ -304,8 +367,8 @@ const Header = () => { // Removed isAuthenticated, user props
                 )}
               </div>
             ) : (
-              // Show these buttons if not logged in
-              <div className="header-buttons">
+              // Show these buttons only on desktop
+              <div className="header-buttons desktop-only-buttons">
                 <button className="btn btn-secondary" onClick={handleStartDonate}>
                   Start Donate
                 </button>
