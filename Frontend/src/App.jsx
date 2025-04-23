@@ -33,10 +33,17 @@ import Home from './components/Donor/Home/Home';
 
 // Import the protected route components
 import DonorRoute from './components/Common/Auth/DonorRoute';
-import SchoolRoute from './components/Common/Auth/SchoolRoute'; // <-- Import SchoolRoute
+import SchoolRoute from './components/Common/Auth/SchoolRoute';
+
+// --- Import New Components for Password Reset ---
+// Assuming you have created these files with the code provided in the previous response
+import ForgotPasswordPage from './components/Donor/ForgotPasswordPage/ForgotPasswordPage';
+import ResetPasswordPage from './components/Donor/ResetPasswordPage/ResetPasswordPage';
+// --- End New Components ---
+
 
 const DonorLayout = () => {
-    // ... (same as before)
+    // This layout wraps routes that use the donor header and footer
     return (
       <>
         <Header />
@@ -48,7 +55,8 @@ const DonorLayout = () => {
 
 
 const SchoolLayout = () => {
-    // ... (same as before)
+    // This layout wraps routes specific to the school dashboard (might have different header/sidebar)
+     // Keeping LanguageProvider here based on the original snippet, adjust as needed
     return (
       <LanguageProvider>
         <LanguageSelector />
@@ -58,7 +66,7 @@ const SchoolLayout = () => {
 };
 
 const AdminLayout = () => {
-    // ... (same as before)
+    // This layout wraps admin dashboard routes
     return (
       <div className="edusahasra-app">
         <AdminNavigation />
@@ -73,25 +81,35 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        {/* Routes using the Donor Layout */}
         <Route element={<DonorLayout />}>
+          {/* Public Routes */}
           <Route path="/donor-register" element={<DonorRegistration />} />
           <Route path="/donor-login" element={<DonorLogin />} />
           <Route path='/needs' element={<SchoolsInNeedPage />} />
           <Route path='/requests/:requestId' element={<NeedPage />} />
-          <Route path="/school-register" element={<SchoolRegistration />} />
-          <Route path="/school-login" element={<SchoolLogin />} />
+          <Route path="/school-register" element={<SchoolRegistration />} /> {/* Should this be under DonorLayout? Or its own minimal layout? Keeping as is from previous state. */}
+          <Route path="/school-login" element={<SchoolLogin />} /> {/* Should this be under DonorLayout? Or its own minimal layout? Keeping as is from previous state. */}
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/" element={<Home />} />
 
+           {/* --- New Public Password Reset Routes --- */}
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} /> {/* Token is read from search params */}
+           {/* --- End New Routes --- */}
+
+          {/* Protected Donor Routes (require donor authentication) */}
           <Route element={<DonorRoute />}>
              <Route path='/donate/:requestId' element={<DonationPage />} />
              <Route path='/my-donations' element={<MyDonations />} />
              <Route path="/messages" element={<MessagesPage />} />
-             <Route path="/profile" element={<ProfilePage />} />
+             <Route path="/profile" element={<ProfilePage />} /> {/* This route is now correctly protected */}
           </Route>
         </Route>
 
+        {/* Routes using the School Layout */}
         <Route element={<SchoolLayout />}>
+            {/* Protected School Routes (require school authentication) */}
             <Route element={<SchoolRoute />}>
                 <Route path="/Dashboard" element={<SchoolDashboard />} />
                 <Route path="/view-donations" element={<ViewDonations />} />
@@ -101,8 +119,11 @@ const App = () => {
             </Route>
         </Route>
 
-        <Route path="/admin-login" element={<AdminLogin />} />
+        {/* Admin Routes */}
+        <Route path="/admin-login" element={<AdminLogin />} /> {/* Admin Login doesn't use the AdminLayout */}
+        {/* Routes using the Admin Layout (assuming they are protected elsewhere if needed) */}
         <Route element={<AdminLayout />}>
+          {/* Admin Dashboard routes */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/school-verification" element={<SchoolVerification />} />
           <Route path="/admin/donation-management" element={<DonationManagement />} />

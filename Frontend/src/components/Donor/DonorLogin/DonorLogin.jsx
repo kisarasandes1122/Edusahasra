@@ -161,7 +161,7 @@ const DonorLogin = () => {
               />
               <span>Remember Me</span>
             </label>
-            <a href="#" className="forgot-password">
+            <a href="/forgot-password" className="forgot-password">
               Forgot Password?
             </a>
           </div>
