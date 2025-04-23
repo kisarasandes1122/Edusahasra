@@ -3,11 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import './Header.css';
 import './DonationModal.css';
 import logo from '../../../assets/images/Edusahasra.png';
-import { IoCalendarOutline } from 'react-icons/io5';
-import { FiTool } from 'react-icons/fi';
-import { IoIosArrowDown } from 'react-icons/io';
-import { IoChatbox } from "react-icons/io5";
-import { FiMenu, FiX } from 'react-icons/fi'; // Added icons for mobile menu
+import { IoCalendarOutline, IoLeafOutline } from 'react-icons/io5';
+import { FiTool, FiHeart, FiChevronDown, FiMenu, FiX } from 'react-icons/fi';
+import { IoChatbox, IoSchoolOutline } from "react-icons/io5";
 
 // --- DonationModal Component (unchanged) ---
 const DonationModal = ({ isOpen, onClose }) => {
@@ -94,7 +92,7 @@ const RequestModal = ({ isOpen, onClose }) => {
 };
 
 
-// --- Updated Header Component with Mobile Support ---
+// --- Updated Header Component with Modern Look and Green Theme ---
 const Header = () => {
   const [isDonorsDropdownOpen, setIsDonorsDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -242,18 +240,18 @@ const Header = () => {
       <header className="header">
         <div className="header-content">
           <div className="header-res">
-          <div className="logo">
-            <a href="/"><img src={logo} alt="EduSahasra Logo" /></a>
-          </div>
+            <div className="logo">
+              <a href="/"><img src={logo} alt="EduSahasra Logo" /></a>
+            </div>
 
-          {/* Mobile menu toggle button */}
-          <button 
-            className="mobile-menu-toggle" 
-            onClick={toggleMobileMenu}
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-          >
-            {mobileMenuOpen ? <FiX /> : <FiMenu />}
-          </button>
+            {/* Mobile menu toggle button */}
+            <button 
+              className="mobile-menu-toggle" 
+              onClick={toggleMobileMenu}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileMenuOpen ? <FiX /> : <FiMenu />}
+            </button>
           </div>
 
           {/* Mobile menu overlay - improves UX */}
@@ -268,11 +266,10 @@ const Header = () => {
                   className="dropdown-trigger"
                   onClick={toggleDonorsDropdown}
                 >
-                  Donors <IoIosArrowDown className={`dropdown-arrow ${isDonorsDropdownOpen ? 'rotated' : ''}`} />
+                  Donors <FiChevronDown className={`dropdown-arrow ${isDonorsDropdownOpen ? 'rotated' : ''}`} />
                 </button>
                 {isDonorsDropdownOpen && (
                   <div className="dropdown-menu">
-                    <h3 className="dropdown-title">For Donors</h3><hr />
                     <div className="dropdown-items">
                       <a href="/needs" className="dropdown-item" onClick={handleNavLinkClick}>
                         <IoCalendarOutline className="dropdown-icon" />
@@ -281,7 +278,7 @@ const Header = () => {
                           <span className="dropdown-item-description">Filter Requests by location, needs, or urgency</span>
                         </div>
                       </a>
-                      <a href="/howitworks" className="dropdown-item" onClick={handleNavLinkClick}>
+                      <a href="/how-it-works" className="dropdown-item" onClick={handleNavLinkClick}>
                         <FiTool className="dropdown-icon" />
                         <div className="dropdown-content">
                           <span className="dropdown-item-title">How It Works</span>
@@ -299,18 +296,18 @@ const Header = () => {
                   </div>
                 )}
               </li>
-              <li><a href="/aboutus" onClick={handleNavLinkClick}>About</a></li>
-              <li><a href="#impact" onClick={handleNavLinkClick}>Impact</a></li>
+              <li><a href="/about-us" onClick={handleNavLinkClick}>About</a></li>
+              <li><a href="/impact-stories" onClick={handleNavLinkClick}>Impact</a></li>
               
               {/* Mobile-only buttons (visible in mobile menu) */}
               {!isLoggedIn && (
                 <li className="mobile-only-buttons">
                   <div className="header-buttons">
                     <button className="btn btn-secondary" onClick={handleStartDonate}>
-                      Start Donate
+                      <FiHeart style={{ marginRight: '6px' }} /> Start Donate
                     </button>
                     <button className="btn btn-primary" onClick={handleRequestDonation}>
-                      Request Donation
+                      <IoSchoolOutline style={{ marginRight: '6px' }} /> Request Donation
                     </button>
                   </div>
                 </li>
@@ -326,7 +323,7 @@ const Header = () => {
                   onClick={toggleUserDropdown}
                 >
                   <span className="user-name">{currentUser.fullName || 'User'}</span>
-                  <IoIosArrowDown className={`dropdown-arrow ${isUserDropdownOpen ? 'rotated' : ''}`} />
+                  <FiChevronDown className={`dropdown-arrow ${isUserDropdownOpen ? 'rotated' : ''}`} />
                 </button>
                 {isUserDropdownOpen && (
                   <div className="user-dropdown-menu">
@@ -335,28 +332,28 @@ const Header = () => {
                     </div>
                     <div className="user-dropdown-items">
                       <a href="/my-donations" className="user-dropdown-item">
-                        <div className="icon-wrapper"><span className="icon">📊</span></div>
+                        <div className="icon-wrapper"><IoLeafOutline /></div>
                         <div className="dropdown-content">
                           <span className="item-title">My Donations</span>
-                          <span className="item-description">Track donations.</span>
+                          <span className="item-description">Track your contributions</span>
                         </div>
                       </a>
                       <a href="/messages" className="user-dropdown-item">
-                        <div className="icon-wrapper"><span className="icon">💬</span></div>
+                        <div className="icon-wrapper"><IoChatbox /></div>
                         <div className="dropdown-content">
                           <span className="item-title">Messages</span>
-                          <span className="item-description">View messages from schools.</span>
+                          <span className="item-description">View messages from schools</span>
                         </div>
                       </a>
                       <a href="/profile" className="user-dropdown-item">
-                        <div className="icon-wrapper"><span className="icon">👤</span></div>
+                        <div className="icon-wrapper"><FiHeart /></div>
                         <div className="dropdown-content">
                           <span className="item-title">Edit Profile</span>
                           <span className="item-description">Manage account & preferences</span>
                         </div>
                       </a>
                       <button onClick={handleLogout} className="user-dropdown-item logout-button">
-                        <div className="icon-wrapper"><span className="icon">🚪</span></div>
+                        <div className="icon-wrapper"><FiX /></div>
                         <div className="dropdown-content">
                           <span className="item-title">Log out</span>
                           <span className="item-description">Securely exit your account</span>
@@ -370,10 +367,10 @@ const Header = () => {
               // Show these buttons only on desktop
               <div className="header-buttons desktop-only-buttons">
                 <button className="btn btn-secondary" onClick={handleStartDonate}>
-                  Start Donate
+                  <FiHeart style={{ marginRight: '6px' }} /> Start Donate
                 </button>
                 <button className="btn btn-primary" onClick={handleRequestDonation}>
-                  Request Donation
+                  <IoSchoolOutline style={{ marginRight: '6px' }} /> Request Donation
                 </button>
               </div>
             )}

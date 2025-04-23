@@ -30,13 +30,17 @@ import MessagesPage from './components/Donor/MessagesPage/MessagesPage';
 import ProfilePage from './components/Donor/ProfilePage/ProfilePage';
 import AboutUs from './components/Donor/AboutUs/AboutUs';
 import Home from './components/Donor/Home/Home';
+import HowItWorksPage from './components/Donor/HowItWorksPage/HowItWorksPage';
+
+// Import the new Impact Stories Page component
+import ImpactStoriesPage from './components/Donor/ImpactStoriesPage/ImpactStoriesPage';
+
 
 // Import the protected route components
 import DonorRoute from './components/Common/Auth/DonorRoute';
 import SchoolRoute from './components/Common/Auth/SchoolRoute';
 
 // --- Import New Components for Password Reset ---
-// Assuming you have created these files with the code provided in the previous response
 import ForgotPasswordPage from './components/Donor/ForgotPasswordPage/ForgotPasswordPage';
 import ResetPasswordPage from './components/Donor/ResetPasswordPage/ResetPasswordPage';
 // --- End New Components ---
@@ -88,12 +92,18 @@ const App = () => {
           <Route path="/donor-login" element={<DonorLogin />} />
           <Route path='/needs' element={<SchoolsInNeedPage />} />
           <Route path='/requests/:requestId' element={<NeedPage />} />
-          <Route path="/school-register" element={<SchoolRegistration />} /> {/* Should this be under DonorLayout? Or its own minimal layout? Keeping as is from previous state. */}
-          <Route path="/school-login" element={<SchoolLogin />} /> {/* Should this be under DonorLayout? Or its own minimal layout? Keeping as is from previous state. */}
-          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/school-register" element={<SchoolRegistration />} />
+          <Route path="/school-login" element={<SchoolLogin />} />
+          <Route path="/about-us" element={<AboutUs />} />
           <Route path="/" element={<Home />} />
+          <Route path="/how-it-works" element={<HowItWorksPage />} />
 
-           {/* --- New Public Password Reset Routes --- */}
+          {/* --- ADD THIS NEW ROUTE --- */}
+          <Route path="/impact-stories" element={<ImpactStoriesPage />} />
+          {/* --- END ADDITION --- */}
+
+
+           {/* --- Public Password Reset Routes --- */}
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} /> {/* Token is read from search params */}
            {/* --- End New Routes --- */}
