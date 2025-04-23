@@ -25,6 +25,7 @@
   margin: 0;
 }
 
+/* Back button styles (present in code, but commented out in JSX) */
 .back-button {
   display: flex;
   align-items: center;
@@ -49,28 +50,36 @@
   font-size: 12px;
 }
 
+
 .messages-content {
   display: flex;
   gap: 24px;
-  height: 700px;
+  height: 700px; /* Fixed height for main content area */
   border-radius: 12px;
   border: 1px solid #E5E7EB;
-  overflow: hidden;
+  overflow: hidden; /* Important for containing child elements like sidebar/message area */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .conversations-sidebar {
-  width: 320px;
+  width: 320px; /* Fixed width for sidebar */
   border-right: 1px solid #E5E7EB;
   display: flex;
   flex-direction: column;
   background-color: #F9FAFB;
+  /* Allow sidebar content to scroll */
+  overflow-y: auto; /* Added scroll for sidebar */
+  flex-shrink: 0; /* Prevent sidebar from shrinking */
 }
 
 .conversations-header {
   padding: 16px;
   border-bottom: 1px solid #E5E7EB;
   background-color: #F3F4F6;
+  /* Ensure header stays at the top when list scrolls */
+  position: sticky; /* Added sticky position */
+  top: 0; /* Stick to the top */
+  z-index: 10; /* Ensure it's above scrolling list items */
 }
 
 .conversations-header h2 {
@@ -81,8 +90,9 @@
 }
 
 .conversations-list {
-  overflow-y: auto;
-  flex-grow: 1;
+  /* This div now only contains the scrollable items */
+  flex-grow: 1; /* Fill remaining space */
+  /* Removed overflow-y: auto; here, it's now on the parent .conversations-sidebar */
 }
 
 .conversation-item {
@@ -100,19 +110,19 @@
 }
 
 .conversation-item.active {
-  background-color: #DCFCE7;
-  border-left: 4px solid #2A6F2B;
+  background-color: #DCFCE7; /* Light green background for active item */
+  border-left: 4px solid #2A6F2B; /* Green border on the left */
 }
 
 .conversation-info {
   flex-grow: 1;
-  overflow: hidden;
+  overflow: hidden; /* Needed for ellipsis */
 }
 
 .conversation-header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: baseline; /* Align text baselines */
   margin-bottom: 8px;
 }
 
@@ -121,15 +131,18 @@
   font-weight: 600;
   color: #111827;
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+  flex-grow: 1; /* Allow school name to take space */
+  padding-right: 8px; /* Add space between name and time */
 }
 
 .conversation-time {
   font-size: 12px;
   color: #6B7280;
-  white-space: nowrap;
+  white-space: nowrap; /* Prevent wrapping */
+  flex-shrink: 0; /* Prevent time from shrinking */
 }
 
 .conversation-preview {
@@ -138,26 +151,32 @@
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
+  display: -webkit-box; /* For multiline ellipsis in Webkit browsers */
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  line-clamp: 2; /* Standard for limiting lines */
   box-orient: vertical;
   line-height: 1.4;
+  max-height: calc(1.4em * 2); /* Approximate height for 2 lines */
 }
 
 
 .message-content {
-  flex-grow: 1;
+  flex-grow: 1; /* Fill the remaining space */
   display: flex;
   flex-direction: column;
   background-color: white;
+  overflow-y: auto; /* Allow message content to scroll */
 }
 
 .message-header {
   padding: 20px;
   border-bottom: 1px solid #E5E7EB;
   background-color: #FBFBFB;
+  /* Ensure header stays at the top when message body scrolls */
+  position: sticky; /* Added sticky position */
+  top: 0; /* Stick to the top */
+  z-index: 10; /* Ensure it's above scrolling message body */
 }
 
 .school-info-text {
@@ -178,22 +197,22 @@
 }
 
 .message-body {
-  flex-grow: 1;
+  flex-grow: 1; /* Fill remaining space below header */
   padding: 24px;
-  overflow-y: auto;
+  /* Removed overflow-y: auto; here, it's now on the parent .message-content */
 }
 
 .thank-you-content {
-  max-width: 750px;
-  margin: 0 auto;
+  max-width: 750px; /* Limit width for readability */
+  margin: 0 auto; /* Center the content */
 }
 
 .thank-you-message {
-  background-color: #F9FAFB;
+  background-color: #F9FAFB; /* Light background */
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 32px;
-  border-left: 4px solid #2A6F2B;
+  border-left: 4px solid #2A6F2B; /* Accent border */
 }
 
 .thank-you-message p {
@@ -214,7 +233,7 @@
 
 .images-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
   gap: 16px;
 }
 
@@ -223,6 +242,7 @@
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer; /* Added cursor pointer */
 }
 
 .image-container:hover {
@@ -233,8 +253,8 @@
 .image-container img {
   width: 100%;
   display: block;
-  object-fit: cover;
-  height: 180px;
+  object-fit: cover; /* Cover the container, crop if necessary */
+  height: 180px; /* Fixed height for consistency */
 }
 
 .no-conversation-selected {
@@ -242,7 +262,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 100%; /* Fill parent height */
   text-align: center;
   color: #6B7280;
   padding: 24px;
@@ -265,34 +285,35 @@
   font-size: 16px;
   color: #6B7280;
   margin: 0;
-  max-width: 300px;
+  max-width: 300px; /* Limit text width */
 }
 
-.loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 24px;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid #E5E7EB;
-  border-top: 3px solid #2A6F2B;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 16px;
-}
-
+/* --- Loading & Empty States --- */
+.loading-state,
 .loading-state-small {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 32px;
+}
+
+.loading-state {
+    height: 100%; /* Full height for message area loading */
+    padding: 24px;
+}
+
+.loading-state-small {
+    padding: 32px; /* Padding for sidebar loading */
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #E5E7EB; /* Light gray border */
+  border-top: 3px solid #2A6F2B; /* Green top border */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
 }
 
 .loading-spinner-small {
@@ -321,29 +342,97 @@
   flex-direction: column;
 }
 
+
+/* --- Image Modal Styles --- */
+.image-modal-overlay {
+  position: fixed; /* Stay on top */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  z-index: 1000; /* Ensure it's above other content */
+  padding: 20px; /* Add some padding */
+  overflow-y: auto; /* Allow scrolling if image is large */
+}
+
+.image-modal-content {
+  position: relative; /* For positioning the close button */
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90%; /* Max width of the content container */
+  max-height: 90%; /* Max height of the content container */
+  overflow: hidden; /* Hide anything outside the rounded corners */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.image-modal-content img {
+  display: block; /* Remove extra space below image */
+  max-width: 100%; /* Image should not exceed container width */
+  max-height: calc(90vh - 40px); /* Image should not exceed container height (viewport height - padding) */
+  object-fit: contain; /* Ensure the whole image is visible, maintain aspect ratio */
+  margin: auto; /* Center the image if it's smaller than the container */
+}
+
+.image-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+  z-index: 1010; /* Ensure close button is above image */
+}
+
+.image-modal-close:hover {
+  color: #000;
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .messages-content {
     flex-direction: column;
-    height: auto;
+    height: auto; /* Allow content to determine height */
   }
-  
+
   .conversations-sidebar {
-    width: 100%;
+    width: 100%; /* Full width */
     border-right: none;
     border-bottom: 1px solid #E5E7EB;
-    max-height: 300px;
+    max-height: 300px; /* Limit sidebar height on small screens */
   }
-  
+
   .message-body {
-    max-height: 500px;
+    max-height: none; /* Allow message body to expand */
   }
-  
+
   .images-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust grid for smaller screens */
   }
-  
+
   .messages-header h1 {
     font-size: 28px;
   }
+
+  /* Adjust modal on smaller screens */
+  .image-modal-content {
+    max-width: 95%;
+    max-height: 95%;
+    padding: 10px;
+  }
+
+  .image-modal-content img {
+     max-height: calc(95vh - 20px);
+  }
 }
+

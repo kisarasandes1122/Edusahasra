@@ -1,59 +1,60 @@
+// --- START OF FILE MessagesPage.jsx ---
+
 import React, { useState, useEffect } from 'react';
 import './MessagesPage.css';
-import { FaArrowLeft } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import api from '../../../api';
+import { getFullImageUrl } from '../../../api';
 
 const MessagesPage = () => {
-  const navigate = useNavigate();
   const [thankYouMessages, setThankYouMessages] = useState([]);
   const [activeMessage, setActiveMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [modalImageSrc, setModalImageSrc] = useState(null);
+
 
   useEffect(() => {
-    // This would be replaced with an actual API call
     const fetchThankYouMessages = async () => {
       setIsLoading(true);
+      setError(null);
       try {
-        // Simulating API fetch with mock data
-        setTimeout(() => {
-          const mockMessages = [
-            {
-              id: 1,
-              schoolName: "Ratnapura Central College",
-              date: "2025-04-10T14:30:00",
-              message: "Thank you for your donation! The books have arrived safely. Our students are thrilled to have new reading materials. Your contribution is making a real difference in our school library and we are all very grateful for your support.",
-              images: [
-                "/api/placeholder/400/300",
-                "/api/placeholder/400/300"
-              ]
-            },
-            {
-              id: 2,
-              schoolName: "Colombo Primary School",
-              date: "2025-04-02T16:45:00",
-              message: "We are incredibly grateful for the sports equipment you donated. Our students are already enjoying the new soccer balls and cricket set during PE classes. Your support helps our students stay active and healthy!",
-              images: [
-                "/api/placeholder/400/300",
-                "/api/placeholder/400/300",
-                "/api/placeholder/400/300"
-              ]
-            },
-            {
-              id: 3,
-              schoolName: "Kandy Model School",
-              date: "2025-03-28T09:15:00",
-              message: "Thank you for donating the science lab equipment. It has enhanced our students' learning experience tremendously. They are now able to conduct practical experiments that were not possible before.",
-              images: [
-                "/api/placeholder/400/300"
-              ]
-            }
-          ];
-          setThankYouMessages(mockMessages);
-          setActiveMessage(mockMessages[0]);
-          setIsLoading(false);
-        }, 800);
-      } catch (error) {
-        console.error("Error fetching thank you messages:", error);
+        const response = await api.get('/api/thankyous/my-thanks');
+
+        console.log("Raw Thank You Data from Backend:", response.data); // Keep this log for verification
+
+
+        const formattedMessages = response.data.map(ty => ({
+          id: ty._id,
+          // FIX: Access schoolName and schoolCity directly from the thank you object (ty)
+          schoolName: ty.schoolName || 'Unknown School', // Access directly
+          schoolCity: ty.schoolCity || '', // Access directly
+          date: ty.sentAt,
+          message: ty.message,
+          // Images are expected to have a 'url' property from the backend formatting
+          images: ty.images.map(img => ({
+             url: img.url, // Use the relative URL provided by backend (e.g., /uploads/...)
+             fileName: img.fileName
+          })) || [],
+          // Assuming donationSummary is also a direct property from backend formatting
+          donationSummary: ty.donationSummary
+        }));
+
+        setThankYouMessages(formattedMessages);
+
+        if (formattedMessages.length > 0) {
+          setActiveMessage(formattedMessages[0]);
+        } else {
+          setActiveMessage(null);
+        }
+
+      } catch (err) {
+        console.error("Error fetching thank you messages:", err);
+        const message = err.response?.data?.message || err.message || 'Failed to load messages.';
+        setError(message);
+        setThankYouMessages([]);
+        setActiveMessage(null);
+      } finally {
         setIsLoading(false);
       }
     };
@@ -62,12 +63,33 @@ const MessagesPage = () => {
   }, []);
 
   const formatDate = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+     if (!timestamp) return 'N/A';
+    try {
+        const date = new Date(timestamp);
+        if (isNaN(date.getTime())) {
+            return 'Invalid Date';
+        }
+        return date.toLocaleDateString('en-LK', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+        });
+    } catch (e) {
+        console.error("Error formatting date:", e);
+        return 'Invalid Date';
+    }
+  };
+
+  const openModal = (imageUrl) => {
+    setModalImageSrc(imageUrl);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    setModalImageSrc(null);
+    document.body.style.overflow = 'auto';
   };
 
 
@@ -77,6 +99,12 @@ const MessagesPage = () => {
         <h1>Thank You Messages</h1>
         <p>View appreciation messages from schools you've supported</p>
       </div>
+
+       {error && !isLoading && (
+            <div style={{ color: 'red', backgroundColor: '#ffebee', border: '1px solid red', padding: '10px', borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}>
+                <strong>Error:</strong> {error}
+            </div>
+        )}
 
       <div className="messages-content">
         <div className="conversations-sidebar">
@@ -91,38 +119,47 @@ const MessagesPage = () => {
               </div>
             ) : thankYouMessages.length > 0 ? (
               thankYouMessages.map(message => (
-                <div 
-                  key={message.id} 
+                <div
+                  key={message.id}
                   className={`conversation-item ${activeMessage?.id === message.id ? 'active' : ''}`}
                   onClick={() => setActiveMessage(message)}
                 >
                   <div className="conversation-info">
                     <div className="conversation-header">
+                      {/* Display schoolName from the formatted message */}
                       <h3>{message.schoolName}</h3>
                       <span className="conversation-time">
-                        {formatDate(message.date)}
+                        {new Date(message.date).toLocaleDateString('en-LK', { month: 'short', day: 'numeric' })}
                       </span>
                     </div>
-                    <p className="conversation-preview">{message.message.substring(0, 80)}...</p>
+                    <p className="conversation-preview">{message.message}</p>
                   </div>
                 </div>
               ))
-            ) : (
-              <div className="empty-state-small">
-                <p>No thank you messages yet</p>
-              </div>
-            )}
+            ) : !error ? (
+                 <div className="empty-state-small">
+                    <p>You haven't received any thank you messages yet.</p>
+                 </div>
+            ) : null }
           </div>
         </div>
 
         <div className="message-content">
-          
-          {activeMessage ? (
+            {isLoading && !activeMessage ? (
+                <div className="loading-state">
+                     <div className="loading-spinner"></div>
+                </div>
+            ) : !isLoading && activeMessage ? (
             <>
               <div className="message-header">
                 <div className="message-header-info">
+                  {/* Display schoolName from the active message */}
                   <h2>{activeMessage.schoolName}</h2>
-                  <span className="message-date">{formatDate(activeMessage.date)}</span>
+                  {/* Display schoolCity from the active message */}
+                  {activeMessage.schoolCity && <span className="message-date" style={{marginBottom: '4px'}}>📍 {activeMessage.schoolCity}</span>}
+                  <span className="message-date">Sent: {formatDate(activeMessage.date)}</span>
+                  {/* Check if donationSummary exists before rendering */}
+                   {activeMessage.donationSummary && <span className="message-date" style={{marginTop: '4px', fontSize: '12px'}}>Regarding: {activeMessage.donationSummary}</span>}
                 </div>
               </div>
 
@@ -131,14 +168,16 @@ const MessagesPage = () => {
                   <div className="thank-you-message">
                     <p>{activeMessage.message}</p>
                   </div>
-                  
+
                   {activeMessage.images && activeMessage.images.length > 0 && (
                     <div className="thank-you-images">
                       <h3>Photos from the School</h3>
                       <div className="images-grid">
                         {activeMessage.images.map((image, index) => (
-                          <div key={index} className="image-container">
-                            <img src={image} alt={`Thank you from ${activeMessage.schoolName} ${index + 1}`} />
+                          <div key={index} className="image-container"
+                             onClick={() => openModal(getFullImageUrl(image.url))}
+                          >
+                            <img src={getFullImageUrl(image.url)} alt={`Thank you from ${activeMessage.schoolName} - ${image.fileName || index + 1}`} />
                           </div>
                         ))}
                       </div>
@@ -147,15 +186,25 @@ const MessagesPage = () => {
                 </div>
               </div>
             </>
-          ) : (
-            <div className="no-conversation-selected">
-              <div className="empty-icon">💌</div>
-              <h3>Select a message</h3>
-              <p>Choose a thank you message from the list to view details</p>
-            </div>
-          )}
+            ) : !isLoading && !activeMessage && thankYouMessages.length > 0 ? (
+                <div className="no-conversation-selected">
+                <div className="empty-icon">💌</div>
+                <h3>Select a message</h3>
+                <p>Choose a thank you message from the list to view details.</p>
+                </div>
+            ) : null }
         </div>
       </div>
+
+      {modalImageSrc && (
+        <div className="image-modal-overlay" onClick={closeModal}>
+          <div className="image-modal-content" onClick={e => e.stopPropagation()}>
+            <button className="image-modal-close" onClick={closeModal}>×</button>
+            <img src={modalImageSrc} alt="Full view" />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

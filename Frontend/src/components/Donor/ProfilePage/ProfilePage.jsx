@@ -36,7 +36,6 @@ const ProfilePage = () => {
             email: 'kisara.sandes@example.com',
             phone: '+94 76 123 4567',
             location: 'Colombo, Sri Lanka',
-            avatar: '/api/placeholder/100/100',
             notificationPreferences: {
               email: true,
               sms: false,
@@ -45,7 +44,7 @@ const ProfilePage = () => {
               newsletterUpdates: false
             },
             donationsCount: 12,
-            totalImpact: '450 students'
+            memberSince: '2022'
           };
           
           setProfile(mockProfile);
@@ -124,52 +123,49 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="profile-page-container">
-      <div className="profile-header">
+    <div className="usr-profile-container">
+      <div className="usr-profile-header">
         <h1>Edit Profile</h1>
         <p>Manage account & preferences</p>
       </div>
 
       {isLoading ? (
-        <div className="loading-state">
-          <div className="loading-spinner"></div>
+        <div className="usr-profile-loading-state">
+          <div className="usr-profile-loading-spinner"></div>
           <p>Loading your profile...</p>
         </div>
       ) : profile ? (
-        <div className="profile-content">
-          <div className="profile-sidebar">
-            <div className="profile-card">
-              <div className="profile-avatar">
-                <img src={profile.avatar} alt={profile.name} />
-              </div>
-              <h2 className="profile-name">{profile.name}</h2>
-              <div className="profile-stats">
-                <div className="stat">
-                  <span className="stat-value">{profile.donationsCount}</span>
-                  <span className="stat-label">Donations</span>
+        <div className="usr-profile-content">
+          <div className="usr-profile-sidebar">
+            <div className="usr-profile-card">
+              <h2 className="usr-profile-name">{profile.name}</h2>
+              <div className="usr-profile-stats">
+                <div className="usr-profile-stat">
+                  <span className="usr-profile-stat-value">{profile.donationsCount}</span>
+                  <span className="usr-profile-stat-label">Donations</span>
                 </div>
-                <div className="stat">
-                  <span className="stat-value">{profile.totalImpact}</span>
-                  <span className="stat-label">Impact</span>
+                <div className="usr-profile-stat">
+                  <span className="usr-profile-stat-value">{profile.memberSince}</span>
+                  <span className="usr-profile-stat-label">Member since</span>
                 </div>
               </div>
             </div>
             
-            <div className="profile-tabs">
+            <div className="usr-profile-tabs">
               <button 
-                className={`tab-button ${activeTab === 'personal' ? 'active' : ''}`}
+                className={`usr-profile-tab-button ${activeTab === 'personal' ? 'active' : ''}`}
                 onClick={() => setActiveTab('personal')}
               >
                 Personal Information
               </button>
               <button 
-                className={`tab-button ${activeTab === 'notifications' ? 'active' : ''}`}
+                className={`usr-profile-tab-button ${activeTab === 'notifications' ? 'active' : ''}`}
                 onClick={() => setActiveTab('notifications')}
               >
                 Notification Settings
               </button>
               <button 
-                className={`tab-button ${activeTab === 'security' ? 'active' : ''}`}
+                className={`usr-profile-tab-button ${activeTab === 'security' ? 'active' : ''}`}
                 onClick={() => setActiveTab('security')}
               >
                 Password & Security
@@ -177,17 +173,17 @@ const ProfilePage = () => {
             </div>
           </div>
           
-          <div className="profile-form-container">
+          <div className="usr-profile-form-container">
             {successMessage && (
-              <div className="success-message">
+              <div className="usr-profile-success-message">
                 {successMessage}
               </div>
             )}
             
             {activeTab === 'personal' && (
-              <form onSubmit={handleSubmit} className="profile-form">
-                <h3 className="form-section-title">Personal Information</h3>
-                <div className="form-group">
+              <form onSubmit={handleSubmit} className="usr-profile-form">
+                <h3 className="usr-profile-form-section-title">Personal Information</h3>
+                <div className="usr-profile-form-group">
                   <label htmlFor="name">Full Name</label>
                   <input
                     type="text"
@@ -199,7 +195,7 @@ const ProfilePage = () => {
                   />
                 </div>
                 
-                <div className="form-group">
+                <div className="usr-profile-form-group">
                   <label htmlFor="email">Email Address</label>
                   <input
                     type="email"
@@ -211,7 +207,7 @@ const ProfilePage = () => {
                   />
                 </div>
                 
-                <div className="form-group">
+                <div className="usr-profile-form-group">
                   <label htmlFor="phone">Phone Number</label>
                   <input
                     type="tel"
@@ -222,7 +218,7 @@ const ProfilePage = () => {
                   />
                 </div>
                 
-                <div className="form-group">
+                <div className="usr-profile-form-group">
                   <label htmlFor="location">Location</label>
                   <input
                     type="text"
@@ -233,19 +229,19 @@ const ProfilePage = () => {
                   />
                 </div>
                 
-                <div className="form-actions">
-                  <button type="submit" className="btn-primary">Save Changes</button>
+                <div className="usr-profile-form-actions">
+                  <button type="submit" className="usr-profile-btn-primary">Save Changes</button>
                 </div>
               </form>
             )}
             
             {activeTab === 'notifications' && (
-              <form onSubmit={handleSubmit} className="profile-form">
-                <h3 className="form-section-title">Notification Settings</h3>
-                <div className="notification-preferences">
-                  <h4 className="subsection-title">Notification Methods</h4>
-                  <div className="checkbox-group">
-                    <label className="checkbox-label">
+              <form onSubmit={handleSubmit} className="usr-profile-form">
+                <h3 className="usr-profile-form-section-title">Notification Settings</h3>
+                <div className="usr-profile-notification-preferences">
+                  <h4 className="usr-profile-subsection-title">Notification Methods</h4>
+                  <div className="usr-profile-checkbox-group">
+                    <label className="usr-profile-checkbox-label">
                       <input
                         type="checkbox"
                         name="email"
@@ -256,8 +252,8 @@ const ProfilePage = () => {
                     </label>
                   </div>
                   
-                  <div className="checkbox-group">
-                    <label className="checkbox-label">
+                  <div className="usr-profile-checkbox-group">
+                    <label className="usr-profile-checkbox-label">
                       <input
                         type="checkbox"
                         name="sms"
@@ -268,9 +264,9 @@ const ProfilePage = () => {
                     </label>
                   </div>
                   
-                  <h4 className="subsection-title">Notification Types</h4>
-                  <div className="checkbox-group">
-                    <label className="checkbox-label">
+                  <h4 className="usr-profile-subsection-title">Notification Types</h4>
+                  <div className="usr-profile-checkbox-group">
+                    <label className="usr-profile-checkbox-label">
                       <input
                         type="checkbox"
                         name="donationUpdates"
@@ -281,8 +277,8 @@ const ProfilePage = () => {
                     </label>
                   </div>
                   
-                  <div className="checkbox-group">
-                    <label className="checkbox-label">
+                  <div className="usr-profile-checkbox-group">
+                    <label className="usr-profile-checkbox-label">
                       <input
                         type="checkbox"
                         name="impactReports"
@@ -293,8 +289,8 @@ const ProfilePage = () => {
                     </label>
                   </div>
                   
-                  <div className="checkbox-group">
-                    <label className="checkbox-label">
+                  <div className="usr-profile-checkbox-group">
+                    <label className="usr-profile-checkbox-label">
                       <input
                         type="checkbox"
                         name="newsletterUpdates"
@@ -306,16 +302,16 @@ const ProfilePage = () => {
                   </div>
                 </div>
                 
-                <div className="form-actions">
-                  <button type="submit" className="btn-primary">Save Preferences</button>
+                <div className="usr-profile-form-actions">
+                  <button type="submit" className="usr-profile-btn-primary">Save Preferences</button>
                 </div>
               </form>
             )}
             
             {activeTab === 'security' && (
-              <form onSubmit={handlePasswordSubmit} className="profile-form">
-                <h3 className="form-section-title">Password & Security</h3>
-                <div className="form-group">
+              <form onSubmit={handlePasswordSubmit} className="usr-profile-form">
+                <h3 className="usr-profile-form-section-title">Password & Security</h3>
+                <div className="usr-profile-form-group">
                   <label htmlFor="currentPassword">Current Password</label>
                   <input
                     type="password"
@@ -327,7 +323,7 @@ const ProfilePage = () => {
                   />
                 </div>
                 
-                <div className="form-group">
+                <div className="usr-profile-form-group">
                   <label htmlFor="newPassword">New Password</label>
                   <input
                     type="password"
@@ -339,7 +335,7 @@ const ProfilePage = () => {
                   />
                 </div>
                 
-                <div className="form-group">
+                <div className="usr-profile-form-group">
                   <label htmlFor="confirmPassword">Confirm New Password</label>
                   <input
                     type="password"
@@ -351,7 +347,7 @@ const ProfilePage = () => {
                   />
                 </div>
                 
-                <div className="password-requirements">
+                <div className="usr-profile-password-requirements">
                   <h4>Password Requirements:</h4>
                   <ul>
                     <li>At least 8 characters long</li>
@@ -361,17 +357,17 @@ const ProfilePage = () => {
                   </ul>
                 </div>
                 
-                <div className="form-actions">
-                  <button type="submit" className="btn-primary">Update Password</button>
+                <div className="usr-profile-form-actions">
+                  <button type="submit" className="usr-profile-btn-primary">Update Password</button>
                 </div>
               </form>
             )}
           </div>
         </div>
       ) : (
-        <div className="error-state">
+        <div className="usr-profile-error-state">
           <p>Failed to load profile information. Please try again.</p>
-          <button className="btn-primary">Reload</button>
+          <button className="usr-profile-btn-primary">Reload</button>
         </div>
       )}
     </div>

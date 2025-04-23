@@ -90,7 +90,7 @@
 .donation-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 20px;
   padding-bottom: 12px;
   border-bottom: 1px solid #E5E7EB;
@@ -100,7 +100,13 @@
   font-size: 18px;
   font-weight: 600;
   color: #111827;
-  margin: 0;
+  margin: 0 0 6px 0;
+}
+
+.delivery-type-label {
+  font-size: 13px;
+  color: #6B7280;
+  display: block;
 }
 
 .status-badge {
@@ -124,6 +130,45 @@
 .status-badge.pending {
   background-color: #FEF3C7;
   color: #92400E;
+}
+
+.status-dropdown {
+  min-width: 120px;
+}
+
+.status-selector {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  cursor: pointer;
+  transition: border 0.2s ease;
+}
+
+.status-selector:focus {
+  outline: none;
+  border-color: #2A6F2B;
+  box-shadow: 0 0 0 2px rgba(42, 111, 43, 0.2);
+}
+
+.status-selector.delivered {
+  border-left: 4px solid #047857;
+}
+
+.status-selector.in-transit {
+  border-left: 4px solid #1E40AF;
+}
+
+.status-selector.pending {
+  border-left: 4px solid #D97706;
 }
 
 .donation-details {
