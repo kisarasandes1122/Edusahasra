@@ -399,3 +399,466 @@
          text-align: center;
     }
 }
+
+
+--- START OF FILE NeedPage.css ---
+
+/* NeedPage.css */
+.need-container {
+  max-width: 1235px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  padding-bottom: 70px;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  background-color: #fff;
+}
+
+/* Header styling */
+.need-header {
+  display: flex;
+  justify-content: space-between; /* Keep space between text and button */
+  align-items: stretch; /* This helps align items vertically */
+  margin-bottom: 30px;
+  padding-bottom: 20px; /* Add some padding below the header content */
+  border-bottom: 1px solid #eee; /* Optional: Add a subtle separator line */
+  gap: 20px; /* Add gap between text section and button */
+}
+
+.need-title-section {
+  flex: 1; /* Allow text section to take available space */
+  min-width: 0; /* Prevent overflow issues in flex child */
+  display: flex;
+  flex-direction: column;
+}
+
+.need-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: #000;
+  text-align: left;
+  line-height: 1.2; /* Adjust line height */
+}
+
+.need-location {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  color: #555;
+  font-size: 16px;
+}
+
+.location-icon {
+  margin-right: 8px; /* Increased spacing */
+  font-size: 18px;
+  color: #777; /* Slightly muted icon color */
+}
+
+/* Content containers wrapper - helps with alignment */
+.content-containers {
+  flex: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%; /* Adjusted width to be responsive */
+}
+
+/* School info container */
+.school-info-container {
+  background-color: #f9f9f9; /* Subtle background */
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #efefef;
+  margin-bottom: 10px; /* Space between containers */
+}
+
+.need-description {
+  line-height: 1.6; /* Improved readability */
+  margin: 0; /* No bottom margin needed */
+  font-size: 15px;
+  color: #444; /* Slightly darker text */
+}
+
+/* Request notes as separate container */
+.request-notes-container {
+  background-color: #f3f8f3; /* Different subtle background color */
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #e5f0e5; /* Slightly different border color */
+  margin-top: auto; /* Push to bottom when possible */
+}
+
+.need-request-note {
+  margin: 0; /* Reset margin */
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.need-request-note strong {
+  color: #333;
+}
+
+.donate-btn-wrapper {
+  display: flex;
+  flex-direction: column; /* Stack button and status message */
+  align-items: flex-end; /* Align button/message to the right */
+  margin-left: 20px; /* Ensure some space from text on wider screens */
+  flex-shrink: 0; /* Prevent button wrapper from shrinking */
+  justify-content: flex-start; /* Align button to top */
+}
+
+.donate-now-btn {
+  background-color: #78C51C;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap; /* Prevent button text wrapping */
+}
+
+.donate-now-btn:hover {
+  background-color: #2A6F2B; /* Darker green */
+}
+
+/* Status message styling (Fulfilled/Cancelled) */
+.request-status-message {
+  font-weight: bold;
+  margin-top: 10px; /* Space between button (if shown) and message */
+  text-align: right;
+  font-size: 14px;
+}
+.request-status-message.fulfilled {
+  color: #2e7d32; /* Green */
+}
+.request-status-message.cancelled {
+  color: #c62828; /* Red */
+}
+
+/* Image gallery styling */
+.gallery-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 30px 0 15px 0;
+  color: #333;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee; /* Separator */
+}
+
+.photo-gallery {
+  display: grid; /* Use grid for better control */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive columns */
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.photo-item {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  aspect-ratio: 4 / 3; /* Maintain aspect ratio */
+}
+
+.need-photo {
+  width: 100%;
+  height: 100%; /* Fill the container */
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.need-photo:hover {
+  transform: scale(1.03); /* Slightly larger hover effect */
+}
+
+/* Progress Tracker */
+.progress-tracker {
+  margin-bottom: 35px; /* More space below progress */
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-label {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.completion-status {
+  font-weight: 500;
+  font-size: 15px; /* Slightly smaller */
+  color: #444;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 10px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, #95d83d, #78C51C); /* Gradient fill */
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+/* --- Map Section Styling --- */
+.school-location-map-section {
+    margin-bottom: 35px; /* Space below map section */
+}
+
+.map-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+  color: #333;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee; /* Separator */
+}
+
+.map-container {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+/* Style for the map itself */
+.need-map {
+    height: 250px; /* Adjusted default height */
+    width: 100%;
+}
+
+.map-coords {
+    font-size: 14px;
+    color: #555;
+    margin-top: 10px; /* Space below the map */
+    text-align: center;
+}
+
+.map-coords a {
+    color: #2A6F2B;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.map-coords a:hover {
+    color: #358337;
+}
+
+/* Items Table */
+.items-table {
+  background-color: #fff; /* White background for table */
+  border: 1px solid #eaf3eb; /* Border instead of bg color */
+  border-radius: 8px;
+  overflow: hidden; /* Keep rounded corners */
+  margin-bottom: 30px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Subtle shadow */
+}
+
+.table-header {
+  display: flex;
+  background-color: #f5f7fa; /* Lighter header background */
+  color: #555; /* Header text color */
+  font-weight: 600;
+  padding: 12px 0; /* Adjusted padding */
+  border-bottom: 1px solid #e5e9f0; /* Header border */
+  font-size: 14px; /* Slightly smaller header font */
+  text-transform: uppercase; /* Uppercase headers */
+  letter-spacing: 0.5px;
+}
+
+.table-row {
+  display: flex;
+  padding: 15px 0; /* Vertical padding */
+  border-bottom: 1px solid #eaf3eb ;
+  transition: background-color 0.2s ease; /* Hover effect */
+}
+.table-row:hover {
+  background-color: #f9fbfb; /* Slight hover background */
+}
+
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-cell {
+  flex: 1;
+  padding: 0 15px; /* Horizontal padding */
+  display: flex;
+  align-items: center;
+  font-size: 15px; /* Consistent font size */
+}
+
+.table-cell:nth-child(2), /* Requested */
+.table-cell:nth-child(3), /* Received */
+.table-cell:nth-child(4) { /* Remaining */
+  justify-content: center; /* Center align numbers */
+  flex-basis: 15%; /* Adjust basis for number columns */
+  flex-grow: 0;
+}
+.table-cell:nth-child(5) { /* Status */
+  justify-content: center; /* Center align status */
+   flex-basis: 20%; /* Adjust basis for status column */
+   flex-grow: 0;
+}
+
+
+.status-complete {
+  color: #2e7d32;
+  display: flex;
+  align-items: center;
+  font-weight: 500; /* Make status text slightly bolder */
+}
+
+.check-icon {
+  margin-right: 6px; /* Increased space */
+  font-size: 16px; /* Slightly larger icon */
+}
+
+.status-pending {
+  color: #666; /* Muted color for pending */
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .need-header {
+    flex-direction: column;
+    align-items: stretch; /* Stretch items full width */
+    border-bottom: none; /* Remove border on mobile */
+    padding-bottom: 0;
+  }
+
+  .need-title-section {
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .content-containers {
+    margin-bottom: 15px;
+  }
+
+  .school-info-container {
+    margin-bottom: 15px;
+  }
+
+  .request-notes-container {
+    margin-top: 15px; /* Fixed space on mobile */
+  }
+
+  .donate-btn-wrapper {
+    align-items: flex-start; /* Align button to left */
+    margin-left: 0; /* Remove left margin */
+    margin-top: 10px; /* Add space above button */
+  }
+  .request-status-message {
+    text-align: left; /* Align status text left */
+  }
+
+  .photo-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust for smaller screens */
+  }
+
+  .items-table {
+    border: none; /* Remove border from container */
+    box-shadow: none; /* Remove shadow from container */
+    margin-bottom: 15px;
+  }
+
+  .table-header {
+    display: none; /* Hide header on small screens */
+  }
+
+  .table-row {
+    flex-direction: column; /* Stack cells vertically */
+    padding: 10px 15px; /* Adjust padding */
+    margin-bottom: 10px; /* Space between stacked rows */
+    border: 1px solid #eaf3eb; /* Add border to each "card" */
+    border-radius: 6px;
+    background-color: #fcfdfd;
+  }
+  .table-row:last-child {
+      border-bottom: 1px solid #eaf3eb; /* Ensure last item also has border */
+  }
+   .table-row:hover {
+       background-color: #f9fbfb;
+   }
+
+
+  .table-cell {
+    padding: 5px 0; /* Adjust vertical padding */
+    width: 100%; /* Make cells full width */
+    justify-content: space-between !important; /* Align label and value */
+    flex-basis: auto !important; /* Reset basis */
+    flex-grow: 1 !important; /* Allow cells to grow */
+    border-bottom: 1px dashed #eee; /* Separator inside card */
+    font-size: 14px;
+  }
+  .table-cell:last-child {
+      border-bottom: none; /* No border on last cell in card */
+  }
+
+
+  /* Add labels using ::before pseudo-element */
+  .table-cell::before {
+    content: attr(data-label); /* Get label from data attribute */
+    font-weight: 600; /* Make label bold */
+    margin-right: 10px;
+    color: #333;
+    display: inline-block; /* Needed for alignment */
+  }
+
+   /* Specific labels for each cell */
+   .table-cell:nth-child(1)::before { content: "Item:"; }
+   .table-cell:nth-child(2)::before { content: "Requested:"; }
+   .table-cell:nth-child(3)::before { content: "Received:"; }
+   .table-cell:nth-child(4)::before { content: "Remaining:"; }
+   .table-cell:nth-child(5)::before { content: "Status:"; }
+
+   .need-map {
+       height: 250px; /* Height on tablets */
+   }
+}
+
+@media (max-width: 480px) {
+    .need-title {
+        font-size: 24px; /* Smaller title */
+    }
+    .need-location {
+        font-size: 14px;
+    }
+    .need-description, .need-request-note {
+        font-size: 14px;
+    }
+    .photo-gallery {
+        grid-template-columns: 1fr; /* Single column gallery */
+    }
+    .donate-now-btn {
+        padding: 10px 20px;
+        font-size: 15px;
+        width: 100%; /* Full width button */
+        text-align: center;
+    }
+    .request-status-message {
+         width: 100%; /* Full width status */
+         text-align: center;
+    }
+    .need-map {
+        height: 200px; /* Height on small phones */
+    }
+}

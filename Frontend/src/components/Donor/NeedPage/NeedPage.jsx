@@ -1,19 +1,47 @@
 // frontend/src/components/Donor/NeedPage/NeedPage.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Ensure useNavigate is imported
+import { useParams, useNavigate } from 'react-router-dom';
 import { IoLocationOutline } from 'react-icons/io5';
 import { FaRegCheckCircle } from 'react-icons/fa';
-import api from '../../../api'; // Assuming api.js sets the base URL
+import api from '../../../api';
 import LoadingSpinner from '../../Common/LoadingSpinner/LoadingSpinner';
 import './NeedPage.css';
+
+// --- Import React Leaflet Components ---
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css'; // Import Leaflet CSS
+
+// --- Fix for default marker icon (Webpack/Vite issue) ---
+import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconRetina from 'leaflet/dist/images/marker-icon-2x.png';
+import shadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Configure the default icon path
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    iconRetinaUrl: iconRetina,
+    shadowUrl: shadow,
+    iconSize: [25, 41], // Default size
+    iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
+    popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
+    shadowSize: [41, 41] // Size of the shadow
+});
+
+// Apply the new icon configuration globally
+L.Marker.prototype.options.icon = DefaultIcon;
+// --- End Fix ---
+
+
 // Fallback images (keep these)
 import img1 from '../../../assets/images/Rural1.webp';
 import img2 from '../../../assets/images/Rural2.webp';
 import img3 from '../../../assets/images/Rural3.webp';
 
+
 const NeedPage = () => {
   const { requestId } = useParams();
-  const navigate = useNavigate(); // Add useNavigate hook
+  const navigate = useNavigate();
   const [request, setRequest] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,6 +49,7 @@ const NeedPage = () => {
   // Define base URL for images - ensure api.js sets the base URL correctly
   // Use axios default baseURL if available, otherwise fallback
   const IMAGE_BASE_URL = api.defaults.baseURL || 'http://localhost:5000';
+
 
   useEffect(() => {
     const fetchRequestDetails = async () => {
@@ -58,7 +87,7 @@ const NeedPage = () => {
       setError("Request ID is missing in the URL.");
       setLoading(false);
     }
-  }, [requestId]); // Dependency array includes requestId
+  }, [requestId]);
 
   // Helper function to format location string
   const formatLocation = (school) => {
@@ -128,6 +157,13 @@ const NeedPage = () => {
   if (!request || !request.school) {
     return <div className="need-container"><p>Request details or school information could not be loaded.</p></div>;
   }
+
+  // Safely access latitude and longitude from the populated school location
+  // GeoJSON coordinates are [longitude, latitude]
+  const schoolLatitude = request.school.location?.coordinates?.[1];
+  const schoolLongitude = request.school.location?.coordinates?.[0];
+  const hasLocationData = schoolLatitude !== undefined && schoolLongitude !== undefined && schoolLatitude !== null && schoolLongitude !== null;
+
 
   // Calculate overall progress safely, handling potential undefined or empty items
   const totalRequested = request.requestedItems?.reduce((sum, item) => sum + (item.quantity || 0), 0) || 0;
@@ -218,7 +254,7 @@ const NeedPage = () => {
       <div className="progress-tracker">
         <div className="progress-header">
           <h3 className="progress-label">Overall Progress</h3>
-          <span className="completion-status">{overallProgress}% Complete</span> {/* Updated text */}
+          <span className="completion-status">{overallProgress}% Complete</span>
         </div>
         <div className="progress-bar-container">
           <div
@@ -232,6 +268,7 @@ const NeedPage = () => {
           ></div>
         </div>
       </div>
+
 
       {/* --- Items Table --- */}
       <div className="items-table">
@@ -283,6 +320,42 @@ const NeedPage = () => {
           </div>
         )}
       </div>
+
+      {/* --- School Location Map --- */}
+      {hasLocationData && (
+         <div className="school-location-map-section">
+             <h3 className="map-title">School Location</h3>
+             <div className="map-container">
+                 {/* Set center to [latitude, longitude] and initial zoom */}
+                 <MapContainer
+                    center={[schoolLatitude, schoolLongitude]}
+                    zoom={14} // Adjust zoom level as needed (e.g., 13-16)
+                    scrollWheelZoom={false} // Disable scroll wheel zooming to avoid accidental page scrolls
+                    className="need-map" // Add class for styling
+                 >
+                     <TileLayer
+                         attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                     />
+                     <Marker position={[schoolLatitude, schoolLongitude]}>
+                         <Popup>
+                             {request.school.schoolName} <br /> {request.school.streetAddress}
+                         </Popup>
+                     </Marker>
+                 </MapContainer>
+                 <p className="map-coords">
+                    Coordinates: {schoolLatitude.toFixed(6)}, {schoolLongitude.toFixed(6)}
+                     <a
+                        href={`https://maps.google.com/?q=${schoolLatitude},${schoolLongitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ marginLeft: '10px', color: '#2A6F2B', textDecoration: 'underline' }}
+                     >View on Google Maps</a>
+                 </p>
+             </div>
+         </div>
+       )}
+      {/* --- End School Location Map --- */}
 
       {/* --- Photo Gallery --- */}
        <h3 className="gallery-title">School Gallery</h3>

@@ -1,8 +1,7 @@
-// controllers/donationController.js
 const asyncHandler = require('express-async-handler');
 const Donation = require('../models/donationModel');
 const DonationRequest = require('../models/donationRequestModel');
-const School = require('../models/schoolModel');
+const School = require('../models/schoolModel'); // Ensure School model is imported
 const Donor = require('../models/donorModel');
 const mongoose = require('mongoose');
 
@@ -131,7 +130,9 @@ const createDonation = asyncHandler(async (req, res) => {
 // @access  Private (Donor)
 const getMyDonations = asyncHandler(async (req, res) => {
     const donations = await Donation.find({ donor: req.donor._id })
-        .populate('school', 'schoolName city') // Populate school details
+        // *** MODIFIED POPULATE CALL ***
+        // Populate school details including address and location
+        .populate('school', 'schoolName streetAddress city district province postalCode location') // <-- Add required fields
         .sort({ createdAt: -1 });
     res.json(donations);
 });
@@ -215,11 +216,14 @@ const updateDonationStatusByDonor = asyncHandler(async (req, res) => {
     const donorId = req.donor._id;
 
     // Allowed statuses for donor update (Self-Delivery)
-    const allowedStatuses = ['Preparing', 'In Transit', 'Delivered'];
-    if (!allowedStatuses.includes(newStatus)) {
-        res.status(400);
-        throw new Error(`Invalid status update: "${newStatus}". Allowed: ${allowedStatuses.join(', ')}`);
-    }
+    // Donor can update from 'Preparing' to 'In Transit' to 'Delivered'
+    // Donor can also potentially cancel if not yet Received by School
+    const allowedStatuses = ['Preparing', 'In Transit', 'Delivered', 'Cancelled'];
+     if (!allowedStatuses.includes(newStatus)) {
+         res.status(400);
+         throw new Error(`Invalid status update: "${newStatus}". Allowed for Donor: ${allowedStatuses.join(', ')}`);
+     }
+
 
     const donation = await Donation.findById(donationId);
 
@@ -235,18 +239,39 @@ const updateDonationStatusByDonor = asyncHandler(async (req, res) => {
     }
     if (donation.deliveryMethod !== 'Self-Delivery') {
         res.status(400);
-        throw new Error('Donor can only update status for Self-Delivery donations.');
+        throw new Error('Donor can only update status for Self-Delivery donations using this endpoint.');
     }
-    if (donation.trackingStatus === 'Received by School' || donation.schoolConfirmation) {
+    // Prevent updates if the donation has reached a final state (Received by School, Cancelled)
+    const finalStatuses = ['Received by School', 'Cancelled'];
+    if (finalStatuses.includes(donation.trackingStatus)) {
         res.status(400);
-        throw new Error('Cannot update status after school has confirmed receipt.');
-    }
-    if (donation.trackingStatus === 'Cancelled') {
-         res.status(400);
-         throw new Error('Cannot update status of a cancelled donation.');
+        throw new Error(`Cannot update status for a donation that is already "${donation.trackingStatus}".`);
     }
 
-    // Add more sophisticated state transition checks if needed (e.g., can't go from Delivered back to Preparing)
+     // More sophisticated state transition checks (prevent skipping/going backwards)
+    const statusOrder = ['Preparing', 'In Transit', 'Delivered']; // Order for progression
+    const currentIndex = statusOrder.indexOf(donation.trackingStatus);
+    const newIndex = statusOrder.indexOf(newStatus);
+
+     if (newStatus === 'Cancelled') {
+         // Allow cancelling from any status except final ones (checked above)
+         // No further transition check needed for 'Cancelled'
+     } else if (newIndex === -1) {
+         // New status is not 'Preparing', 'In Transit', or 'Delivered'
+          res.status(400);
+          throw new Error(`Invalid status "${newStatus}" for Self-Delivery update.`);
+     } else if (newIndex < currentIndex) {
+         // Attempting to move backwards (e.g., Delivered -> In Transit)
+         res.status(400);
+         throw new Error(`Cannot change status from "${donation.trackingStatus}" to "${newStatus}". Invalid transition.`);
+     } else if (newIndex > currentIndex + 1) {
+         // Attempting to skip a status (e.g., Preparing -> Delivered)
+          // This might be allowed in some workflows, but for this explicit flow, let's restrict it.
+          // If you want to allow skipping, remove this else-if block.
+          res.status(400);
+          throw new Error(`Cannot skip statuses. Next valid status after "${donation.trackingStatus}" is "${statusOrder[currentIndex + 1]}".`);
+     }
+
 
     donation.trackingStatus = newStatus;
     donation.statusLastUpdatedAt = Date.now();
@@ -263,11 +288,11 @@ const updateDonationStatusByAdmin = asyncHandler(async (req, res) => {
     const { newStatus, adminTrackingId, adminRemarks } = req.body;
     const donationId = req.params.id;
 
-    // Allowed statuses for admin update (Courier)
-    const allowedStatuses = ['Preparing', 'In Transit', 'Delivered', 'Cancelled']; // Admin can cancel
+    // Allowed statuses for admin update (can potentially manage all)
+    const allowedStatuses = ['Pending Confirmation', 'Preparing', 'In Transit', 'Delivered', 'Received by School', 'Cancelled'];
     if (!allowedStatuses.includes(newStatus)) {
         res.status(400);
-        throw new Error(`Invalid status update: "${newStatus}". Allowed: ${allowedStatuses.join(', ')}`);
+        throw new Error(`Invalid status update: "${newStatus}". Allowed for Admin: ${allowedStatuses.join(', ')}`);
     }
 
     const donation = await Donation.findById(donationId);
@@ -277,22 +302,18 @@ const updateDonationStatusByAdmin = asyncHandler(async (req, res) => {
         throw new Error('Donation not found.');
     }
 
-    // Validation
-    if (donation.deliveryMethod !== 'Courier') {
+    // Admin can update status for both delivery methods if needed, but tracking ID applies mainly to Courier
+     if (donation.trackingStatus === 'Received by School' && newStatus !== 'Received by School') {
+        // Prevent changing status AFTER school has confirmed receipt, unless it's confirming it again (idempotent)
         res.status(400);
-        throw new Error('Admin can typically only update status for Courier donations this way.');
-        // Or adjust logic if admin should override self-delivery status too
+        throw new Error('Cannot change status after school has confirmed receipt.');
     }
-     if (donation.trackingStatus === 'Received by School' || donation.schoolConfirmation) {
-        res.status(400);
-        throw new Error('Cannot update status after school has confirmed receipt.');
-    }
-    
+
 
     donation.trackingStatus = newStatus;
     donation.statusLastUpdatedAt = Date.now();
-    if (adminTrackingId !== undefined) donation.adminTrackingId = adminTrackingId;
-    if (adminRemarks !== undefined) donation.adminRemarks = adminRemarks;
+    if (adminTrackingId !== undefined) donation.adminTrackingId = adminTrackingId; // Admin can set/clear tracking ID
+    if (adminRemarks !== undefined) donation.adminRemarks = adminRemarks; // Admin can add/update remarks
 
 
     const updatedDonation = await donation.save();
@@ -320,10 +341,17 @@ const confirmDonationReceipt = asyncHandler(async (req, res) => {
         res.status(403);
         throw new Error('Not authorized to confirm this donation.');
     }
-    if (donation.schoolConfirmation) {
+    if (donation.schoolConfirmation || donation.trackingStatus === 'Received by School') {
         res.status(400);
         throw new Error('Donation receipt already confirmed.');
     }
+     // Optional: Check if status is at least 'Delivered' before allowing confirmation
+     if (!['Delivered', 'In Transit'].includes(donation.trackingStatus) && donation.deliveryMethod !== 'Self-Delivery') {
+          // For self-delivery, they might confirm even if donor forgot to mark delivered
+          // For courier, it should ideally be 'Delivered' or sometimes 'In Transit' (if they confirm before admin marks Delivered)
+          console.warn(`School confirming donation ${donationId} with unexpected status: ${donation.trackingStatus}`);
+          // Decide if this is an error or just a warning. Let's allow it but log.
+     }
 
 
     // --- Perform Confirmation ---
@@ -334,33 +362,37 @@ const confirmDonationReceipt = asyncHandler(async (req, res) => {
 
     // --- Update the Original Donation Request ---
     const donationRequest = await DonationRequest.findById(donation.donationRequest);
-    if (!donationRequest) { 
+    if (!donationRequest) {
         console.error(`Error: DonationRequest ${donation.donationRequest} not found for confirmed Donation ${donationId}`);
         await donation.save();
         res.status(500).json({ message: 'Donation confirmed, but failed to update original request (Request not found).' });
         return; // Stop further processing
     }
 
-    let needsSave = false;
+    let needsRequestSave = false;
     donation.itemsDonated.forEach(donatedItem => {
         const requestedItem = donationRequest.requestedItems.find(
             reqItem => reqItem.categoryId === donatedItem.categoryId
         );
         if (requestedItem) {
+            // Ensure quantityReceived doesn't exceed requested quantity, just in case
             const potentialNewReceived = requestedItem.quantityReceived + donatedItem.quantityDonated;
-             requestedItem.quantityReceived = potentialNewReceived; // Update received amount
+             requestedItem.quantityReceived = Math.min(potentialNewReceived, requestedItem.quantity); // Update received amount, cap at requested
 
-            needsSave = true;
+            needsRequestSave = true;
         } else {
              console.warn(`Warning: Category ID ${donatedItem.categoryId} from Donation ${donationId} not found in DonationRequest ${donationRequest._id}`);
         }
     });
 
-    // Update the overall status of the request
-    if (needsSave) {
+    // Update the overall status of the request if quantities were updated
+    if (needsRequestSave) {
         donationRequest.updateRequestStatus(); // Use the method defined in the model
         await donationRequest.save();
+    } else {
+        console.warn(`No matching items found in request ${donationRequest._id} for donation ${donationId}. Request status not updated.`);
     }
+
 
     // Save the confirmed donation
     const updatedDonation = await donation.save();

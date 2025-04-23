@@ -7,6 +7,34 @@ const mongoose = require('mongoose');
 // Define the minimum threshold consistent with the frontend
 const MINIMUM_THRESHOLD = 25;
 
+// --- Helper Function to check remaining quantity ---
+const checkRemainingQuantity = (request, itemsToDonate) => {
+    const errors = [];
+    const updates = []; // Store potential updates to quantityReceived temporarily if needed
+
+    for (const donatedItem of itemsToDonate) {
+        const requestedItem = request.requestedItems.find(
+            (item) => item.categoryId === donatedItem.categoryId
+        );
+
+        if (!requestedItem) {
+            errors.push(`Item with category ID ${donatedItem.categoryId} not found in the original request.`);
+            continue;
+        }
+
+        const remaining = requestedItem.quantity - requestedItem.quantityReceived; // Use quantity and quantityReceived
+
+        if (donatedItem.quantityDonated > remaining) {
+            errors.push(
+                `Cannot donate ${donatedItem.quantityDonated} of ${requestedItem.categoryNameEnglish}. Only ${remaining} remaining.`
+            );
+        }
+        // Optional: Could track intended donations here if needed before confirmation
+    }
+    return { errors };
+};
+
+
 // @desc    Create a new donation request
 // @route   POST /api/requests/create
 // @access  Private (School) - Note: Route updated in routes file example below
@@ -111,9 +139,9 @@ const getDonationRequestById = asyncHandler(async (req, res) => {
       throw new Error('Invalid Donation Request ID format.');
     }
 
-    // ***** CHANGE HERE: Populate more fields from the school *****
+    // ***** CHANGE HERE: Populate more fields from the school, including location *****
     const request = await DonationRequest.findById(requestId)
-        .populate('school', 'schoolName schoolEmail city district province description images'); // <-- Added description and images
+        .populate('school', 'schoolName schoolEmail city district province description images location streetAddress postalCode'); // <-- Added location, streetAddress, postalCode
 
     if (!request) {
         res.status(404);
@@ -332,7 +360,7 @@ const getPublicDonationRequests = asyncHandler(async (req, res) => {
 module.exports = {
 createDonationRequest,
 getSchoolDonationRequests,
-getDonationRequestById,
+getDonationRequestById, // <-- Export it
 updateDonationRequestStatus,
 deleteDonationRequest,
 getPublicDonationRequests, // <-- Export it

@@ -1,3 +1,5 @@
+/* --- START OF FILE MyDonations.css --- */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 .donations-page-container {
@@ -115,6 +117,7 @@
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.5px;
+  text-transform: capitalize; /* Make badge text look nicer */
 }
 
 .status-badge.delivered {
@@ -127,13 +130,30 @@
   color: #1E429F;
 }
 
-.status-badge.pending {
+.status-badge.pending,
+.status-badge.pending-confirmation { /* Style for new pending-confirmation status */
   background-color: #FEF3C7;
   color: #92400E;
 }
 
+.status-badge.preparing { /* Style for preparing status */
+   background-color: #EDE9FE; /* Example light purple/lavender */
+   color: #5B21B6; /* Example darker purple */
+}
+
+.status-badge.received-by-school { /* Style for final received status */
+   background-color: #D1FAE5; /* Example light green/teal */
+   color: #065F46; /* Example darker green/teal */
+}
+
+.status-badge.cancelled { /* Style for cancelled status */
+   background-color: #FEE2E2; /* Example light red */
+   color: #991B1B; /* Example darker red */
+}
+
+
 .status-dropdown {
-  min-width: 120px;
+  min-width: 150px; /* Adjust minimum width for dropdown */
 }
 
 .status-selector {
@@ -145,12 +165,13 @@
   font-size: 14px;
   font-weight: 500;
   appearance: none;
+  background-color: white; /* Ensure background is white */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 16px;
   cursor: pointer;
-  transition: border 0.2s ease;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
 .status-selector:focus {
@@ -159,17 +180,15 @@
   box-shadow: 0 0 0 2px rgba(42, 111, 43, 0.2);
 }
 
-.status-selector.delivered {
-  border-left: 4px solid #047857;
-}
+/* Border colors for status selector based on the *current* value */
+.status-selector.delivered { border-left: 4px solid #047857; }
+.status-selector.in-transit { border-left: 4px solid #1E40AF; }
+.status-selector.pending,
+.status-selector.pending-confirmation { border-left: 4px solid #D97706; }
+.status-selector.preparing { border-left: 4px solid #7C3AED; } /* Example purple */
+.status-selector.received-by-school { border-left: 4px solid #059669; } /* Example teal */
+.status-selector.cancelled { border-left: 4px solid #DC2626; } /* Example red */
 
-.status-selector.in-transit {
-  border-left: 4px solid #1E40AF;
-}
-
-.status-selector.pending {
-  border-left: 4px solid #D97706;
-}
 
 .donation-details {
   display: grid;
@@ -185,6 +204,7 @@
   padding: 12px;
   background-color: #F9FAFB;
   border-radius: 8px;
+  word-break: break-word; /* Prevent long words/text from overflowing */
 }
 
 .detail-label {
@@ -205,6 +225,7 @@
   display: flex;
   gap: 12px;
   margin-top: 8px;
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
 }
 
 .btn-primary {
@@ -239,6 +260,10 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+   text-decoration: none; /* Ensure it looks like a button if used as link */
+  display: inline-flex; /* Ensure consistent sizing/alignment */
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-secondary:hover {
@@ -307,56 +332,152 @@
   margin: 0 0 24px 0;
 }
 
+/* --- Modal Styles for Location Details --- */
+.location-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above other content */
+    padding: 20px; /* Add padding for small screens */
+}
+
+.location-modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative; /* Needed for absolute positioning of close button */
+    max-height: 90vh; /* Limit height */
+    overflow-y: auto; /* Add scroll if content is too tall */
+}
+
+.location-modal-content h3 {
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.location-details-body p {
+    margin-bottom: 8px; /* Space between paragraphs */
+    font-size: 15px;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.location-details-body strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+.view-on-map-link a {
+    color: #2A6F2B;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.view-on-map-link a:hover {
+    color: #358337;
+}
+
+.modal-close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6B7280;
+    transition: color 0.2s ease;
+}
+
+.modal-close-button:hover {
+    color: #111827;
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .donations-header h1 {
     font-size: 28px;
   }
-  
+
   .donation-details {
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  
+
   .donation-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
+
   .filter-tabs {
     justify-content: center;
   }
-  
+
   .filter-tab {
     flex: 1;
     min-width: 80px;
     text-align: center;
     padding: 8px 12px;
   }
-  
+
   .donation-actions {
     flex-direction: column;
     width: 100%;
+    gap: 8px; /* Smaller gap on mobile */
   }
-  
+
   .btn-primary, .btn-secondary {
     width: 100%;
   }
+
+  .location-modal-content {
+      padding: 20px; /* Reduce padding on small screens */
+  }
+
+   .modal-close-button {
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+   }
 }
 
 @media (max-width: 480px) {
   .donations-page-container {
     padding: 20px 16px;
   }
-  
+
   .donations-header {
     margin-bottom: 24px;
   }
-  
+
   .filter-tab {
     font-size: 12px;
     padding: 8px 10px;
     min-width: 60px;
   }
+
+   .location-modal-content h3 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+   }
+    .location-details-body p {
+        font-size: 14px;
+    }
 }
