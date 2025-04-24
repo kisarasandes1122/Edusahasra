@@ -395,3 +395,54 @@
       padding: 10px 0;
     }
   }
+
+
+  /* SchoolVerificationReview.css */
+
+/* ... (previous styles remain unchanged) ... */
+
+
+/* Optional: Loading Overlay Style */
+.svr-loading-overlay {
+  position: absolute; /* Position relative to the parent .svr-modal */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1em; /* Slightly smaller text */
+  color: #333;
+  z-index: 10; /* Ensure it's above other content */
+  /* Keep these to match modal corners */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+   /* Adjust border-radius if modal content padding affects it */
+   /* In this structure, the overlay covers header/footer padding implicitly due to absolute positioning */
+}
+
+/* Add a specific style for document type text */
+.svr-doc-icon span {
+  font-size: 10px;
+  font-weight: 600;
+  color: inherit; /* Inherit color from parent .svr-pdf-icon, .svr-image-icon etc */
+  line-height: 1; /* Prevent extra space */
+}
+
+/* Add styles for other possible document types */
+.svr-txt-icon {
+  background-color: #e0f2f7; /* Light cyan */
+  color: #0e7490; /* Dark cyan */
+}
+.svr-zip-icon {
+  background-color: #eef2ff; /* Light indigo */
+  color: #4338ca; /* Indigo */
+}
+.svr-doc-icon {
+  background-color: #eef2ff; /* Light blue-grey */
+  color: #4f46e5; /* Indigo-ish */
+}

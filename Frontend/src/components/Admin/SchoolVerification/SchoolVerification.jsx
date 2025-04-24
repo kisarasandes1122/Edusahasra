@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
+// frontend/src/components/Admin/SchoolVerification/SchoolVerification.jsx
+import React, { useState, useMemo, useEffect } from 'react';
 import { FiSearch, FiChevronDown, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import './SchoolVerification.css';
 import SchoolVerificationReview from './SchoolVerificationReview';
+import api from '../../../api'; // Import your API instance
 
 const sriLankanDistricts = [
   "All Districts", "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo",
@@ -12,59 +14,103 @@ const sriLankanDistricts = [
 ];
 
 const SchoolVerification = () => {
-  const [activeTab, setActiveTab] = useState('pending');
+  const [activeTab, setActiveTab] = useState('pending'); // 'pending', 'approved', 'rejected'
   const [searchQuery, setSearchQuery] = useState('');
-  const [reviewingSchool, setReviewingSchool] = useState(null);
+  const [reviewingSchool, setReviewingSchool] = useState(null); // Holds the school data for the review modal
   const [selectedLocation, setSelectedLocation] = useState(sriLankanDistricts[0]);
-  const [selectedSortOrder, setSelectedSortOrder] = useState('desc');
-  const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
-  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
-  const [schools, setSchools] = useState([
-    { id: 5, name: "Anuradhapura Central College", location: "Anuradhapura, North Central Province", district: "Anuradhapura", submissionDate: "2025-01-16", status: "pending", contactPerson: "Nimal Silva", email: "admin@acc.edu", phone: "+94 71 567-8901" },
-    { id: 1, name: "Galle Central College", location: "Galle, Southern Province", district: "Galle", submissionDate: "2025-01-15", status: "pending", contactPerson: "Mahesh Perera", email: "admin@galle-central.edu", phone: "+94 78 123-4567" },
-    { id: 2, name: "Kandy Girls' High School", location: "Kandy, Central Province", district: "Kandy", submissionDate: "2025-01-14", status: "pending", contactPerson: "Priya Sharma", email: "admin@kandygirls.edu", phone: "+94 77 234-5678" },
-    { id: 3, name: "Colombo Royal College", location: "Colombo, Western Province", district: "Colombo", submissionDate: "2025-01-13", status: "approved", contactPerson: "Ashan Fernando", email: "admin@colomboroyal.edu", phone: "+94 76 345-6789" },
-    { id: 4, name: "Jaffna Hindu College", location: "Jaffna, Northern Province", district: "Jaffna", submissionDate: "2025-01-12", status: "rejected", contactPerson: "Vijay Kumar", email: "admin@jaffnahindu.edu", phone: "+94 75 456-7890" },
-  ]);
+  const [selectedSortOrder, setSelectedSortOrder] = useState('desc'); // 'desc' for newest, 'asc' for oldest
 
+  const [allSchools, setAllSchools] = useState([]); // State to hold all fetched schools before client-side filtering
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // --- Pagination State (Client-Side) ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Number of items to display per page
+
+  // --- Fetch Schools from Backend ---
+  const fetchSchools = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = {
+        status: activeTab === 'all' ? undefined : activeTab, // Send status filter
+        search: searchQuery || undefined,
+        district: selectedLocation === 'All Districts' ? undefined : selectedLocation,
+        sortBy: selectedSortOrder === 'desc' ? 'dateDesc' : 'dateAsc',
+        // For client-side pagination, we fetch all matching records:
+        // page: currentPage, // Disable server-side pagination for now
+        // limit: itemsPerPage, // Disable server-side pagination for now
+      };
+
+      const { data } = await api.get('/api/admin/schools', { params });
+
+      // Assuming backend returns { schools: [...], totalCount: N }
+      setAllSchools(data.schools);
+      // Total count is handled by the filtered list length for client-side pagination display
+      // totalRequests will be calculated from filteredSchools.length
+      // totalPages will be calculated from filteredSchools.length / itemsPerPage
+
+    } catch (err) {
+      console.error("Error fetching schools:", err);
+      setError('Failed to fetch schools. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch data when component mounts or filters/tab change
+  useEffect(() => {
+    // Reset page to 1 whenever filters or tab change
+    setCurrentPage(1);
+    fetchSchools();
+  }, [activeTab, searchQuery, selectedLocation, selectedSortOrder]); // Depend on filter states
+
+  // --- Filtering and Sorting (Client-Side) ---
+  // This memo filters based on the tab (already done by backend query now)
+  // and applies client-side sorting based on fetched data order.
+  // It also performs client-side pagination slicing.
   const filteredAndSortedSchools = useMemo(() => {
-    let filtered = schools.filter(school => {
-      const matchesTab = activeTab === 'all' || school.status === activeTab;
-      const matchesSearch = school.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           school.location.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesLocation = selectedLocation === "All Districts" || school.district === selectedLocation;
-      return matchesTab && matchesSearch && matchesLocation;
-    });
+    // Backend already filters by tab, search, location, and sorts.
+    // This memo primarily serves to apply pagination slicing on the fetched data.
 
-    filtered.sort((a, b) => {
-      const dateA = new Date(a.submissionDate);
-      const dateB = new Date(b.submissionDate);
-      return selectedSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
-    });
+    const schoolsToPaginate = [...allSchools]; // Start with the fetched list
 
-    return filtered;
-  }, [schools, activeTab, searchQuery, selectedLocation, selectedSortOrder]);
+    // Note: If you wanted full client-side filtering/sorting on a large dataset
+    // fetched once, the logic below would expand significantly.
+    // For this setup, we assume backend filtering/sorting is primary.
 
-  const pendingCount = useMemo(() => schools.filter(s => s.status === 'pending').length, [schools]);
-  const approvedCount = useMemo(() => schools.filter(s => s.status === 'approved').length, [schools]);
-  const rejectedCount = useMemo(() => schools.filter(s => s.status === 'rejected').length, [schools]);
+    // Apply client-side pagination
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentSchools = schoolsToPaginate.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleReview = (school) => setReviewingSchool(school);
+    return currentSchools;
+
+     // No need to depend on filter states here if backend handles it
+  }, [allSchools, currentPage, itemsPerPage]); // Depend on the fetched data and pagination state
+
+  // Calculate total counts for tabs
+  const pendingCount = useMemo(() => allSchools.filter(s => s.status === 'pending').length, [allSchools]);
+  const approvedCount = useMemo(() => allSchools.filter(s => s.status === 'approved').length, [allSchools]);
+  const rejectedCount = useMemo(() => allSchools.filter(s => s.status === 'rejected').length, [allSchools]);
+  const totalRequests = allSchools.length; // Total matching filter criteria
+  const totalPages = Math.ceil(totalRequests / itemsPerPage);
+
+
+  const handleReview = (school) => {
+     // Pass the selected school object to the review modal state
+    setReviewingSchool(school);
+  };
   const handleCloseReview = () => setReviewingSchool(null);
 
-  const handleApprove = (schoolId, notes) => {
-    setSchools(schools.map(school =>
-      school.id === schoolId ? { ...school, status: 'approved', notes } : school
-    ));
-    handleCloseReview();
+  // handleApprove/handleReject are now called from the Review modal
+  // and should trigger a refetch of the main list
+  const handleStatusUpdateSuccess = () => {
+      handleCloseReview(); // Close the modal first
+      fetchSchools(); // Refetch the list to show updated status
   };
 
-  const handleReject = (schoolId, notes) => {
-    setSchools(schools.map(school =>
-      school.id === schoolId ? { ...school, status: 'rejected', notes } : school
-    ));
-    handleCloseReview();
-  };
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
@@ -76,20 +122,51 @@ const SchoolVerification = () => {
     setIsSortDropdownOpen(false);
   };
 
+   const handlePageChange = (pageNumber) => {
+       if (pageNumber >= 1 && pageNumber <= totalPages) {
+           setCurrentPage(pageNumber);
+       }
+   };
+
+
   const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
+    try {
+        return new Date(dateString).toLocaleDateString('en-US', options);
+    } catch (e) {
+        console.error("Error formatting date:", dateString, e);
+        return 'Invalid Date';
+    }
   };
 
-  const currentPage = 1;
-  const totalEntries = filteredAndSortedSchools.length;
-  const entriesToShow = filteredAndSortedSchools.length;
+  const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+      const handleClickOutside = (event) => {
+          if (isLocationDropdownOpen && !event.target.closest('.sv-dropdown-location')) {
+              setIsLocationDropdownOpen(false);
+          }
+          if (isSortDropdownOpen && !event.target.closest('.sv-dropdown-sort')) {
+              setIsSortDropdownOpen(false);
+          }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+      };
+  }, [isLocationDropdownOpen, isSortDropdownOpen]);
+
 
   return (
     <div className="sv-container">
+      {/* Header is usually part of a layout, keeping it here for self-containment */}
       <div className="sv-header">
         <h1>School Verification</h1>
-        <div className="sv-header-user-info">John Admin</div>
+        {/* Placeholder for logged-in admin user info */}
+        <div className="sv-header-user-info">Admin User</div>
       </div>
 
       <div className="sv-content">
@@ -97,6 +174,7 @@ const SchoolVerification = () => {
           <div className="sv-page-header">
             <div className="sv-page-title-row">
               <h2 className="sv-page-title">School Verification Requests</h2>
+              {/* <button className="sv-export-button"><FiDownload /> Export</button> {/* Export button not implemented */}
             </div>
             <p className="sv-page-subtitle">Manage and review school verification applications</p>
           </div>
@@ -136,7 +214,8 @@ const SchoolVerification = () => {
                 )}
               </div>
 
-              <div className="sv-date-input">
+               {/* Date Input - Not currently integrated with backend filtering */}
+              <div className="sv-date-input" style={{ display: 'none' }}>
                 <input type="date" className="sv-date-picker" />
               </div>
 
@@ -156,13 +235,13 @@ const SchoolVerification = () => {
                         className={`sv-dropdown-item ${selectedSortOrder === 'desc' ? 'sv-dropdown-item-active' : ''}`}
                          onClick={() => handleSortSelect('desc')}
                       >
-                        Newest First
+                        Newest First (Submission Date)
                       </li>
                       <li
                          className={`sv-dropdown-item ${selectedSortOrder === 'asc' ? 'sv-dropdown-item-active' : ''}`}
                          onClick={() => handleSortSelect('asc')}
                        >
-                         Oldest First
+                         Oldest First (Submission Date)
                       </li>
                    </ul>
                 )}
@@ -192,70 +271,84 @@ const SchoolVerification = () => {
           </div>
 
           <div className="sv-table-container">
-            <table className="sv-table">
-              <thead className="sv-table-head">
-                <tr>
-                  <th>SCHOOL</th>
-                  <th>LOCATION</th>
-                  <th>SUBMISSION DATE</th>
-                  <th>STATUS</th>
-                  <th>ACTIONS</th>
-                </tr>
-              </thead>
-              <tbody className="sv-table-body">
-                {filteredAndSortedSchools.length > 0 ? (
-                    filteredAndSortedSchools.map(school => (
-                    <tr key={school.id} className="sv-table-row">
-                      <td>
-                        <div className="sv-school-name">{school.name}</div>
-                      </td>
-                      <td className="sv-school-location">{school.location}</td>
-                      <td className="sv-submission-date">{formatDate(school.submissionDate)}</td>
-                      <td>
-                        <span className={`sv-status sv-status-${school.status}`}>
-                          {school.status.charAt(0).toUpperCase() + school.status.slice(1)}
-                        </span>
-                      </td>
-                      <td>
-                        <button
-                          className="sv-action-button sv-action-button-view"
-                          onClick={() => handleReview(school)}
-                        >
-                          {school.status === 'pending' ? 'Review' : 'View'}
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                 ) : (
-                    <tr>
-                      <td colSpan="5" className="sv-no-results">
-                        No matching school requests found.
-                      </td>
-                    </tr>
-                 )}
-              </tbody>
-            </table>
+              {loading ? (
+                  <div className="sv-no-results">Loading schools...</div>
+              ) : error ? (
+                  <div className="sv-no-results" style={{ color: 'red' }}>{error}</div>
+              ) : (
+                  <table className="sv-table">
+                    <thead className="sv-table-head">
+                      <tr>
+                        <th>SCHOOL NAME</th>
+                        <th>LOCATION</th>
+                        <th>SUBMISSION DATE</th> {/* Assuming registeredAt */}
+                        <th>STATUS</th>
+                        <th>ACTIONS</th>
+                      </tr>
+                    </thead>
+                    <tbody className="sv-table-body">
+                      {filteredAndSortedSchools.length > 0 ? (
+                          filteredAndSortedSchools.map(school => (
+                          <tr key={school._id} className="sv-table-row">
+                            <td>
+                              <div className="sv-school-name">{school.schoolName}</div>
+                            </td>
+                            <td className="sv-school-location">{`${school.city}, ${school.province}`}</td> {/* Display city, province */}
+                            <td className="sv-submission-date">{formatDate(school.registeredAt)}</td> {/* Use registeredAt */}
+                            <td>
+                              <span className={`sv-status sv-status-${school.status}`}>
+                                {school.status.charAt(0).toUpperCase() + school.status.slice(1)}
+                              </span>
+                            </td>
+                            <td>
+                              <button
+                                className="sv-action-button sv-action-button-view"
+                                onClick={() => handleReview(school)}
+                              >
+                                {school.status === 'pending' ? 'Review' : 'View Details'}
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                       ) : (
+                          <tr>
+                            <td colSpan="5" className="sv-no-results">
+                              No matching school requests found.
+                            </td>
+                          </tr>
+                       )}
+                    </tbody>
+                  </table>
+              )}
           </div>
 
-          {totalEntries > 0 && (
+          {totalRequests > 0 && (
               <div className="sv-pagination">
                 <div className="sv-pagination-info">
-                  Showing 1 to {entriesToShow} of {totalEntries} entries
+                   Showing {Math.min(filteredAndSortedSchools.length, (currentPage - 1) * itemsPerPage + 1)} to {Math.min(filteredAndSortedSchools.length, currentPage * itemsPerPage)} of {totalRequests} entries
                 </div>
                 <div className="sv-pagination-controls">
                   <button
                     className="sv-pagination-button sv-prev-button"
+                    onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
                      <FiChevronLeft size={16} />
                   </button>
-                  <button className="sv-pagination-button sv-page-number sv-page-active">1</button>
-                  {totalEntries > 5 && (
-                    <button className="sv-pagination-button sv-page-number">2</button>
-                  )}
+                   {/* Render page numbers - simplified for example */}
+                   {[...Array(totalPages).keys()].map(page => (
+                       <button
+                           key={page + 1}
+                           className={`sv-pagination-button sv-page-number ${currentPage === page + 1 ? 'sv-page-active' : ''}`}
+                           onClick={() => handlePageChange(page + 1)}
+                       >
+                           {page + 1}
+                       </button>
+                   ))}
                   <button
                     className="sv-pagination-button sv-next-button"
-                    disabled={totalEntries <= 5}
+                     onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
                   >
                     <FiChevronRight size={16} />
                   </button>
@@ -267,10 +360,10 @@ const SchoolVerification = () => {
 
       {reviewingSchool && (
         <SchoolVerificationReview
-          school={reviewingSchool}
+          school={reviewingSchool} // Pass the initial school data from the list
           onClose={handleCloseReview}
-          onApprove={handleApprove}
-          onReject={handleReject}
+          // Pass callback to trigger refetch after update
+          onStatusUpdateSuccess={handleStatusUpdateSuccess}
         />
       )}
     </div>
