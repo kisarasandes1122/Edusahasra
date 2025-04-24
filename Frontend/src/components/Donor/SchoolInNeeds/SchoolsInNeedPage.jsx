@@ -1,24 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // <-- Import useNavigate
-import { FaSchool, FaMapMarkerAlt, FaUsers, FaListUl, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import api from '../../../api'; // <-- Import axios instance
+import { useNavigate } from 'react-router-dom';
+import { 
+  FaSchool, FaMapMarkerAlt, FaUsers, FaListUl, FaChevronLeft, FaChevronRight, 
+  FaFilter, FaMapMarkedAlt, FaTags, FaSort, FaTimes, FaSyncAlt, FaEye, 
+  FaChevronDown, FaSearch, FaGift, FaTimesCircle
+} from 'react-icons/fa';
+import api from '../../../api';
 import './SchoolsInNeedPage.css';
-import LoadingSpinner from '../../Common/LoadingSpinner/LoadingSpinner'; // Assuming you have a spinner component
+import LoadingSpinner from '../../Common/LoadingSpinner/LoadingSpinner';
 
 const SchoolsInNeedPage = () => {
-  const navigate = useNavigate(); // <-- Get navigate function
+  const navigate = useNavigate();
 
   // --- State for Filters ---
   const [location, setLocation] = useState('');
   const [itemCategories, setItemCategories] = useState({
-    books: false,
-    stationery: false,
-    uniform: false,
-    equipment: false,
-    sportsGear: false,
-    other: false,
+    stationery: false,      // Pens, pencils, notebooks, erasers, etc.
+    textbooks: false,       // Textbooks and educational books
+    readingMaterials: false, // Library books, story books
+    artSupplies: false,     // Art paper, color boxes, posters
+    mathTools: false,       // Geometry sets, rulers, calculators
+    techEquipment: false,   // Computers, tablets, projectors
+    sportsEquipment: false, // Sports gear and equipment
+    teachingAids: false,    // Educational games, teacher guides, maps
   });
   const [sortBy, setSortBy] = useState('highest'); // 'highest' or 'lowest' progress
+
+  // --- State for UI Interactions ---
+  const [expandedFilters, setExpandedFilters] = useState({
+    location: true,
+    category: true,
+    sort: true
+  });
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   // --- State for Data and Pagination ---
   const [donationRequests, setDonationRequests] = useState([]);
@@ -87,22 +101,37 @@ const SchoolsInNeedPage = () => {
   }
 
   const handleSortChange = (e) => {
-      setSortBy(e.target.value);
-      setCurrentPage(1); // Reset to first page
+    setSortBy(e.target.value);
+    setCurrentPage(1); // Reset to first page
   }
 
   const resetFilters = () => {
     setLocation('');
     setItemCategories({
-      books: false,
       stationery: false,
-      uniform: false,
-      equipment: false,
-      sportsGear: false,
-      other: false,
+      textbooks: false,
+      readingMaterials: false,
+      artSupplies: false,
+      mathTools: false,
+      techEquipment: false,
+      sportsEquipment: false,
+      teachingAids: false,
     });
     setSortBy('highest');
     setCurrentPage(1);
+  };
+
+  // Toggle filter sections
+  const toggleFilterSection = (section) => {
+    setExpandedFilters(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  // Toggle sidebar on mobile
+  const toggleSidebar = () => {
+    setSidebarExpanded(!sidebarExpanded);
   };
 
   // --- Pagination Handlers ---
@@ -122,12 +151,33 @@ const SchoolsInNeedPage = () => {
   const indexOfLastRequest = currentPage * requestsPerPage;
   const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
 
-
   // --- Helper to format location ---
   const formatLocation = (school) => {
-      const parts = [school.city, school.district, school.province].filter(Boolean); // Filter out null/empty values
-      return parts.join(', ');
+    const parts = [school.city, school.district, school.province].filter(Boolean); // Filter out null/empty values
+    return parts.join(', ');
   }
+
+  // Helper to get active filter count
+  const getActiveFilterCount = () => {
+    const categoryCount = Object.values(itemCategories).filter(Boolean).length;
+    return (location ? 1 : 0) + categoryCount;
+  };
+
+  // Helper to get category label and tag class
+  const getCategoryInfo = (category) => {
+    const categoryMap = {
+      stationery: { label: 'Stationery', tagClass: 'tag-stationery' },
+      textbooks: { label: 'Textbooks', tagClass: 'tag-textbooks' },
+      readingMaterials: { label: 'Reading Materials', tagClass: 'tag-reading' },
+      artSupplies: { label: 'Art Supplies', tagClass: 'tag-art' },
+      mathTools: { label: 'Math Tools', tagClass: 'tag-math' },
+      techEquipment: { label: 'Technology Equipment', tagClass: 'tag-tech' },
+      sportsEquipment: { label: 'Sports Equipment', tagClass: 'tag-sports' },
+      teachingAids: { label: 'Teaching Aids', tagClass: 'tag-teaching' },
+    };
+    
+    return categoryMap[category] || { label: category, tagClass: '' };
+  };
 
   // --- Render Logic ---
   return (
@@ -141,147 +191,251 @@ const SchoolsInNeedPage = () => {
       </header>
 
       <div className="sin-content">
+        {/* Enhanced Sidebar with Collapsible Sections */}
         <aside className="sin-sidebar">
-          {/* --- Filters --- */}
-          <div className="sin-filter-section">
-            <h2 className="sin-filter-title">Location</h2>
-            {/* Improve Location Filter - maybe use distinct locations from data? For now, manual */}
-            <select
-              className="sin-select"
-              value={location}
-              onChange={handleLocationChange} // Use specific handler
-            >
-              <option value="">All Locations</option>
-              {/* Add more locations as needed or fetch dynamically */}
-              <option value="Galle">Galle</option>
-              <option value="Kandy">Kandy</option>
-              <option value="Jaffna">Jaffna</option>
-              <option value="Matara">Matara</option>
-              <option value="Matale">Matale</option>
-              <option value="Anuradhapura">Anuradhapura</option>
-              <option value="Badulla">Badulla</option>
-              <option value="Trincomalee">Trincomalee</option>
-              <option value="Negombo">Negombo</option>
-              <option value="Ratnapura">Ratnapura</option>
-              <option value="Kurunegala">Kurunegala</option>
-            </select>
+          <div className="sin-sidebar-header">
+            <h2 className="sin-sidebar-title">
+              <FaFilter className="sin-sidebar-icon" />
+              Filters {getActiveFilterCount() > 0 && `(${getActiveFilterCount()})`}
+            </h2>
+            <button className="sin-mobile-toggle" onClick={toggleSidebar}>
+              <FaChevronDown 
+                className={`sin-filter-chevron ${sidebarExpanded ? 'expanded' : ''}`} 
+              />
+            </button>
           </div>
 
-          <div className="sin-filter-section">
-            <h2 className="sin-filter-title">Item Category</h2>
-            <div className="sin-checkbox-group">
-              {/* Checkbox labels remain the same */}
-              <label className="sin-checkbox-label">
-                <input type="checkbox" checked={itemCategories.books} onChange={() => handleCategoryChange('books')} className="sin-checkbox"/> Books
-              </label>
-              <label className="sin-checkbox-label">
-                <input type="checkbox" checked={itemCategories.stationery} onChange={() => handleCategoryChange('stationery')} className="sin-checkbox"/> Stationery
-              </label>
-              <label className="sin-checkbox-label">
-                 <input type="checkbox" checked={itemCategories.uniform} onChange={() => handleCategoryChange('uniform')} className="sin-checkbox" /> Uniform/ Clothes
-              </label>
-              <label className="sin-checkbox-label">
-                 <input type="checkbox" checked={itemCategories.equipment} onChange={() => handleCategoryChange('equipment')} className="sin-checkbox" /> Equipment
-              </label>
-               <label className="sin-checkbox-label">
-                 <input type="checkbox" checked={itemCategories.sportsGear} onChange={() => handleCategoryChange('sportsGear')} className="sin-checkbox" /> Sports Gear
-              </label>
-               <label className="sin-checkbox-label">
-                 <input type="checkbox" checked={itemCategories.other} onChange={() => handleCategoryChange('other')} className="sin-checkbox" /> Other
-               </label>
+          <div className={`sin-filter-container ${sidebarExpanded ? 'expanded' : ''}`}>
+            {/* Display Active Filters as Pills */}
+            {getActiveFilterCount() > 0 && (
+              <div className="sin-active-filters">
+                {location && (
+                  <div className="sin-filter-pill sin-pill-location">
+                    <span>{location}</span>
+                    <button 
+                      className="sin-pill-remove" 
+                      onClick={() => setLocation('')}
+                      aria-label="Remove location filter"
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                )}
+                
+                {Object.entries(itemCategories)
+                  .filter(([_, isChecked]) => isChecked)
+                  .map(([category]) => {
+                    const { label } = getCategoryInfo(category);
+                    return (
+                      <div className="sin-filter-pill sin-pill-category" key={category}>
+                        <span>{label}</span>
+                        <button 
+                          className="sin-pill-remove" 
+                          onClick={() => handleCategoryChange(category)}
+                          aria-label={`Remove ${label} filter`}
+                        >
+                          <FaTimes />
+                        </button>
+                      </div>
+                    );
+                  })
+                }
+              </div>
+            )}
+
+            {/* Location Filter */}
+            <div className="sin-filter-section">
+              <div 
+                className="sin-filter-header" 
+                onClick={() => toggleFilterSection('location')}
+              >
+                <h2 className="sin-filter-title">
+                  <FaMapMarkedAlt className="sin-filter-icon" />
+                  Location
+                </h2>
+                <FaChevronDown 
+                  className={`sin-filter-chevron ${expandedFilters.location ? 'expanded' : ''}`} 
+                />
+              </div>
+              
+              <div className={`sin-filter-content ${expandedFilters.location ? 'expanded' : ''}`}>
+                <div className="sin-select-container">
+                  <select
+                    className="sin-select"
+                    value={location}
+                    onChange={handleLocationChange}
+                  >
+                    <option value="">All Locations</option>
+                    <option value="Galle">Galle</option>
+                    <option value="Kandy">Kandy</option>
+                    <option value="Jaffna">Jaffna</option>
+                    <option value="Matara">Matara</option>
+                    <option value="Matale">Matale</option>
+                    <option value="Anuradhapura">Anuradhapura</option>
+                    <option value="Badulla">Badulla</option>
+                    <option value="Trincomalee">Trincomalee</option>
+                    <option value="Negombo">Negombo</option>
+                    <option value="Ratnapura">Ratnapura</option>
+                    <option value="Kurunegala">Kurunegala</option>
+                  </select>
+                  <FaChevronDown className="sin-select-icon" />
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="sin-filter-section">
-            <h2 className="sin-filter-title">Sort By Progress</h2>
-            <select
-              className="sin-select"
-              value={sortBy}
-              onChange={handleSortChange} // Use specific handler
-            >
-              <option value="highest">Highest Progress First</option>
-              <option value="lowest">Lowest Progress First</option>
-            </select>
-          </div>
+            {/* Item Category Filter */}
+            <div className="sin-filter-section">
+              <div 
+                className="sin-filter-header" 
+                onClick={() => toggleFilterSection('category')}
+              >
+                <h2 className="sin-filter-title">
+                  <FaTags className="sin-filter-icon" />
+                  Item Category
+                </h2>
+                <FaChevronDown 
+                  className={`sin-filter-chevron ${expandedFilters.category ? 'expanded' : ''}`} 
+                />
+              </div>
+              
+              <div className={`sin-filter-content ${expandedFilters.category ? 'expanded' : ''}`}>
+                <div className="sin-checkbox-group">
+                  {/* Enhanced checkbox styling with color tags */}
+                  {Object.entries(itemCategories).map(([category, isChecked]) => {
+                    const { label, tagClass } = getCategoryInfo(category);
+                    return (
+                      <label className="sin-checkbox-label" key={category}>
+                        <div className="sin-checkbox-container">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handleCategoryChange(category)}
+                            className="sin-checkbox"
+                          />
+                          <span className="sin-checkbox-custom"></span>
+                        </div>
+                        <span className={`sin-category-tag ${tagClass}`}></span>
+                        <span className="sin-checkbox-text">{label}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
 
-          <button className="sin-reset-button" onClick={resetFilters}>
-            Reset Filters
-          </button>
+            {/* Sort By Filter */}
+            <div className="sin-filter-section">
+              <div 
+                className="sin-filter-header" 
+                onClick={() => toggleFilterSection('sort')}
+              >
+                <h2 className="sin-filter-title">
+                  <FaSort className="sin-filter-icon" />
+                  Sort By Progress
+                </h2>
+                <FaChevronDown 
+                  className={`sin-filter-chevron ${expandedFilters.sort ? 'expanded' : ''}`} 
+                />
+              </div>
+              
+              <div className={`sin-filter-content ${expandedFilters.sort ? 'expanded' : ''}`}>
+                <div className="sin-select-container">
+                  <select
+                    className="sin-select"
+                    value={sortBy}
+                    onChange={handleSortChange}
+                  >
+                    <option value="highest">Highest Progress First</option>
+                    <option value="lowest">Lowest Progress First</option>
+                  </select>
+                  <FaChevronDown className="sin-select-icon" />
+                </div>
+              </div>
+            </div>
+
+            {/* Reset Button with Icon */}
+            <button className="sin-reset-button" onClick={resetFilters}>
+              <FaSyncAlt className="sin-reset-icon" />
+              Reset All Filters
+            </button>
+          </div>
         </aside>
 
         <main className="sin-main-content">
           {loading ? (
-             <LoadingSpinner /> // Display loading spinner
+            <div className="sin-loading-spinner">
+              <div className="sin-spinner"></div>
+            </div>
           ) : error ? (
-            <div className="sin-error-message">Error: {error}</div> // Display error
+            <div className="sin-no-results">
+              <FaTimesCircle className="sin-no-results-icon" />
+              <p>Error: {error}</p>
+            </div>
           ) : donationRequests.length > 0 ? (
-            <div className="sin-school-grid">
+            <div className="sin-school-grid sin-fade-in">
               {donationRequests.map((request) => (
-                <div className="sin-school-card" key={request._id}> {/* Use request._id */}
+                <div className="sin-school-card" key={request._id}>
                   <div className="sin-school-header">
                     <FaSchool className="sin-school-icon" />
-                     {/* Display school name from populated data */}
                     <h3 className="sin-school-name">{request.schoolInfo?.schoolName || 'School Name Unavailable'}</h3>
                   </div>
 
-                  <div className="sin-school-location">
-                    <FaMapMarkerAlt className="sin-location-icon" />
-                    {/* Display formatted location */}
-                    <span className="sin-location-text">{formatLocation(request.schoolInfo)}</span>
-                  </div>
+                  <div className="sin-school-body">
+                    <div className="sin-school-location">
+                      <FaMapMarkerAlt className="sin-location-icon" />
+                      <span className="sin-location-text">{formatLocation(request.schoolInfo)}</span>
+                    </div>
 
-                  {/* Removed student count as it's not in the base request/school model */}
-                  {/* <div className="sin-school-students">
-                    <FaUsers className="sin-students-icon" />
-                    <span className="sin-students-text">{request.schoolInfo?.studentCount || 'N/A'} Students potentially benefit</span>
-                  </div> */}
-
-                  <div className="sin-school-needs">
-                    <FaListUl className="sin-needs-icon" />
-                    <div className="sin-needs-container">
-                      <span className="sin-needs-label">Needs Summary:</span>
-                       {/* Display summarized requested items */}
-                      <span className="sin-needs-text">
-                        {request.requestedItems
+                    <div className="sin-school-needs">
+                      <FaListUl className="sin-needs-icon" />
+                      <div className="sin-needs-container">
+                        <span className="sin-needs-label">Needs Summary:</span>
+                        <span className="sin-needs-text">
+                          {request.requestedItems
                             .map(item => `${item.quantity} ${item.categoryNameEnglish}`)
                             .slice(0, 3) // Show first 3 items for brevity
                             .join(', ')}
-                        {request.requestedItems.length > 3 ? '...' : ''}
-                      </span>
+                          {request.requestedItems.length > 3 ? '...' : ''}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="sin-progress-section">
-                    <div className="sin-progress-text">
-                      <span>Progress</span>
-                      {/* Display calculated progress */}
-                      <span>{Math.round(request.progress || 0)}% Done</span>
+                    <div className="sin-progress-section">
+                      <div className="sin-progress-text">
+                        <span>Progress</span>
+                        <span className="sin-progress-percentage">{Math.round(request.progress || 0)}% Done</span>
+                      </div>
+                      <div className="sin-progress-bar">
+                        <div
+                          className="sin-progress-fill"
+                          style={{ width: `${request.progress || 0}%` }}
+                        ></div>
+                      </div>
                     </div>
-                    <div className="sin-progress-bar">
-                      <div
-                        className="sin-progress-fill"
-                        style={{ width: `${request.progress || 0}%` }}
-                      ></div>
-                    </div>
-                  </div>
 
-                  {/* Update Button Navigation */}
-                  <button
-                    className="sin-donate-button"
-                    onClick={() => navigate(`/requests/${request._id}`)} // Navigate to request detail page
-                  >
-                    View Details & Donate
-                  </button>
+                    <button
+                      className="sin-donate-button"
+                      onClick={() => navigate(`/requests/${request._id}`)}
+                    >
+                      <FaEye className="sin-button-icon" />
+                      View Details & Donate
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
             <div className="sin-no-results">
+              <FaSearch className="sin-no-results-icon" />
               <p>No donation requests match your current filters.</p>
+              <button className="sin-reset-button" onClick={resetFilters}>
+                <FaSyncAlt className="sin-reset-icon" />
+                Reset Filters
+              </button>
             </div>
           )}
 
-          {/* Pagination - Use totalPages from state */}
+          {/* Pagination */}
           {totalRequests > 0 && !loading && (
             <div className="sin-pagination">
               <button
@@ -293,7 +447,6 @@ const SchoolsInNeedPage = () => {
               </button>
 
               <div className="sin-pagination-numbers">
-                 {/* Generate page numbers based on totalPages */}
                 {Array.from({ length: totalPages }, (_, i) => (
                   <button
                     key={i + 1}
@@ -315,14 +468,11 @@ const SchoolsInNeedPage = () => {
             </div>
           )}
 
-          {/* Results summary - Use totalRequests from state */}
-          {!loading && (
-             <div className="sin-results-summary">
-                {totalRequests > 0
-                  ? `Showing ${indexOfFirstRequest + 1}-${Math.min(indexOfLastRequest, totalRequests)} of ${totalRequests} requests`
-                  : 'No requests found'
-                }
-             </div>
+          {/* Results summary */}
+          {!loading && totalRequests > 0 && (
+            <div className="sin-results-summary">
+              Showing {indexOfFirstRequest + 1}-{Math.min(indexOfLastRequest, totalRequests)} of {totalRequests} requests
+            </div>
           )}
         </main>
       </div>
