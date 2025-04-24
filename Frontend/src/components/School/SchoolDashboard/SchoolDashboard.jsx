@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react'; // Import hooks
-import { useNavigate } from 'react-router-dom';
-import { FaSignOutAlt, FaEye, FaHandHoldingHeart, FaThumbsUp, FaUserCircle, FaSpinner } from 'react-icons/fa'; // Added FaSpinner
+import { useNavigate, Link } from 'react-router-dom'; // Import Link
+import { FaSignOutAlt, FaEye, FaHandHoldingHeart, FaThumbsUp, FaUserCircle, FaSpinner } from 'react-icons/fa';
+import { BookOpen, PenSquare, Award } from 'lucide-react'; // Import lucide icons for variety
 import { useLanguage } from '../../LanguageSelector/LanguageContext';
-import api from '../../../api'; // Adjust path as needed
+import api from '../../../api';
 import './SchoolDashboard.css';
 
 const SchoolDashboard = () => {
@@ -20,7 +21,7 @@ const SchoolDashboard = () => {
     navigate('/');
   };
 
-  // --- Helper Functions (similar to ViewDonations) ---
+  // --- Helper Functions ---
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     try {
@@ -33,11 +34,6 @@ const SchoolDashboard = () => {
 
   const getItemSummary = (items) => {
     if (!items || items.length === 0) return translations.no_items_specified || "No items specified";
-    // Create a concise summary, maybe just the first item or total count?
-    // Example: Show first item's details concisely
-    // const firstItem = items[0];
-    // return `${firstItem.quantityDonated} ${firstItem.categoryNameEnglish}${items.length > 1 ? ' (+ more)' : ''}`;
-    // Or a simpler count approach:
     const totalQuantity = items.reduce((sum, item) => sum + item.quantityDonated, 0);
     const distinctItems = new Set(items.map(item => item.categoryNameEnglish)).size;
     return `${totalQuantity} ${translations.items || 'items'} (${distinctItems} ${translations.types || 'types'})`;
@@ -47,35 +43,18 @@ const SchoolDashboard = () => {
   const fetchRecentDonations = useCallback(async () => {
     setLoading(true);
     setError(null);
-    console.log("Dashboard: Fetching recent donations...");
-
     try {
       const response = await api.get('/api/donations/school-donations');
       const allSchoolDonations = response.data || [];
-      console.log("Dashboard: Raw donations fetched:", allSchoolDonations);
-
-
-      // Filter for confirmed donations
       const confirmedDonations = allSchoolDonations.filter(
         donation => donation.schoolConfirmation === true || donation.trackingStatus === 'Received by School'
       );
-      console.log("Dashboard: Confirmed donations:", confirmedDonations);
-
-
-      // Sort by confirmation date (descending), fallback to creation date
       const sortedDonations = confirmedDonations.sort((a, b) => {
          const dateA = new Date(a.schoolConfirmationAt || a.createdAt);
          const dateB = new Date(b.schoolConfirmationAt || b.createdAt);
          return dateB - dateA; // Newest first
        });
-       console.log("Dashboard: Sorted donations:", sortedDonations);
-
-
-      // Get the top 5
       const latestDonations = sortedDonations.slice(0, 5);
-      console.log("Dashboard: Latest 5 donations:", latestDonations);
-
-
       setRecentDonations(latestDonations);
 
     } catch (err) {
@@ -86,9 +65,8 @@ const SchoolDashboard = () => {
        }
     } finally {
       setLoading(false);
-      console.log("Dashboard: Fetching complete.");
     }
-  }, [translations.error_fetching_recent_donations, translations.no_items_specified, translations.items, translations.types]); // Add translation keys
+  }, [translations.error_fetching_recent_donations, translations.no_items_specified, translations.items, translations.types]);
 
   // --- Fetch data on mount ---
   useEffect(() => {
@@ -99,13 +77,12 @@ const SchoolDashboard = () => {
     <div className="dashboard-container">
       <header className="dashboard-header">
         <div className="dashboard-title">
-          {/* Use h1 semantically, styled by CSS */}
           <h1>{translations.dashboard || 'Dashboard'}</h1>
         </div>
         <button
           className="dashboard-logout"
           onClick={handleLogout}
-          aria-label={translations.logout || 'Logout'} // Accessibility
+          aria-label={translations.logout || 'Logout'}
         >
           <FaSignOutAlt className="dashboard-logout-icon" />
           <span>{translations.logout || 'Logout'}</span>
@@ -113,41 +90,57 @@ const SchoolDashboard = () => {
       </header>
 
       <div className="dashboard-welcome">
-        {/* Use paragraph element */}
-        <p>{translations.welcome_message || 'New here? Click for guidance'}</p>
+        <p>{translations.welcome_message || 'Welcome to your school dashboard.'}</p> {/* Updated message */}
       </div>
 
       <div className="dashboard-grid">
-        {/* Use Link component from react-router-dom for internal navigation */}
-        {/* For simplicity, using <a> tags as provided, but <Link to="..."> is better */}
-        <a href="/view-donations" className="dashboard-card action-card">
+        {/* Use Link component for internal navigation */}
+        <Link to="/view-donations" className="dashboard-card action-card">
           <FaEye className="card-icon" />
           <div className="card-content">
-            {/* Use h3 for card titles */}
             <h3>{translations.view_donations || 'View Donations'}</h3>
           </div>
-        </a>
+        </Link>
 
-        <a href="/request-donations" className="dashboard-card action-card">
+        <Link to="/request-donations" className="dashboard-card action-card">
           <FaHandHoldingHeart className="card-icon" />
           <div className="card-content">
             <h3>{translations.request_donations || 'Request Donations'}</h3>
           </div>
-        </a>
+        </Link>
 
-        <a href="/send-thanks" className="dashboard-card action-card">
-          <FaThumbsUp className="card-icon" />
-          <div className="card-content">
-            <h3>{translations.send_thanks || 'Send Thanks'}</h3>
-          </div>
-        </a>
+        <Link to="/send-thanks" className="dashboard-card action-card">
+           <FaThumbsUp className="card-icon" /> {/* Using FaThumbsUp icon */}
+           <div className="card-content">
+               <h3>{translations.send_thanks || 'Send Thanks'}</h3> {/* Use existing translation */}
+           </div>
+        </Link>
 
-        <a href="/edit-profile" className="dashboard-card action-card">
+        {/* --- ADD NEW CARD FOR IMPACT STORIES --- */}
+        <Link to="/write-impact-story" className="dashboard-card action-card">
+            <PenSquare className="card-icon" /> {/* Using PenSquare from lucide-react */}
+             <div className="card-content">
+                {/* Add translation key */}
+                <h3>{translations.write_impact_story || 'Write Impact Story'}</h3>
+            </div>
+        </Link>
+        {/* --- END NEW CARD --- */}
+
+         {/* Optional: Add card to view submitted stories */}
+        {/* <Link to="/my-impact-stories" className="dashboard-card action-card">
+            <Award className="card-icon" />
+            <div className="card-content">
+                <h3>{translations.my_impact_stories || 'My Impact Stories'}</h3>
+            </div>
+        </Link> */}
+
+
+        <Link to="/edit-profile" className="dashboard-card action-card">
           <FaUserCircle className="card-icon" />
           <div className="card-content">
             <h3>{translations.edit_profile || 'Edit Profile'}</h3>
           </div>
-        </a>
+        </Link>
       </div>
 
       {/* --- Recent Donations Section --- */}
@@ -173,14 +166,10 @@ const SchoolDashboard = () => {
             {recentDonations.length > 0 ? (
               recentDonations.map(donation => (
                 <div className="donation-item" key={donation._id}>
-                   {/* Display a summary and date */}
                    <span className="donation-summary">{getItemSummary(donation.itemsDonated)}</span>
                    <span className="donation-date">
-                     {/* Added translation key */}
                      {translations.received_on || 'Received on'} {formatDate(donation.schoolConfirmationAt || donation.createdAt)}
                    </span>
-                   {/* Optional: Add Donor Name if available and desired */}
-                   {/* <span className="donation-donor">From: {donation.donor?.fullName || 'Anonymous'}</span> */}
                 </div>
               ))
             ) : (

@@ -1,0 +1,269 @@
+/* frontend/src/components/School/WriteImpactStoriesPage/WriteImpactStoriesPage.css */
+
+/* Reuse variables from ImpactStoriesPage.css or define here if standalone */
+/* Assuming shared CSS variables or defining them again for clarity */
+:root {
+    --primary-green: #2A6F2B; /* EduSahasra Primary Green */
+    --accent-green: #78C51C; /* EduSahasra Accent Green */
+    --dark-text: #111827; /* Heading text */
+    --body-text: #4B5563; /* Body paragraph text */
+    --light-text: #6B7280; /* Subtitles, labels, metadata */
+    --border-color: #E5E7EB; /* Standard border */
+    --bg-light: #F9FAFB; /* Light background */
+    --bg-white: #ffffff; /* White background */
+    --red-error: #dc2626; /* Red for errors */
+     /* Box shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+     /* Transition */
+    --transition: all 0.3s ease;
+  }
+  
+  
+  .write-impact-story-container {
+    max-width: 800px; /* Container narrower than public view */
+    margin: 20px auto; /* Added margin top/bottom */
+    padding: 30px 20px;
+    font-family: 'Inter', sans-serif; /* Consistent font */
+    color: var(--body-text);
+    background-color: var(--bg-white); /* Ensure white background */
+    border-radius: var(--radius-md); /* Rounded corners */
+    box-shadow: var(--shadow-sm); /* Subtle shadow */
+  }
+  
+  .page-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--dark-text);
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .page-subtitle {
+    font-size: 16px;
+    color: var(--light-text);
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+  
+  .impact-story-form .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .impact-story-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark-text);
+    font-size: 15px;
+  }
+  
+  .impact-story-form input[type="text"],
+  .impact-story-form select,
+  .impact-story-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    color: var(--body-text);
+    transition: border-color 0.2s ease;
+    box-sizing: border-box; /* Include padding in width */
+  }
+  
+  .impact-story-form input[type="file"] {
+       padding: 12px 0; /* Adjust padding */
+       font-size: 15px;
+  }
+  
+  
+  .impact-story-form input[type="text"]:focus,
+  .impact-story-form select:focus,
+  .impact-story-form textarea:focus {
+    border-color: var(--primary-green);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(42, 111, 43, 0.1); /* Focus glow */
+  }
+  
+  .impact-story-form textarea {
+    resize: vertical; /* Allow vertical resize */
+  }
+  
+  .submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: auto; /* Adjust button width */
+    padding: 12px 24px;
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .submit-button:hover:not(:disabled) {
+    background-color: #205721; /* Darker green */
+  }
+  
+  .submit-button:disabled {
+    background-color: var(--light-text); /* Grey color */
+    cursor: not-allowed;
+  }
+  
+  
+  /* Image Previews */
+  .image-previews {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px; /* Space between previews */
+      margin-top: 15px;
+      border: 1px dashed var(--border-color); /* Optional: Border around previews area */
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-light);
+  }
+  
+  .image-preview {
+      width: 80px; /* Fixed size for previews */
+      height: 80px;
+      object-fit: cover; /* Crop image */
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+  }
+  
+  /* Alerts */
+  .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+  }
+  
+  .alert.error {
+    background-color: #f8d7da; /* Light red */
+    color: #721c24; /* Dark red */
+    border: 1px solid #f5c6cb;
+  }
+  
+  .alert.success {
+    background-color: #d4edda; /* Light green */
+    color: #155724; /* Dark green */
+    border: 1px solid #c3e6cb;
+  }
+  
+  /* Empty state styling */
+  .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      background-color: var(--bg-light);
+      border-radius: var(--radius-md);
+      margin-top: 30px;
+  }
+  
+  .empty-icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+      color: var(--accent-green);
+  }
+  
+  .empty-state h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--dark-text);
+      margin: 0 0 10px 0;
+  }
+  
+  .empty-state p {
+      font-size: 15px;
+      color: var(--light-text);
+      margin: 0 0 20px 0;
+  }
+  
+  /* Button styles (reused/consistent) */
+  .btn {
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+  }
+  
+  .btn.primary {
+    background-color: var(--primary-green);
+    color: white;
+  }
+  
+  .btn.primary:hover {
+    background-color: #205721;
+  }
+  
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .write-impact-story-container {
+      padding: 20px 15px;
+      margin: 15px auto;
+    }
+    .page-title {
+      font-size: 24px;
+    }
+    .page-subtitle {
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+    .impact-story-form label {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .impact-story-form input[type="text"],
+    .impact-story-form select,
+    .impact-story-form textarea {
+      padding: 10px;
+      font-size: 14px;
+    }
+     .image-previews {
+         gap: 8px;
+         padding: 8px;
+     }
+     .image-preview {
+         width: 60px;
+         height: 60px;
+     }
+     .submit-button {
+         padding: 10px 20px;
+         font-size: 15px;
+     }
+      .alert {
+          padding: 12px;
+          font-size: 14px;
+      }
+       .empty-state {
+          padding: 30px 15px;
+       }
+       .empty-icon {
+          font-size: 35px;
+       }
+       .empty-state h3 {
+          font-size: 18px;
+       }
+       .empty-state p {
+          font-size: 14px;
+       }
+       .btn {
+          padding: 8px 16px;
+          font-size: 14px;
+       }
+  }

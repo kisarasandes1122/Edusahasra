@@ -1,0 +1,307 @@
+/* frontend/src/components/Admin/AdminImpactStories/AdminImpactStories.css */
+
+/* Admin Specific Colors - Match AdminNavigation/AdminDashboard */
+:root {
+    --admin-primary-dark: #043f2e; /* Main Admin Heading */
+    --admin-secondary: #0a5e45;    /* Admin Accent */
+    --admin-light-bg: #f1f8f4;     /* Admin Light Background */
+    --admin-dark-text: #343a40;    /* Admin Main Text */
+    --admin-body-text: #495057;    /* Admin Body Text */
+    --admin-light-text: #6c757d;   /* Admin Grey Text / Borders */
+    --admin-border-color: #e9ecef; /* Admin Border */
+    --admin-bg-white: #ffffff;     /* Admin Card Background */
+    --admin-bg-light-grey: #f8f9fa;/* Admin Light Table Header / Section Background */
+
+    /* Status Colors (Consistent across Admin) */
+    --status-pending: #ffc107;     /* Warning yellow */
+    --status-approved: #28a745;    /* Success green */
+    --status-rejected: #dc3545;    /* Danger red */
+    /* Assuming other statuses like 'In Transit', 'Delivered' aren't used directly on stories */
+
+
+    --radius-sm: 6px;
+    --radius-md: 8px;
+}
+
+.admin-impact-stories-container {
+  padding: 20px;
+  /* Use a light background for the main content area, matching App.jsx main style */
+  /* background-color: var(--admin-bg-light-grey); */
+   /* Remove specific background here if parent handles it */
+   /* Instead, style the card INSIDE the container */
+   /* Removed background-color and box-shadow */
+  max-width: 1200px;
+  margin: 20px auto; /* Center the container */
+  font-family: 'Inter', sans-serif;
+  color: var(--admin-body-text);
+}
+
+/* Style the inner card/content area */
+.admin-impact-stories-content-card {
+    background-color: var(--admin-bg-white);
+    border-radius: var(--radius-md);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow */
+    padding: 20px;
+}
+
+
+.admin-page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--admin-primary-dark);
+  margin: 0 0 20px 0; /* Adjust margin */
+  text-align: center;
+}
+
+.filter-controls {
+    margin-bottom: 20px;
+    text-align: center; /* Center filters or align left */
+    display: flex; /* Use flex for better layout */
+    gap: 16px; /* Space between filter items */
+    justify-content: center; /* Center the flex items */
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.filter-controls label {
+    /* Remove margin-right if using flex gap */
+    font-weight: 600;
+    color: var(--admin-dark-text);
+    font-size: 15px; /* Consistent font size */
+     /* Align label with input/select */
+     display: flex;
+     align-items: center;
+}
+
+.filter-controls select {
+    padding: 8px 12px;
+    border: 1px solid var(--admin-border-color);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    color: var(--admin-body-text);
+    background-color: var(--admin-bg-white); /* Explicit background */
+     /* Match height of other form controls if applicable */
+     height: 38px;
+     cursor: pointer;
+}
+
+/* Table styles consistent with DonationManagement */
+.admin-impact-stories-table-container { /* Wrapper for responsiveness */
+    border: 1px solid var(--admin-border-color); /* Border around the table */
+    border-radius: var(--radius-md); /* Rounded corners */
+    overflow: hidden; /* Hide overflow from rounded corners */
+    overflow-x: auto; /* Enable horizontal scroll */
+    margin-top: 20px;
+    margin-bottom: 20px; /* Add space below table */
+}
+
+.admin-impact-stories-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px; /* Minimum width to prevent stacking on larger mobiles */
+}
+
+.admin-impact-stories-table thead {
+  background-color: var(--admin-bg-light-grey);
+}
+
+.admin-impact-stories-table th,
+.admin-impact-stories-table td {
+  padding: 12px 16px; /* Consistent padding */
+  text-align: left;
+  font-size: 14px;
+  color: var(--admin-body-text);
+  border-bottom: 1px solid var(--admin-border-color); /* Row separator */
+}
+
+.admin-impact-stories-table th {
+  font-weight: 600;
+  color: var(--admin-dark-text);
+  text-transform: uppercase; /* Uppercase headers */
+  letter-spacing: 0.05em;
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+.admin-impact-stories-table tbody tr:last-child td {
+    border-bottom: none; /* No border on last row */
+}
+
+.admin-impact-stories-table tbody tr:hover {
+  background-color: #fcfcfd; /* Subtle hover effect */
+}
+
+/* Status Badge Styling (Consistent across Admin) */
+.admin-impact-stories-table td .status-badge {
+    display: inline-block; /* Needs to be inline-block for padding */
+    padding: 4px 8px;
+    border-radius: 12px; /* Pill shape */
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.admin-impact-stories-table td .status-badge.status-pending-approval {
+    background-color: var(--status-pending);
+    color: #212529; /* Dark text for yellow */
+}
+
+.admin-impact-stories-table td .status-badge.status-approved {
+    background-color: var(--status-approved);
+    color: white;
+}
+
+.admin-impact-stories-table td .status-badge.status-rejected {
+    background-color: var(--status-rejected);
+    color: white;
+}
+
+/* Action Button Cell */
+.admin-impact-stories-table td:last-child {
+    text-align: right; /* Align actions to the right */
+    white-space: nowrap; /* Prevent button wrapping */
+}
+
+
+/* Button styles (consistent with DonationManagement) */
+.btn {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease;
+   display: inline-flex; /* For icon alignment */
+   align-items: center;
+   gap: 5px; /* Space for icon */
+}
+
+.btn-small {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.btn-secondary {
+    background-color: var(--admin-light-text); /* Greyish */
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #5a6268; /* Darker grey */
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: var(--admin-light-bg); /* Admin light background */
+    border-radius: var(--radius-md);
+    margin-top: 20px; /* Space after filters */
+    color: var(--admin-body-text);
+}
+
+.empty-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+    color: var(--admin-secondary); /* Use an admin accent color */
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--admin-dark-text);
+    margin: 0 0 10px 0;
+}
+
+.empty-state p {
+    font-size: 15px;
+    color: var(--admin-light-text);
+    margin: 0;
+}
+
+/* Responsive Table (Copy from SchoolVerification or DonationManagement) */
+/* Already added table-responsive wrapper in JSX */
+
+@media (max-width: 768px) {
+     .admin-impact-stories-container {
+         padding: 15px;
+     }
+     /* Remove specific card padding here if using .admin-impact-stories-content-card */
+
+     .admin-page-title {
+         font-size: 20px;
+     }
+
+    .filter-controls {
+        flex-direction: column; /* Stack filters */
+        align-items: stretch; /* Stretch filters */
+        gap: 12px; /* Reduce gap */
+    }
+     .filter-controls label { /* Make labels stack above selects */
+         justify-content: flex-start;
+     }
+
+    .admin-impact-stories-table,
+    .admin-impact-stories-table thead,
+    .admin-impact-stories-table tbody,
+    .admin-impact-stories-table th,
+    .admin-impact-stories-table td,
+    .admin-impact-stories-table tr {
+        display: block; /* Stack table elements */
+    }
+
+    .admin-impact-stories-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .admin-impact-stories-table tr {
+        border: 1px solid var(--admin-border-color);
+        margin-bottom: 15px;
+        border-radius: var(--radius-sm); /* Add rounded corners to stacked rows */
+        overflow: hidden; /* Ensure content respects border-radius */
+    }
+
+    .admin-impact-stories-table td {
+        border: none; /* Remove individual cell borders */
+        border-bottom: 1px solid var(--admin-border-color); /* Add row segment border */
+        position: relative;
+        padding-left: 50%; /* Space for the data-label */
+        text-align: right;
+    }
+
+    .admin-impact-stories-table td:last-child {
+        border-bottom: none; /* No border for the last cell in the stacked row */
+         text-align: right; /* Ensure action button aligns right */
+    }
+
+
+    .admin-impact-stories-table td:before {
+        position: absolute;
+        top: 12px; /* Vertical alignment */
+        left: 16px; /* Horizontal position */
+        width: 45%; /* Width for the label */
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: 600;
+        color: var(--admin-dark-text);
+        content: attr(data-label); /* Use data-label attribute from HTML */
+         /* Adjust top/left based on padding if needed */
+         /* For 12px padding, top: 12px, left: 16px seems okay */
+    }
+
+    /* Adjust action button alignment in stacked mode */
+    .admin-impact-stories-table td:last-child .btn {
+        margin: 0; /* Remove default button margins if any */
+    }
+
+    .empty-state { /* Adjust margin/padding */
+        padding: 30px 15px;
+        margin-top: 15px;
+    }
+}

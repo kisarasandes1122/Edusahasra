@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+// Use environment variable for base URL in production, default to localhost for development
+// Ensure process.env.REACT_APP_BACKEND_URL is set correctly in your frontend .env file
 axios.defaults.baseURL = 'http://localhost:5000';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000', 
+  baseURL: axios.defaults.baseURL, // Use the determined base URL
   headers: {
     'Content-Type': 'application/json'
   }
@@ -18,44 +20,56 @@ api.interceptors.request.use(
     }
 
     let token = null;
-    // Prioritize schoolInfo for school-specific routes
+    // --- MODIFIED: Check for adminInfo first ---
+    const adminInfo = localStorage.getItem('adminInfo');
     const schoolInfo = localStorage.getItem('schoolInfo');
     const donorInfo = localStorage.getItem('donorInfo');
 
-    // Logic to find the correct token (prioritizing school)
-    if (schoolInfo) {
+    // Logic to find the correct token (prioritizing admin)
+    if (adminInfo) {
+        try {
+            const parsedAdminInfo = JSON.parse(adminInfo);
+            if (parsedAdminInfo && parsedAdminInfo.token) {
+                token = parsedAdminInfo.token;
+                 // console.log("Using Admin Token"); // Debug log
+            }
+        } catch (e) {
+            console.error("Error parsing adminInfo:", e);
+            localStorage.removeItem('adminInfo'); // Clear corrupted data
+        }
+    } else if (schoolInfo) {
         try {
             const parsedSchoolInfo = JSON.parse(schoolInfo);
             if (parsedSchoolInfo && parsedSchoolInfo.token) {
                 token = parsedSchoolInfo.token;
-                console.log("Using School Token"); // Debug log
+                // console.log("Using School Token"); // Debug log
             }
         } catch (e) {
             console.error("Error parsing schoolInfo:", e);
-            localStorage.removeItem('schoolInfo');
+            localStorage.removeItem('schoolInfo'); // Clear corrupted data
         }
     } else if (donorInfo) {
          try {
             const parsedDonorInfo = JSON.parse(donorInfo);
             if (parsedDonorInfo && parsedDonorInfo.token) {
                 token = parsedDonorInfo.token;
-                 console.log("Using Donor Token"); // Debug log
+                 // console.log("Using Donor Token"); // Debug log
             }
          } catch (e) {
              console.error("Error parsing donorInfo:", e);
-            localStorage.removeItem('donorInfo');
+            localStorage.removeItem('donorInfo'); // Clear corrupted data
          }
     } else {
-        console.log("No token found in localStorage"); // Debug log
+        // console.log("No token found in localStorage"); // Debug log
     }
 
 
     // Attach token if found
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log("Authorization header set"); // Debug log
+      // console.log("Authorization header set"); // Debug log
     } else {
-       console.warn("No token available for request to:", config.url); // Warn if no token
+       // console.warn("No token available for request to:", config.url); // Warn if no token
     }
 
 
@@ -74,34 +88,68 @@ api.interceptors.response.use(
   },
   (error) => {
     console.error("Response Error Interceptor:", error.response || error.message); // Debug log
-    // Handle 401 Unauthorized errors specifically for school/donor tokens
+    // Handle 401 Unauthorized errors specifically for school/donor/admin tokens
     if (error.response && error.response.status === 401) {
         console.log("Received 401 Unauthorized, clearing tokens."); // Debug log
-        // Check which token might have caused the 401
-        if (localStorage.getItem('schoolInfo')) {
-            localStorage.removeItem('schoolInfo');
-            window.location.href = '/school-login';
+        // Clear *all* user tokens and redirect to login, or redirect based on current route
+        // A more specific approach based on the protected route type might be better,
+        // but for simplicity, let's clear all and redirect to admin login if the path
+        // looks like an admin path.
+         if (window.location.pathname.startsWith('/admin')) {
+             localStorage.removeItem('adminInfo');
+              // Clear other tokens too? Depends on desired multi-login behavior.
+              // localStorage.removeItem('schoolInfo');
+              // localStorage.removeItem('donorInfo');
+             window.location.href = '/admin-login'; // Redirect to admin login
+         } else if (window.location.pathname.startsWith('/school')) {
+             localStorage.removeItem('schoolInfo');
+              // localStorage.removeItem('adminInfo');
+              // localStorage.removeItem('donorInfo');
+             window.location.href = '/school-login'; // Redirect to school login
+         } else {
+             // Assuming other protected routes are donor routes
+             localStorage.removeItem('donorInfo');
+             // localStorage.removeItem('adminInfo');
+             // localStorage.removeItem('schoolInfo');
+             window.location.href = '/donor-login'; // Redirect to donor login (default)
+         }
 
-        } else if (localStorage.getItem('donorInfo')) {
-            localStorage.removeItem('donorInfo');
-            window.location.href = '/donor-login';
-        }
+        // Note: This interceptor might be too aggressive if a user logs out manually but the token is still
+        // briefly in storage. A better approach is often handling 401 errors in the components/hooks
+        // that make the specific requests. However, for a simple app, this global handler can work.
     }
+    // Also handle 403 Forbidden if needed, though protect middleware throws errors handled by errorHandler
+
     return Promise.reject(error);
   }
 );
 
-export const getFullImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    
-    // If already a full URL, return as is
-    if (imagePath.startsWith('http')) {
-      return imagePath;
-    }
-    
-    // Make sure path starts with a slash
-    const path = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
-    return `${axios.defaults.baseURL}${path}`;
-  };
+// --- Helper function to get full image URL for uploaded files ---
+// Backend stores path relative to the 'uploads' directory (e.g., 'impact-story-images/filename.jpg')
+// Static serving is configured in server.js for /uploads to serve the 'uploads' directory.
+// So, the full URL is BASE_URL + '/uploads/' + relativeUploadPath.
+export const getFullImageUrl = (relativeUploadPath) => {
+    if (!relativeUploadPath) return null;
+
+    // If it's already a full URL (e.g., from an external source or test data)
+     if (relativeUploadPath.startsWith('http') || relativeUploadPath.startsWith('/uploads')) {
+         // If it's already relative to /uploads or a full URL, just return it
+         // We are building the URL from the backend's relative path.
+         // If the backend gives a full /uploads path, use that.
+         if (relativeUploadPath.startsWith('/uploads')) {
+             return `${axios.defaults.baseURL}${relativeUploadPath}`;
+         }
+         return relativeUploadPath; // Assume it's an external URL
+     }
+
+    // Ensure the path segment doesn't start with a slash if joining with /uploads/
+    const cleanPath = relativeUploadPath.startsWith('/') ? relativeUploadPath.substring(1) : relativeUploadPath;
+
+    // Construct the full URL using the determined base URL
+    // The backend stores paths like 'impact-story-images/filename.jpg'
+    // So the frontend needs to request '/uploads/impact-story-images/filename.jpg'
+    return `${axios.defaults.baseURL}/uploads/${cleanPath}`;
+};
+
 
 export default api;

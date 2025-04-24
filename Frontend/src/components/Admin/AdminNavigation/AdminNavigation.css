@@ -1,87 +1,229 @@
+/* frontend/src/components/Admin/AdminNavigation/AdminNavigation.css */
+
+/* Main sidebar container */
 .edusahasra-navigation {
-    width: 260px;
-    background-color: #ffffff;
-    height: 100vh;
-    border-right: 1px solid #e9ecef;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  width: 260px;
+  background-color: #ffffff;
+  height: 100vh;
+  border-right: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  /* Added position fixed for standard admin sidebar */
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.edusahasra-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px; /* Adjust padding as needed */
+  border-bottom: 1px solid #e9ecef;
+  /* Center the logo */
+  text-align: center;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.edusahasra-logo {
+  width: 100px; /* Adjust size */
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Assuming brand name is not used in this layout based on your previous JSX */
+/* If you have a brand name text next to the logo, keep these styles */
+/* .edusahasra-brand-name {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #343a40;
+} */
+
+.edusahasra-nav-items {
+  padding: 10px 0; /* Add some vertical padding */
+  margin: 0;
+  list-style: none;
+  flex-grow: 1; /* Allow nav items to take available space */
+  overflow-y: auto; /* Add scrolling if links exceed height */
+}
+
+.edusahasra-nav-item {
+  margin: 4px 0;
+}
+
+/* General styles for nav links (used by both Link and Button) */
+.edusahasra-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #495057; /* Default text color */
+  transition: all 0.2s ease;
+  background-color: transparent; /* Ensure button has transparent background by default */
+  border: none; /* Remove default button border */
+  width: 100%; /* Make button fill its container */
+  text-align: left; /* Align button text to the left */
+  font: inherit; /* Inherit font styles */
+}
+
+.edusahasra-nav-link:hover {
+  background-color: #f8f9fa; /* Hover background */
+  color: #343a40; /* Darker text on hover */
+}
+
+/* Active link styles */
+.edusahasra-nav-link-active {
+  background-color: #e8f4fe; /* Light blue background */
+  color: #0d6efd; /* Primary blue color */
+  border-left: 3px solid #0d6efd; /* Accent border */
+  padding-left: 22px; /* Adjust padding due to border */
+  font-weight: 600; /* Make active text bolder */
+}
+
+/* Icon styles */
+.edusahasra-nav-icon {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Optional: Adjust icon size if needed */
+  /* font-size: 18px; */
+}
+
+/* Specific styles for the icon element itself if needed (e.g., lucide-react SVG) */
+.edusahasra-nav-icon-element svg {
+ width: 18px; /* Set size explicitly for SVG icons */
+ height: 18px;
+}
+
+
+.edusahasra-nav-label {
+  font-size: 14px;
+}
+
+/* --- Styles for the Logout Button (Specific overrides if needed) --- */
+/* It uses edusahasra-nav-link, but we might want a different hover/color */
+.edusahasra-nav-link.logout-button {
+  margin-top: auto; /* Pushes the logout button to the bottom */
+  border-top: 1px solid #e9ecef; /* Optional: separator line above logout */
+  padding-top: 15px;
+  margin-top: 10px;
+  color: #dc3545; /* Default logout text color (red) */
+}
+
+.edusahasra-nav-link.logout-button:hover {
+  background-color: #dc3545; /* Red background on hover */
+  color: white; /* White text on hover */
+}
+
+
+/* --- Styles for the App Layout --- */
+.edusahasra-app {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Adjust padding left for main content to account for fixed sidebar */
+  /* Only apply if sidebar is fixed */
+  padding-left: 260px; /* Match the width of .edusahasra-navigation */
+}
+
+.edusahasra-main-content {
+  flex: 1; /* Take remaining space */
+  overflow-y: auto; /* Add scrollbar if content overflows */
+  background-color: #f8f9fa; /* Light background for content area */
+  padding: 20px; /* Add padding inside the main content area */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .edusahasra-navigation {
+      width: 100%;
+      height: auto;
+      position: static; /* Make static on smaller screens */
+      flex-direction: row; /* Horizontal layout */
+      border-right: none;
+      border-bottom: 1px solid #e9ecef;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+       /* Remove flex-grow from nav items */
+      flex-grow: 0;
+      overflow-y: visible; /* No vertical scrolling needed horizontally */
   }
-  
+
   .edusahasra-logo-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    border-bottom: 1px solid #e9ecef;
+      padding: 5px 10px;
+      border-bottom: none;
+       /* Ensure logo container doesn't take full width */
+      width: auto;
   }
-  
-  .edusahasra-logo {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .edusahasra-brand-name {
-    margin-left: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #343a40;
-  }
-  
+   .edusahasra-logo {
+       width: 60px; /* Smaller logo on mobile */
+       height: auto;
+   }
+
   .edusahasra-nav-items {
-    padding: 0;
-    margin: 0;
-    list-style: none;
+      flex-direction: row; /* Arrange links horizontally */
+      padding: 0 10px; /* Adjust padding */
+      flex-wrap: wrap; /* Allow wrapping */
+       /* Remove auto margin push, manage space with gap */
+      margin-top: 0;
+       /* Add gap between horizontal items */
+      gap: 5px;
+      overflow-y: visible; /* Ensure no scrollbar in horizontal mode */
   }
-  
-  .edusahasra-nav-item {
-    margin: 4px 0;
-  }
-  
+
+   .edusahasra-nav-item {
+       margin: 0; /* Reset margin */
+   }
+
   .edusahasra-nav-link {
-    display: flex;
-    align-items: center;
-    padding: 15px 25px;
-    cursor: pointer;
-    text-decoration: none;
-    color: #495057;
-    transition: all 0.2s ease;
+      padding: 10px 15px; /* Adjust padding for smaller links */
+      font-size: 13px; /* Smaller font size */
   }
-  
-  .edusahasra-nav-link:hover {
-    background-color: #f8f9fa;
-  }
-  
+
   .edusahasra-nav-link-active {
-    background-color: #e8f4fe;
-    color: #0d6efd;
-    border-left: 3px solid #0d6efd;
+       border-left: none; /* Remove left border */
+       border-bottom: 2px solid #0d6efd; /* Use bottom border for active */
+       padding-left: 15px; /* Reset padding */
+       padding-bottom: 8px; /* Adjust padding for bottom border */
+       background-color: #e8f4fe; /* Keep light blue background */
   }
-  
-  .edusahasra-nav-icon {
-    margin-right: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+   .edusahasra-nav-icon {
+       margin-right: 8px; /* Reduce space next to icon */
+   }
+
+   .edusahasra-nav-icon-element svg {
+      width: 16px; /* Smaller icons on mobile */
+      height: 16px;
+   }
+
+
+   /* Adjust styles for the logout button in horizontal layout */
+  .edusahasra-nav-link.logout-button {
+      margin-top: 0; /* Remove auto margin */
+      border-top: none; /* Remove top border */
+       /* Add margin/padding if needed for separation */
+       margin-left: auto; /* Push logout button to the right */
+       color: #dc3545; /* Keep red color */
+        padding: 10px 15px; /* Match other links padding */
   }
-  
-  .edusahasra-nav-icon-element {
-    font-size: 18px;
-  }
-  
-  .edusahasra-nav-label {
-    font-size: 14px;
-  }
-  
-  /* For the App layout */
+
+  .edusahasra-nav-link.logout-button:hover {
+       background-color: #dc3545; /* Red hover background */
+       color: white; /* White text on hover */
+   }
+
+
+  /* Adjust main content padding when sidebar is static */
   .edusahasra-app {
-    display: flex;
-    height: 100vh;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-left: 0; /* Remove left padding */
+      flex-direction: column; /* Stack layout vertically */
   }
-  
+
   .edusahasra-main-content {
-    flex: 1;
-    overflow-y: auto;
-    background-color: #f8f9fa;
+       padding-top: 10px; /* Add some padding below the horizontal nav */
+       padding: 15px; /* Adjust overall padding */
   }
+}

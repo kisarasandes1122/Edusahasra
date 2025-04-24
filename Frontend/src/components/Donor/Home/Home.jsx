@@ -146,8 +146,8 @@ const Home = () => {
             <a href="/donor-register" className="home__button home__button--primary">
               Start Donating Today
             </a>
-            <a href="/needs" className="home__button home__button--secondary">
-              Browse School Requests
+            <a href="/school-register" className="home__button home__button--secondary">
+              Request Donations
             </a>
           </div>
         </div>

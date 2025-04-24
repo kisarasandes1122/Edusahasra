@@ -60,12 +60,6 @@ const AdminSettings = () => {
     });
   };
 
-  const handleLogout = () => {
-    // Implement logout logic here
-    alert('Logging out...');
-    // Redirect to login page or call API
-    window.location.href = '/login';
-  };
 
   const handleSaveSettings = (e) => {
     e.preventDefault();
@@ -109,12 +103,6 @@ const AdminSettings = () => {
               onClick={() => setActiveTab('users')}
             >
               <i className="fas fa-users"></i> User Management
-            </li>
-            <li 
-              className="logout-option"
-              onClick={handleLogout}
-            >
-              <i className="fas fa-sign-out-alt"></i> Logout
             </li>
           </ul>
         </div>
