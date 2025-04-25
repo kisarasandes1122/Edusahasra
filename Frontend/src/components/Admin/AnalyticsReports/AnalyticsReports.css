@@ -1,466 +1,600 @@
 /* Analytics Reports Main Container */
 .analytics-reports-container {
-    padding: 24px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Header Styles */
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.analytics-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.analytics-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Time Range Selector */
+.time-range-selector {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0 8px;
+}
+
+.time-range-selector select {
+  border: none;
+  padding: 8px 4px;
+  outline: none;
+  font-size: 14px;
+  background-color: transparent;
+  margin-left: 8px;
+  cursor: pointer; /* Added cursor */
+}
+
+/* Button Styles */
+.refresh-btn, .export-btn, .generate-report-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  transition: all 0.2s ease;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.refresh-btn:hover, .export-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.refresh-btn:disabled, .export-btn:disabled, .generate-report-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.generate-report-btn {
+  background-color: #0088FE;
+  color: white;
+  border: none;
+}
+
+.generate-report-btn:hover {
+  background-color: #0066cc;
+}
+
+/* Add spin animation for loading */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.refresh-btn .spin {
+  animation: spin 1s linear infinite;
+}
+
+
+/* Export Dropdown */
+.export-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.export-dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+  z-index: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  top: 100%; /* Position below the button */
+  margin-top: 4px; /* Small space below button */
+}
+
+.export-dropdown:hover .export-dropdown-content,
+.export-btn:focus + .export-dropdown-content { /* Keep dropdown open on button focus */
+  display: block;
+}
+
+ /* Add a tiny triangle indicator maybe? */
+.export-btn::after {
+     content: '▼'; /* Unicode for down arrow */
+     font-size: 10px;
+     margin-left: 8px;
+     color: #666;
+ }
+  .export-btn:hover::after {
+      color: #333;
   }
-  
-  /* Header Styles */
-  .analytics-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-  }
-  
-  .analytics-header h2 {
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-  }
-  
+
+
+.export-dropdown-content button {
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  display: block; /* Ensure buttons take full width and stack */
+}
+
+.export-dropdown-content button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Tab Navigation */
+.analytics-tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 24px;
+  overflow-x: auto; /* Allow horizontal scroll for many tabs */
+  white-space: nowrap;
+}
+
+.analytics-tabs button {
+  padding: 12px 20px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.2s ease;
+   flex-shrink: 0; /* Prevent tabs from shrinking */
+}
+
+.analytics-tabs button:hover {
+  color: #333;
+}
+
+.analytics-tabs button.active {
+  border-bottom: 2px solid #0088FE;
+  color: #0088FE;
+}
+
+/* Chart Container Styles */
+.analytics-content {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.chart-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.chart-container {
+  flex: 1;
+  min-width: 45%; /* Allow two charts per row on larger screens */
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.chart-container.full-width {
+  width: 100%;
+  flex-basis: 100%;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Stats Summary Styles */
+.stats-summary, .verification-summary { /* Combined rule */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 24px;
+  margin-bottom: 24px; /* Added margin-bottom */
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 200px;
+   max-width: 280px; /* Limit max width */
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h4 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.stat-trend {
+  font-size: 12px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.stat-trend.positive {
+  color: #4CAF50;
+}
+
+.stat-trend.negative {
+  color: #F44336;
+}
+
+/* Table Styles */
+.table-container {
+  margin-top: 24px;
+   overflow-x: auto; /* Allow scrolling on table */
+}
+
+.table-container h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 600px; /* Ensure table is not too narrow on small screens */
+}
+
+.analytics-table th {
+  background-color: #f5f5f5;
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+}
+
+.analytics-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.analytics-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Status Classes */
+.status-pending-confirmation,
+.status-preparing,
+.status-processing { /* Use lowercase and dashes */
+  color: #FF9800;
+  font-weight: 500;
+}
+
+.status-in-transit {
+  color: #2196F3;
+  font-weight: 500;
+}
+
+.status-delivered,
+ .status-received-by-school, /* Added based on backend status */
+ .status-approved { /* Added for verification status */
+  color: #4CAF50;
+  font-weight: 500;
+}
+
+ .status-cancelled,
+ .status-rejected { /* Added for cancelled/rejected */
+  color: #F44336;
+  font-weight: 500;
+}
+
+
+/* Custom Report Builder */
+.custom-report-builder {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+   opacity: 0.7; /* Visually indicate disabled */
+   pointer-events: none; /* Disable interactions */
+}
+
+.custom-report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.custom-report-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.filter-option {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-option label {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.filter-option select, .filter-option input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #f9f9f9; /* Indicate disabled */
+  cursor: not-allowed;
+}
+
+
+
+.filter-option span {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  padding-top: 8px; /* Align with input */
+}
+
+/* Resource Map Placeholder */
+.resource-map-container {
+  margin-top: 24px;
+}
+
+.resource-map-container h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.resource-map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  background-color: #f8f9fa;
+  border: 1px dashed #ddd;
+  border-radius: 8px;
+  color: #666;
+}
+
+.resource-map-placeholder svg {
+  margin-bottom: 16px;
+  color: #999;
+}
+
+/* Testimonials Section */
+.testimonials-section {
+  margin-top: 24px;
+}
+
+.testimonials-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.testimonials-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.testimonial-card {
+  flex: 1;
+  min-width: 250px;
+   max-width: 350px; /* Limit max width */
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Added slight shadow */
+}
+
+.testimonial-card p {
+  margin: 0;
+  font-style: italic;
+  color: #333;
+  font-size: 14px;
+}
+
+.testimonial-card::before {
+  content: '"';
+  font-size: 60px;
+  color: #0088FE;
+  opacity: 0.2;
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  font-family: serif;
+}
+
+.testimonial-author {
+  margin-top: 12px !important;
+  text-align: right;
+  font-style: normal !important;
+  font-weight: 500;
+  color: #666 !important;
+}
+
+/* Verification Summary Styles - same as Stats Summary */
+ /* .verification-summary is combined with .stats-summary above */
+
+
+/* Responsive Adjustments */
+@media (max-width: 992px) { /* Adjusted breakpoint slightly */
   .analytics-actions {
-    display: flex;
-    gap: 12px;
-    align-items: center;
+      flex-wrap: wrap; /* Allow actions to wrap */
+      justify-content: flex-start; /* Align left when wrapped */
   }
-  
-  /* Time Range Selector */
-  .time-range-selector {
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 0 8px;
-  }
-  
-  .time-range-selector select {
-    border: none;
-    padding: 8px 4px;
-    outline: none;
-    font-size: 14px;
-    background-color: transparent;
-    margin-left: 8px;
-  }
-  
-  /* Button Styles */
-  .refresh-btn, .export-btn, .generate-report-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    font-size: 14px;
-    cursor: pointer;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    transition: all 0.2s ease;
-  }
-  
-  .refresh-btn:hover, .export-btn:hover {
-    background-color: #f0f0f0;
-  }
-  
+
+  .time-range-selector,
+  .refresh-btn,
+  .export-dropdown,
   .generate-report-btn {
-    background-color: #0088FE;
-    color: white;
-    border: none;
+      /* Allow these to take up more space or stack */
+      width: auto; /* Reset width */
+      flex-grow: 0; /* Prevent excessive stretching */
   }
-  
-  .generate-report-btn:hover {
-    background-color: #0066cc;
-  }
-  
-  /* Export Dropdown */
-  .export-dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .export-dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: #fff;
-    min-width: 120px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
-    z-index: 1;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  
-  .export-dropdown:hover .export-dropdown-content {
-    display: block;
-  }
-  
-  .export-dropdown-content button {
-    width: 100%;
-    text-align: left;
-    padding: 10px 16px;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .export-dropdown-content button:hover {
-    background-color: #f0f0f0;
-  }
-  
-  /* Tab Navigation */
-  .analytics-tabs {
-    display: flex;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 24px;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  
-  .analytics-tabs button {
-    padding: 12px 20px;
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: #666;
-    transition: all 0.2s ease;
-  }
-  
-  .analytics-tabs button:hover {
-    color: #333;
-  }
-  
-  .analytics-tabs button.active {
-    border-bottom: 2px solid #0088FE;
-    color: #0088FE;
-  }
-  
-  /* Chart Container Styles */
-  .analytics-content {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
+
+   /* Adjust dropdown position if actions wrap */
+   .export-dropdown-content {
+      right: auto; /* Remove right alignment */
+      left: 0; /* Align left with parent button */
+   }
+
+    .export-btn::after {
+       content: none; /* Hide arrow when wrapped/stacked */
+    }
+}
+
+
+@media (max-width: 768px) {
   .chart-row {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
+    flex-direction: column;
   }
-  
+
   .chart-container {
-    flex: 1;
-    min-width: 45%;
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .chart-container h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin-top: 0;
-    margin-bottom: 16px;
-  }
-  
-  .chart-container.full-width {
     width: 100%;
-    flex-basis: 100%;
+    min-width: 100%;
+     min-height: 250px; /* Ensure chart container has minimum height */
   }
-  
-  /* Loading Indicator */
-  .loading-indicator {
-    text-align: center;
-    padding: 40px;
-    font-size: 16px;
-    color: #666;
-  }
-  
-  /* Stats Summary Styles */
-  .stats-summary {
-    display: flex;
-    flex-wrap: wrap;
+
+  .analytics-header {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 16px;
-    margin-top: 24px;
   }
-  
+
+  .analytics-actions {
+    width: 100%;
+    justify-content: space-between; /* Distribute items */
+  }
+
+  /* Adjust flex basis for stat cards to allow 2 or 3 per row */
   .stat-card {
-    flex: 1;
-    min-width: 200px;
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      min-width: calc(50% - 8px); /* Two cards per row with gap */
+      max-width: none; /* Remove max-width constraint */
   }
-  
-  .stat-card h4 {
-    font-size: 14px;
-    font-weight: 500;
-    color: #666;
-    margin-top: 0;
-    margin-bottom: 8px;
+
+
+  .analytics-tabs {
+    overflow-x: auto; /* Ensure tabs are scrollable */
+     padding-bottom: 8px; /* Add padding for scrollbar */
   }
-  
-  .stat-value {
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-  }
-  
-  .stat-trend {
-    font-size: 12px;
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .stat-trend.positive {
-    color: #4CAF50;
-  }
-  
-  .stat-trend.negative {
-    color: #F44336;
-  }
-  
-  /* Table Styles */
-  .table-container {
-    margin-top: 24px;
-  }
-  
-  .table-container h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin-top: 0;
-    margin-bottom: 16px;
-  }
-  
-  .analytics-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-  }
-  
-  .analytics-table th {
-    background-color: #f5f5f5;
-    text-align: left;
-    padding: 12px 16px;
-    font-weight: 600;
-    color: #333;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .analytics-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #eee;
-    color: #333;
-  }
-  
-  .analytics-table tr:hover {
-    background-color: #f9f9f9;
-  }
-  
-  .status-delivered {
-    color: #4CAF50;
-    font-weight: 500;
-  }
-  
-  .status-transit {
-    color: #2196F3;
-    font-weight: 500;
-  }
-  
-  .status-processing {
-    color: #FF9800;
-    font-weight: 500;
-  }
-  
-  /* Custom Report Builder */
-  .custom-report-builder {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .custom-report-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  
-  .custom-report-header h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-  }
-  
-  .filter-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  
-  .filter-option {
-    flex: 1;
-    min-width: 200px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .filter-option label {
-    font-size: 13px;
-    color: #666;
-    font-weight: 500;
-  }
-  
-  .filter-option select, .filter-option input {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .filter-option span {
-    text-align: center;
-    font-size: 13px;
-    color: #666;
-  }
-  
-  /* Resource Map Placeholder */
-  .resource-map-container {
-    margin-top: 24px;
-  }
-  
-  .resource-map-container h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin-top: 0;
-    margin-bottom: 16px;
-  }
-  
-  .resource-map-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 300px;
-    background-color: #f8f9fa;
-    border: 1px dashed #ddd;
-    border-radius: 8px;
-    color: #666;
-  }
-  
-  .resource-map-placeholder svg {
-    margin-bottom: 16px;
-    color: #999;
-  }
-  
-  /* Testimonials Section */
-  .testimonials-section {
-    margin-top: 24px;
-  }
-  
-  .testimonials-section h3 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin-top: 0;
-    margin-bottom: 16px;
-  }
-  
-  .testimonials-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  
-  .testimonial-card {
-    flex: 1;
-    min-width: 250px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 16px;
-    position: relative;
-  }
-  
-  .testimonial-card p {
-    margin: 0;
-    font-style: italic;
-    color: #333;
-    font-size: 14px;
-  }
-  
-  .testimonial-card::before {
-    content: '"';
-    font-size: 60px;
-    color: #0088FE;
-    opacity: 0.2;
-    position: absolute;
-    top: -10px;
-    left: 10px;
-    font-family: serif;
-  }
-  
-  .testimonial-author {
-    margin-top: 12px !important;
-    text-align: right;
-    font-style: normal !important;
-    font-weight: 500;
-    color: #666 !important;
-  }
-  
-  /* Verification Summary Styles - same as Stats Summary */
-  .verification-summary {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 24px;
-  }
-  
-  /* Responsive Adjustments */
-  @media (max-width: 768px) {
-    .chart-row {
-      flex-direction: column;
+
+   .custom-report-builder .filter-options {
+       flex-direction: column; /* Stack filter options */
+   }
+
+   .filter-option {
+       min-width: 100%;
+   }
+
+    /* Adjust stat cards again for smaller screens */
+    .stats-summary .stat-card,
+    .verification-summary .stat-card {
+        min-width: 100%; /* Stack stat cards on smallest screens */
     }
-    
-    .chart-container {
-      width: 100%;
-      min-width: 100%;
+
+    .testimonial-card {
+       min-width: 100%; /* Stack testimonials */
+       max-width: none;
     }
-    
-    .analytics-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
-    }
-    
-    .analytics-actions {
-      width: 100%;
-      justify-content: space-between;
-    }
-    
-    .analytics-tabs {
-      overflow-x: auto;
-    }
-    
-    .stat-card {
-      min-width: 100%;
-    }
-  }
+
+}
+
+ @media (max-width: 480px) {
+     .analytics-actions {
+         flex-direction: column; /* Stack action buttons */
+         align-items: stretch; /* Stretch buttons to full width */
+     }
+     .time-range-selector,
+     .refresh-btn,
+     .export-dropdown,
+     .generate-report-btn {
+         width: 100%; /* Full width */
+     }
+      .export-dropdown-content {
+           left: 0;
+           right: auto;
+           width: 100%; /* Full width dropdown */
+           box-sizing: border-box; /* Include padding/border in width */
+      }
+       .export-btn::after {
+          content: none; /* Hide arrow */
+       }
+
+      .analytics-tabs button {
+           padding: 10px 15px; /* Reduce tab padding */
+      }
+ }

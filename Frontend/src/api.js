@@ -2,10 +2,10 @@ import axios from 'axios';
 
 // Use environment variable for base URL in production, default to localhost for development
 // Ensure process.env.REACT_APP_BACKEND_URL is set correctly in your frontend .env file
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'http://localhost:5000'; // This is the base URL of your server
 
 const api = axios.create({
-  baseURL: axios.defaults.baseURL, // Use the determined base URL
+  baseURL: `${axios.defaults.baseURL}/api`, // <--- ADDED /api prefix here
   headers: {
     'Content-Type': 'application/json'
   }
@@ -20,12 +20,12 @@ api.interceptors.request.use(
     }
 
     let token = null;
-    // --- MODIFIED: Check for adminInfo first ---
+    // Check for adminInfo first, then school, then donor
     const adminInfo = localStorage.getItem('adminInfo');
     const schoolInfo = localStorage.getItem('schoolInfo');
     const donorInfo = localStorage.getItem('donorInfo');
 
-    // Logic to find the correct token (prioritizing admin)
+    // Logic to find the correct token (prioritizing admin > school > donor)
     if (adminInfo) {
         try {
             const parsedAdminInfo = JSON.parse(adminInfo);
@@ -76,28 +76,14 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error("Request Error Interceptor:", error); // Debug log
-    return Promise.reject(error);
-  }
-);
-
-// Response interceptor for handling global errors
-api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    console.error("Response Error Interceptor:", error.response || error.message); // Debug log
+    console.error("Request Error Interceptor:", error.response || error.message); // Debug log
     // Handle 401 Unauthorized errors specifically for school/donor/admin tokens
     if (error.response && error.response.status === 401) {
         console.log("Received 401 Unauthorized, clearing tokens."); // Debug log
-        // Clear *all* user tokens and redirect to login, or redirect based on current route
-        // A more specific approach based on the protected route type might be better,
-        // but for simplicity, let's clear all and redirect to admin login if the path
-        // looks like an admin path.
+        // Determine which token to clear based on the path being accessed
          if (window.location.pathname.startsWith('/admin')) {
              localStorage.removeItem('adminInfo');
-              // Clear other tokens too? Depends on desired multi-login behavior.
+              // If only one user type can be logged in at a time, clear others too.
               // localStorage.removeItem('schoolInfo');
               // localStorage.removeItem('donorInfo');
              window.location.href = '/admin-login'; // Redirect to admin login
@@ -106,12 +92,18 @@ api.interceptors.response.use(
               // localStorage.removeItem('adminInfo');
               // localStorage.removeItem('donorInfo');
              window.location.href = '/school-login'; // Redirect to school login
-         } else {
-             // Assuming other protected routes are donor routes
+         } else if (window.location.pathname.startsWith('/donor') || window.location.pathname === '/' || window.location.pathname.startsWith('/my-')) {
+             // Assuming most other protected routes are donor routes
              localStorage.removeItem('donorInfo');
              // localStorage.removeItem('adminInfo');
              // localStorage.removeItem('schoolInfo');
-             window.location.href = '/donor-login'; // Redirect to donor login (default)
+             window.location.href = '/donor-login'; // Redirect to donor login (default for donor routes)
+         } else {
+             // Fallback for other paths that somehow got a 401
+             localStorage.removeItem('donorInfo');
+             localStorage.removeItem('schoolInfo');
+             localStorage.removeItem('adminInfo');
+             window.location.href = '/donor-login'; // Default redirect
          }
 
         // Note: This interceptor might be too aggressive if a user logs out manually but the token is still
@@ -133,10 +125,9 @@ export const getFullImageUrl = (relativeUploadPath) => {
 
     // If it's already a full URL (e.g., from an external source or test data)
      if (relativeUploadPath.startsWith('http') || relativeUploadPath.startsWith('/uploads')) {
-         // If it's already relative to /uploads or a full URL, just return it
-         // We are building the URL from the backend's relative path.
          // If the backend gives a full /uploads path, use that.
          if (relativeUploadPath.startsWith('/uploads')) {
+             // Use the *original* base URL for static files
              return `${axios.defaults.baseURL}${relativeUploadPath}`;
          }
          return relativeUploadPath; // Assume it's an external URL
@@ -145,9 +136,9 @@ export const getFullImageUrl = (relativeUploadPath) => {
     // Ensure the path segment doesn't start with a slash if joining with /uploads/
     const cleanPath = relativeUploadPath.startsWith('/') ? relativeUploadPath.substring(1) : relativeUploadPath;
 
-    // Construct the full URL using the determined base URL
+    // Construct the full URL using the original base URL + /uploads/
     // The backend stores paths like 'impact-story-images/filename.jpg'
-    // So the frontend needs to request '/uploads/impact-story-images/filename.jpg'
+    // So the frontend needs to request 'http://localhost:5000/uploads/impact-story-images/filename.jpg'
     return `${axios.defaults.baseURL}/uploads/${cleanPath}`;
 };
 

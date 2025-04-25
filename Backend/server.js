@@ -14,6 +14,7 @@ const donationRequestRoutes = require('./routes/donationRequestRoutes');
 const donationRoutes = require('./routes/donationRoutes');
 const thankYouRoutes = require('./routes/thankYouRoutes');
 const impactStoryRoutes = require('./routes/impactStoryRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes'); // Import analytics routes
 
 // --- Initialize App & DB ---
 const app = express();
@@ -28,15 +29,16 @@ app.use(express.json({ limit: '10mb' })); // For parsing application/json
 app.use(express.urlencoded({ extended: true, limit: '10mb' })); // For parsing application/x-www-form-urlencoded
 
 // --- Static File Serving ---
-// Can be placed here or after body parsers
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 // --- Mount All API Routes ---
-// Now all these routers will have access to parsed req.body for JSON/URL-encoded requests
+// Mount more specific paths *before* less specific paths if they share prefixes.
+// Mount ALL top-level routers here.
+app.use('/api/admin/analytics', analyticsRoutes); // Mount analytics first (more specific prefix)
+app.use('/api/admin', adminRoutes); // Then mount main admin routes
 app.use('/api/donors', donorRoutes);
-app.use('/api/schools', schoolRoutes); // This router now gets the parsed body for its JSON routes (like /login)
-app.use('/api/admin', adminRoutes);
+app.use('/api/schools', schoolRoutes);
 app.use('/api/requests', donationRequestRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/thankyous', thankYouRoutes);
