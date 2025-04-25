@@ -1,195 +1,393 @@
-/* DonationDetails.css */
+/* frontend/src/components/Admin/DonationDetails/DonationDetails.css */
 
 .edusahasra-donation-details-header {
-    display: flex;
-    align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 24px;
-  }
-  
-  .edusahasra-back-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    color: #4a5568;
-    padding: 8px 0;
-  }
-  
-  .edusahasra-back-button:hover {
-    color: #2d3748;
-  }
-  
-  .edusahasra-donation-details-summary {
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 24px;
-    margin-bottom: 24px;
-  }
-  
-  .edusahasra-details-heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-  }
-  
-  .edusahasra-details-heading h2 {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
-    color: #2d3748;
-  }
-  
-  .edusahasra-details-sections {
-    display: flex;
-    gap: 48px;
-  }
-  
-  .edusahasra-details-section {
-    flex: 1;
-  }
-  
-  .edusahasra-donor-details h3,
-  .edusahasra-school-details h3 {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 8px 0;
-    color: #2d3748;
-  }
-  
-  .edusahasra-donor-details p,
-  .edusahasra-school-details p {
-    font-size: 14px;
-    color: #4a5568;
-    margin: 4px 0;
-  }
-  
-  .edusahasra-donation-items-section {
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 24px;
-    margin-bottom: 24px;
-  }
-  
-  .edusahasra-donation-items-section h3,
-  .edusahasra-tracking-section h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0 0 16px 0;
-    color: #2d3748;
-  }
-  
-  .edusahasra-donation-items-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .edusahasra-donation-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
-    background-color: #f7fafc;
-    border-radius: 8px;
-  }
-  
-  .edusahasra-item-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background-color: #e2e8f0;
-    font-size: 20px;
-  }
-  
-  .edusahasra-item-details {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .edusahasra-item-name {
-    font-weight: 500;
-    font-size: 16px;
-    color: #2d3748;
-  }
-  
-  .edusahasra-item-quantity {
-    font-size: 14px;
-    color: #718096;
-  }
-  
-  .edusahasra-tracking-timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  
-  .edusahasra-tracking-event {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .edusahasra-tracking-status {
-    display: flex;
-    gap: 16px;
-  }
-  
-  .edusahasra-tracking-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: #ebf8ff;
-    color: #3182ce;
-    font-size: 16px;
-  }
-  
-  .edusahasra-tracking-status-info {
-    flex: 1;
-  }
-  
-  .edusahasra-tracking-status-info h4 {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 8px 0;
-    color: #2d3748;
-  }
-  
-  .edusahasra-tracking-time {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    color: #718096;
-    margin-bottom: 8px;
-  }
-  
-  .edusahasra-tracking-description {
-    font-size: 14px;
-    color: #4a5568;
-    margin: 0;
-  }
-  
-  /* Connect timeline events with a line */
-  .edusahasra-tracking-event:not(:last-child) .edusahasra-tracking-status::before {
-    content: '';
-    position: absolute;
-    top: 32px;
-    left: 16px;
-    height: calc(100% - 32px);
-    width: 2px;
-    background-color: #e2e8f0;
-  }
-  
-  .edusahasra-tracking-status {
-    position: relative;
-  }
+  display: flex;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.edusahasra-back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  color: #4a5568;
+  padding: 8px 0;
+  transition: color 0.2s ease; /* Added transition */
+}
+
+.edusahasra-back-button:hover {
+  color: #2d3748;
+}
+
+.edusahasra-donation-container {
+   /* Note: This class is likely inherited or intended to be the same as in DonationManagement.css */
+   /* Assuming it handles padding, border-radius, box-shadow etc. */
+   /* For this file, we primarily define styles *within* the details view structure */
+   background-color: #fff; /* Example style if not inheriting */
+   border-radius: 8px;     /* Example style if not inheriting */
+   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Example style if not inheriting */
+   padding: 24px;          /* Example style if not inheriting */
+   margin-top: 20px; /* Add some space if used standalone or after header */
+}
+
+
+.edusahasra-donation-details-summary {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+}
+
+.edusahasra-details-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.edusahasra-details-heading h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #2d3748;
+}
+
+.edusahasra-details-sections {
+  display: flex;
+  gap: 48px;
+   flex-wrap: wrap; /* Allow sections to wrap on smaller screens */
+}
+
+.edusahasra-details-section {
+  flex: 1;
+  min-width: 250px; /* Ensure sections don't get too narrow */
+}
+
+.edusahasra-donor-details h3,
+.edusahasra-school-details h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #2d3748;
+}
+
+.edusahasra-donor-details p,
+.edusahasra-school-details p {
+  font-size: 14px;
+  color: #4a5568;
+  margin: 8px 0; /* Increased margin for spacing */
+  display: flex; /* Use flexbox for icon+text */
+  align-items: center; /* Align items vertically */
+  gap: 8px; /* Space between icon and text */
+}
+
+
+.edusahasra-donation-items-section {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+}
+
+.edusahasra-donation-items-section h3,
+.edusahasra-tracking-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #2d3748;
+}
+
+.edusahasra-donation-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.edusahasra-donation-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background-color: #f7fafc;
+  border-radius: 8px;
+}
+
+.edusahasra-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #e2e8f0;
+  font-size: 20px;
+  color: #4a5568; /* Default icon color */
+}
+/* Specific icons can override color if needed */
+/*
+.edusahasra-icon-textbooks { color: #5a67d8; }
+.edusahasra-icon-notebooks { color: #38a169; }
+*/
+
+
+.edusahasra-item-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.edusahasra-item-name {
+  font-weight: 500;
+  font-size: 16px;
+  color: #2d3748;
+}
+
+.edusahasra-item-quantity {
+  font-size: 14px;
+  color: #718096;
+}
+
+
+.edusahasra-tracking-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.edusahasra-tracking-event {
+  display: flex;
+  flex-direction: column;
+}
+
+.edusahasra-tracking-status {
+  display: flex;
+  gap: 16px;
+  position: relative; /* Needed for the line pseudo-element */
+}
+
+.edusahasra-tracking-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ebf8ff;
+  color: #3182ce;
+  font-size: 16px;
+  flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Connect timeline events with a line */
+/* This pseudo-element needs to be positioned relative to the parent `.edusahasra-tracking-status` */
+.edusahasra-tracking-event:not(:last-child) .edusahasra-tracking-status::before {
+  content: '';
+  position: absolute;
+  /* Position the line starting just below the icon center */
+  top: 32px; /* Height of icon */
+  left: 15px; /* Half the width of icon + border approx */
+  height: calc(100% - 32px); /* Extend line down from icon */
+  width: 2px;
+  background-color: #e2e8f0;
+}
+
+
+.edusahasra-tracking-status-info {
+  flex: 1;
+}
+
+.edusahasra-tracking-status-info h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #2d3748;
+}
+
+.edusahasra-tracking-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #718096;
+  margin-bottom: 8px;
+}
+
+.edusahasra-tracking-description {
+  font-size: 14px;
+  color: #4a5568;
+  margin: 8px 0 0 0; /* Add top margin */
+}
+
+
+/* Status Badge Styles (Copied from DonationManagement for consistency) */
+.edusahasra-status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+   white-space: nowrap; /* Prevent wrapping */
+}
+
+.edusahasra-status-badge.edusahasra-status-delivered {
+  background-color: #c6f6d5; /* Light green */
+  color: #2f855a; /* Dark green */
+}
+
+.edusahasra-status-badge.edusahasra-status-transit {
+  background-color: #feebc8; /* Light orange */
+  color: #c05621; /* Dark orange */
+}
+
+.edusahasra-status-badge.edusahasra-status-pending {
+  background-color: #e9d8fd; /* Light purple */
+  color: #6b46c1; /* Dark purple */
+}
+
+.edusahasra-status-badge.edusahasra-status-processing {
+  background-color: #bee3f8; /* Light blue */
+  color: #2b6cb0; /* Dark blue */
+}
+
+.edusahasra-status-badge.edusahasra-status-cancelled {
+  background-color: #fed7d7; /* Light red */
+  color: #9b2c2c; /* Dark red */
+}
+
+
+/* --- Admin Status Update Section Styles --- */
+.edusahasra-status-update-section {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 24px;
+  margin-top: 24px;
+}
+
+.edusahasra-status-update-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #2d3748;
+}
+
+.edusahasra-status-update-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background-color: #f7fafc;
+  border-radius: 8px;
+}
+
+.edusahasra-form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+  margin-bottom: 6px;
+}
+
+/* Reusing styles from DonationManagement for inputs/selects */
+.edusahasra-form-group .edusahasra-select,
+.edusahasra-form-group .edusahasra-search-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #fff; /* Ensure background is white */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Specific style for textarea */
+.edusahasra-form-group .edusahasra-text-area {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  box-sizing: border-box;
+  resize: vertical; /* Allow vertical resize */
+  background-color: #fff; /* Ensure background is white */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+/* Focus styles for form inputs */
+.edusahasra-form-group .edusahasra-select:focus,
+.edusahasra-form-group .edusahasra-search-input:focus,
+.edusahasra-form-group .edusahasra-text-area:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 1px rgba(66, 153, 225, 0.5);
+}
+
+
+.edusahasra-form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end; /* Align buttons to the right */
+  margin-top: 8px;
+}
+
+
+/* Reusing button styles from DonationManagement */
+.edusahasra-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.edusahasra-filter-btn { /* Primary action button style */
+  background-color: #4299e1;
+  color: #fff;
+}
+
+.edusahasra-filter-btn:hover:not(:disabled) {
+  background-color: #3182ce;
+}
+
+.edusahasra-export-btn { /* Secondary action button style */
+  background-color: #f7fafc;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+}
+
+.edusahasra-export-btn:hover:not(:disabled) {
+  background-color: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+.edusahasra-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* Spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.edusahasra-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Styles for messages (assuming .message class from Message.css is applied) */
+/* You might want to add specific margins if needed within the form */
+.edusahasra-status-update-form .message {
+   margin-bottom: 15px; /* Add some space below message within form */
+}
