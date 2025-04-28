@@ -23,6 +23,8 @@ const schoolSchema = new mongoose.Schema({
     minlength: [8, 'Password must be at least 8 characters'],
     select: false // Keep password hidden by default
   },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
 
   // --- School Address ---
   streetAddress: {

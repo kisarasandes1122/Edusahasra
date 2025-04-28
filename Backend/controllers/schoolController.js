@@ -1,3 +1,4 @@
+require('dotenv').config();
 const asyncHandler = require('express-async-handler');
 const School = require('../models/schoolModel');
 const { generateToken } = require('../utils/passwordUtils');
@@ -8,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET, EMAIL_USER, EMAIL_PASS, NODE_ENV } = require('../config/config');
 const validator = require('validator'); // Import validator
 const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 // --- Email Transporter Setup ---
 let transporter;
@@ -723,6 +725,116 @@ const checkApprovalStatus = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Forgot password - Send reset email
+// @route   POST /api/schools/forgot-password
+// @access  Public
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { schoolEmail } = req.body;
+
+  if (!schoolEmail) {
+    res.status(400);
+    throw new Error('Please provide your school email address');
+  }
+
+  if (!validator.isEmail(schoolEmail)) {
+    res.status(400);
+    throw new Error('Please provide a valid school email address');
+  }
+
+  const school = await School.findOne({ schoolEmail });
+
+  if (!school) {
+    res.status(404);
+    throw new Error('No school account found with this email address');
+  }
+
+  // Generate reset token
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  school.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  school.resetPasswordExpire = Date.now() + 30 * 60 * 1000; // 30 minutes
+
+  await school.save();
+
+  // Create reset url
+  const resetUrl = `http://localhost:5173/school-reset-password/${resetToken}`;
+
+  // Email content
+  const message = `Password Reset Request
+
+You requested a password reset for your school account.
+
+Please click the link below to reset your password:
+${resetUrl}
+
+If you did not request this, please ignore this email.`;
+
+  try {
+    await sendEmail({
+      email: school.schoolEmail,
+      subject: 'Password Reset Request',
+      message,
+    });
+
+    res.json({ message: 'Password reset email sent' });
+  } catch (error) {
+    school.resetPasswordToken = undefined;
+    school.resetPasswordExpire = undefined;
+    await school.save();
+
+    res.status(500);
+    throw new Error('Email could not be sent');
+  }
+});
+
+// @desc    Reset password
+// @route   POST /api/schools/reset-password
+// @access  Public
+const resetPassword = asyncHandler(async (req, res) => {
+  const { token, password, confirmPassword } = req.body;
+
+  if (!token || !password || !confirmPassword) {
+    res.status(400);
+    throw new Error('Please provide all required fields');
+  }
+
+  if (password !== confirmPassword) {
+    res.status(400);
+    throw new Error('Passwords do not match');
+  }
+
+  // Add password strength validation
+  if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    res.status(400);
+    throw new Error('Password must be at least 8 characters long and include uppercase, number, and special character');
+  }
+
+  // Get hashed token
+  const resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
+
+  const school = await School.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!school) {
+    res.status(400);
+    throw new Error('Invalid or expired reset token');
+  }
+
+  // Set new password
+  school.password = password;
+  school.resetPasswordToken = undefined;
+  school.resetPasswordExpire = undefined;
+  await school.save();
+
+  res.json({ message: 'Password reset successful' });
+});
 
 module.exports = {
   registerSchool,
@@ -732,5 +844,7 @@ module.exports = {
   checkApprovalStatus,
   uploadProfileImages, // Export Multer middleware
   updateSchoolPassword, // Export the new password update function
-  sendEmail // Export the sendEmail function
+  sendEmail, // Export the sendEmail function
+  forgotPassword,
+  resetPassword
 };

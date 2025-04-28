@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; // Added useEffect potentially for checking existing login
 import { MdEmail, MdLock, MdLanguage } from 'react-icons/md';
-import { useNavigate } from 'react-router-dom'; // <-- Import useNavigate
+import { useNavigate, Link } from 'react-router-dom'; // <-- Import useNavigate and Link
 import api from '../../../api'; // <-- Import your api instance (adjust path if needed)
 import './SchoolLogin.css';
 
@@ -244,8 +244,7 @@ const SchoolLogin = () => {
                             />
                             <label htmlFor="rememberMe" className="remember-label">{translations.rememberMe}</label>
                         </div>
-                        {/* TODO: Implement Forgot Password functionality */}
-                        <a href="#forgot" className="forgot-link">{translations.forgotPassword}</a>
+                        <Link to="/school-forgot-password" className="forgot-link">{translations.forgotPassword}</Link>
                     </div>
 
                     <button

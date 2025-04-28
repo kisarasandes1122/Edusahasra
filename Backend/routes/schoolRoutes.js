@@ -8,7 +8,9 @@ const {
   getSchoolProfile,
   checkApprovalStatus,
   updateSchoolProfile,
-  uploadProfileImages
+  uploadProfileImages,
+  forgotPassword,
+  resetPassword
 } = require('../controllers/schoolController');
 
 // --- Import Auth Middleware ---
@@ -19,6 +21,8 @@ const { protectSchool } = require('../middleware/authMiddleware');
 // ==============================
 router.post('/register', registerSchool);
 router.post('/login', loginSchool);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 router.get('/approval-status', checkApprovalStatus);
 
 // ==============================

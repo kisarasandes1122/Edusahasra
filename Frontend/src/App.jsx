@@ -30,6 +30,8 @@ import RequestDonations from './components/School/RequestDonations/RequestDonati
 import SendThanks from './components/School/SendThanks/SendThanks';
 import EditProfile from './components/School/EditProfile/EditProfile';
 import WriteImpactStoriesPage from './components/School/WriteImpactStoriesPage/WriteImpactStoriesPage'; // School write story
+import ForgotPassword from './components/School/ForgotPassword/ForgotPassword';
+import ResetPassword from './components/School/ResetPassword/ResetPassword';
 
 // Admin Components
 import AdminLogin from './components/Admin/AdminLogin/AdminLogin';
@@ -127,6 +129,8 @@ const App = () => {
            {/* Public Password Reset Routes */}
            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
            <Route path="/reset-password" element={<ResetPasswordPage />} /> {/* Token is read from search params */}
+           <Route path="/school-forgot-password" element={<ForgotPassword />} />
+           <Route path="/school-reset-password/:token" element={<ResetPassword />} />
         </Route>
 
         {/* Admin Login is a standalone public route (doesn't use AdminLayout) */}
