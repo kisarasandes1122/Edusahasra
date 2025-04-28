@@ -2,16 +2,20 @@
 /* EditProfile.css - Updated Styles   */
 /* ================================== */
 
+/* Overall Container */
 .profile-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding-bottom: 40px; /* Add some bottom padding */
+  padding-bottom: 40px;
   font-family: 'Roboto', 'Arial', sans-serif;
   background-color: #f8faf9;
   min-height: 100vh;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  display: flex; /* Use flex for main layout control */
+  flex-direction: column; /* Stack header, back button, and main content area */
 }
 
+/* Header (remains similar) */
 .profile-header {
   display: flex;
   justify-content: center;
@@ -34,12 +38,13 @@
   color: #043f2e;
 }
 
+/* Back Button Area */
 .profile-back-btn-container {
-  padding: 16px 24px;
+  padding: 16px 24px 0 24px; /* Adjusted padding for better spacing */
 }
 
 .profile-back-btn {
-  display: inline-flex; /* Changed from flex to inline-flex */
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   background-color: #e8f3ea;
@@ -66,38 +71,119 @@
   font-size: 14px;
 }
 
-.profile-section {
-  background-color: #f1f8f4;
-  margin: 0 24px 24px 24px;
-  padding: 20px;
-  border-radius: 8px;
+/* --- Main Content Wrapper (Sidebar + Content Area) --- */
+.profile-main-content-wrapper {
+  display: flex;
+  flex-direction: row; /* Arrange sidebar and content side-by-side */
+  flex: 1; /* Allow this wrapper to grow and fill container space */
+  padding: 24px; /* Padding around the main content */
+  gap: 24px; /* Space between sidebar and content */
 }
 
-/* Section for general errors */
+/* --- Sidebar Navigation --- */
+.profile-sidebar {
+  flex: 0 0 250px; /* Fixed width for sidebar */
+  background-color: white; /* White background for sidebar */
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  padding: 20px 0; /* Vertical padding */
+  display: flex;
+  flex-direction: column; /* Stack navigation items vertically */
+  align-self: flex-start; /* Prevent sidebar from stretching height */
+  /* min-height can be removed or adjusted if content pushes container */
+}
+
+.profile-sidebar-link {
+  display: block; /* Make link fill width */
+  width: 100%; /* Ensure button takes full width */
+  text-align: left; /* Align text to the left */
+  padding: 12px 20px; /* Padding inside links */
+  font-size: 16px;
+  color: #4a5568; /* Default text color */
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  border-left: 4px solid transparent; /* Border for active indicator */
+  background: none; /* Remove default button background */
+  border-top: none; /* Remove default button border */
+  border-right: none; /* Remove default button border */
+  border-bottom: none; /* Remove default button border */
+  cursor: pointer; /* Indicate clickable */
+}
+
+.profile-sidebar-link:hover:not(.active):not(:disabled) {
+  background-color: #f1f8f4; /* Hover background */
+  color: #043f2e; /* Hover text color */
+}
+
+.profile-sidebar-link.active {
+  background-color: #e8f3ea; /* Active background */
+  color: #043f2e; /* Active text color */
+  font-weight: 600; /* Bold for active */
+  border-left-color: #78C51C; /* Accent color border for active */
+}
+
+.profile-sidebar-link:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+/* --- Main Content Area --- */
+.profile-content-area {
+  flex: 1; /* Allows content area to take remaining space */
+  background-color: white; /* White background for content area */
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  padding: 20px; /* Padding inside content area */
+  display: flex;
+  flex-direction: column; /* Stack sections within content area */
+  gap: 24px; /* Space between sections */
+}
+
+
+/* --- Section Styling within Content Area --- */
+/* This wraps the content of each tab */
+.profile-content-section {
+   border-radius: 8px; /* Keep border radius */
+   padding: 0; /* Remove padding as it's on content-area */
+   margin: 0; /* Remove margin */
+   display: flex; /* Use flex for internal layout */
+   flex-direction: column; /* Stack elements */
+   gap: 16px; /* Space within sections */
+}
+
+
+/* Section for general errors (Place outside main content area) */
 .profile-error-section {
     background-color: #fed7d7; /* Light red background */
     border: 1px solid #f56565; /* Red border */
     color: #c53030; /* Darker red text */
+    margin: 16px 24px 0 24px; /* Add margins back when outside main content area */
+    padding: 10px;
+    border-radius: 8px;
 }
 .general-error {
     margin: 0;
-    padding: 10px;
     font-weight: 500;
 }
 
 
 .section-title {
   margin-top: 0;
-  margin-bottom: 16px;
-  font-size: 18px;
+  margin-bottom: 0; /* Adjusted margin bottom */
+  font-size: 20px; /* Slightly larger title */
   font-weight: 600;
   color: #043f2e;
+  padding-bottom: 10px; /* Space below title */
+  border-bottom: 1px solid #e2e8f0; /* Separator line */
 }
 
+/* --- Form Elements (Used by both sections) --- */
 .profile-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 16px; /* Space between form groups */
+  padding-top: 16px; /* Space above the first form group after title/separator */
 }
 
 .form-row {
@@ -119,34 +205,34 @@
 
 
 .form-label {
-  font-size: 16px;
+  font-size: 15px; /* Slightly smaller label font */
   font-weight: 500;
   color: #4a5568;
 }
 
 .form-input,
 .form-textarea {
-  width: 100%; /* Takes full width of its container */
-  padding: 12px;
-  border: 1px solid #e8f3ea;
-  border-radius: 6px;
-  font-size: 16px;
+  width: 100%;
+  padding: 10px; /* Slightly smaller padding */
+  border: 1px solid #cbd5e0; /* Neutral border color */
+  border-radius: 4px; /* Slightly smaller radius */
+  font-size: 15px; /* Consistent font size */
   color: #2d3748;
   background-color: white;
   transition: border-color 0.2s ease;
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  box-sizing: border-box;
 }
 
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
   border-color: #78C51C;
-  box-shadow: 0 0 0 3px rgba(120, 197, 28, 0.15);
+  box-shadow: 0 0 0 2px rgba(120, 197, 28, 0.2); /* Smaller glow */
 }
 
 .form-input:disabled,
 .form-textarea:disabled {
-    background-color: #e2e8f0; /* Lighter background for disabled */
+    background-color: #e2e8f0;
     cursor: not-allowed;
     color: #a0aec0;
 }
@@ -161,26 +247,26 @@
 .location-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px; /* Smaller gap */
 }
 
 .location-display {
-  background-color: white;
-  border: 1px solid #e8f3ea;
-  border-radius: 6px;
-  padding: 12px;
-  min-height: 48px; /* Ensure consistent height */
+  background-color: #f7fafc; /* Light background */
+  border: 1px solid #e2e8f0; /* Lighter border */
+  border-radius: 4px;
+  padding: 10px; /* Smaller padding */
+  min-height: 40px; /* Adjusted height */
   display: flex;
   align-items: center;
-  font-size: 14px; /* Slightly smaller font for coords */
+  font-size: 14px;
 }
 
 .location-coordinates {
   display: flex;
-  flex-direction: row; /* Display side-by-side */
-  gap: 12px; /* Space between lat and lon */
+  flex-direction: row;
+  gap: 8px; /* Smaller gap */
   color: #2d3748;
-  flex-wrap: wrap; /* Allow wrapping on small screens */
+  flex-wrap: wrap;
 }
 
 .no-location {
@@ -190,20 +276,20 @@
 }
 
 .get-location-btn {
-  display: inline-flex; /* Changed to inline-flex */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px; /* Smaller gap */
   background-color: #78C51C;
   color: white;
   border: none;
-  border-radius: 6px;
-  padding: 10px 14px; /* Slightly smaller padding */
+  border-radius: 4px; /* Smaller radius */
+  padding: 8px 12px; /* Smaller padding */
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px; /* Smaller font */
   font-weight: 500;
   transition: background-color 0.2s ease;
-  align-self: flex-start; /* Keep button from stretching */
+  align-self: flex-start;
 }
 
 .get-location-btn:hover:not(:disabled) {
@@ -216,20 +302,29 @@
 }
 
 .location-icon {
-  font-size: 16px;
+  font-size: 14px; /* Smaller icon */
 }
 
 .location-error {
   color: #e53e3e;
-  font-size: 14px;
+  font-size: 13px; /* Smaller font */
   margin-top: 4px;
 }
 
-/* Image Upload Area */
+/* Image Upload Area (Nested section styling) */
+.image-upload-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space within this nested section */
+    padding-top: 16px; /* Space above title */
+    border-top: 1px solid #e2e8f0; /* Separator above image section */
+}
+
+
 .image-upload-container {
   display: flex;
   justify-content: center;
-  margin: 10px 0;
+  margin: 10px 0 0 0; /* Adjusted margin */
 }
 
 .image-upload-label {
@@ -238,13 +333,13 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 120px;
+  height: 100px; /* Smaller height */
   border: 2px dashed #cbd5e0;
-  border-radius: 8px;
+  border-radius: 6px; /* Smaller radius */
   cursor: pointer;
   transition: all 0.2s ease;
-  background-color: white;
-  color: #4a5568; /* Inherit text color */
+  background-color: #f7fafc; /* Light background */
+  color: #4a5568;
 }
 
 .image-upload-label:hover:not(.disabled) {
@@ -254,19 +349,17 @@
 
 .image-upload-label.disabled {
     cursor: not-allowed;
-    background-color: #f7fafc;
-    border-color: #e2e8f0;
+    background-color: #e2e8f0;
+    border-color: #cbd5e0;
     color: #a0aec0;
 }
 .image-upload-label.disabled .upload-icon {
     color: #a0aec0;
 }
 
-
 .upload-icon {
-  font-size: 24px;
-  /* color: #4a5568; Removed, inherit from label */
-  margin-bottom: 8px;
+  font-size: 20px; /* Smaller icon */
+  margin-bottom: 6px; /* Smaller margin */
 }
 
 .upload-text {
@@ -276,115 +369,67 @@
 }
 
 .upload-text-main {
-  font-size: 16px;
-  /* color: #4a5568; Removed, inherit from label */
+  font-size: 14px; /* Smaller font */
   font-weight: 500;
 }
 
 .image-upload-input {
-  display: none; /* Hide the actual file input */
+  display: none;
 }
 
 /* Styles for Both Existing and Preview Images */
 .uploaded-images {
-  margin-top: 20px; /* More space above the images */
+  margin-top: 0; /* Adjusted margin - use section gap */
 }
 
 .uploaded-images-title {
-    font-size: 16px;
+    font-size: 15px; /* Smaller font */
     font-weight: 600;
     color: #043f2e;
-    margin-bottom: 12px;
+    margin-bottom: 10px; /* Smaller margin */
 }
 
 .image-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px; /* Spacing between thumbnails */
-}
-
-.uploaded-image-item {
-  position: relative; /* For positioning the remove button */
-  /* Remove previous text-like styling */
-  /* background-color: white; */
-  /* padding: 8px 12px; */
-  /* border-radius: 4px; */
-  /* font-size: 14px; */
-  /* color: #4a5568; */
-  /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); */
+  gap: 8px; /* Smaller gap */
 }
 
 .uploaded-image-item {
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.image-preview-thumb {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.delete-existing-image-btn,
-.remove-preview-image-btn {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: rgba(255, 0, 0, 0.7);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.delete-existing-image-btn:hover,
-.remove-preview-image-btn:hover {
-  background: rgba(255, 0, 0, 0.9);
-}
-
-.delete-existing-image-btn:disabled,
-.remove-preview-image-btn:disabled {
-  background: rgba(128, 128, 128, 0.7);
-  cursor: not-allowed;
+  border-radius: 6px; /* Match thumbnail radius */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Smaller shadow */
 }
 
 /* Thumbnail Image Styling */
 .image-preview-thumb {
   display: block;
-  width: 90px;   /* Adjusted smaller width */
-  height: 90px;  /* Adjusted smaller height */
-  object-fit: cover; /* Fill the area, crop if needed */
-  border-radius: 6px; /* Slightly larger radius */
-  border: 1px solid #e2e8f0; /* Light border */
-  background-color: #f0f0f0; /* Placeholder bg */
+  width: 80px;   /* Adjusted size */
+  height: 80px;  /* Adjusted size */
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background-color: #f0f0f0;
 }
 
 /* Remove Button Styling ('X' on thumbnails) */
 .remove-preview-image-btn,
-.remove-existing-image-btn { /* Style both similarly */
+.remove-existing-image-btn {
   position: absolute;
-  top: -5px;  /* Position slightly offset */
-  right: -5px; /* Position slightly offset */
-  background-color: rgba(229, 62, 62, 0.8); /* Red background */
+  top: -5px;
+  right: -5px;
+  background-color: rgba(229, 62, 62, 0.8);
   color: white;
-  border: 1px solid white; /* White border for definition */
+  border: 1px solid white;
   border-radius: 50%;
-  width: 22px;
-  height: 22px;
+  width: 20px; /* Smaller button */
+  height: 20px; /* Smaller button */
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 10px; /* Smaller font */
   line-height: 1;
   padding: 0;
   transition: background-color 0.2s ease;
@@ -393,7 +438,7 @@
 
 .remove-preview-image-btn:hover,
 .remove-existing-image-btn:hover {
-  background-color: rgba(197, 48, 48, 1); /* Darker red on hover */
+  background-color: rgba(197, 48, 48, 1);
 }
 .remove-preview-image-btn:disabled,
 .remove-existing-image-btn:disabled {
@@ -403,52 +448,68 @@
 }
 
 
-/* Save Button Area */
-.profile-save-container {
+/* Button Container (within each section/form) */
+.button-container {
   display: flex;
   justify-content: center;
-  margin: 0 24px 24px 24px;
-  padding-top: 10px; /* Add some space above the button */
+  padding-top: 10px; /* Space above button */
 }
 
-.profile-save-btn {
-  /* display: flex; Replaced by block/width 100% */
-  /* flex-direction: column; */
-  /* align-items: center; */
+.primary-button {
   background: linear-gradient(to right, #78C51C, #2A6F2B);
   border: none;
-  border-radius: 6px;
-  padding: 14px 24px; /* Slightly larger padding */
+  border-radius: 4px; /* Smaller radius */
+  padding: 12px 20px; /* Adjusted padding */
   cursor: pointer;
-  width: 100%; /* Make button full width */
-  max-width: 400px; /* Optional: Max width for larger screens */
-  margin: 0 auto; /* Center if max-width is used */
+  width: auto; /* Button fits content */
+  max-width: 300px; /* Optional: Max width */
   transition: all 0.2s ease;
-  text-align: center; /* Center text */
+  text-align: center;
+  color: white; /* Ensure text is white */
+  font-size: 15px; /* Adjusted font size */
+  font-weight: 600;
+  display: inline-flex; /* Use inline-flex */
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Space for spinner */
 }
 
-.profile-save-btn:hover:not(:disabled) {
+.primary-button:hover:not(:disabled) {
   background: linear-gradient(to right, #69b119, #245f24);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Adjusted shadow */
 }
 
-.profile-save-btn:disabled {
+.primary-button:disabled {
     background: #cbd5e0;
     cursor: not-allowed;
     box-shadow: none;
 }
 
-
-.save-text {
-  color: white;
-  font-size: 16px;
-  font-weight: 600; /* Bolder text */
+/* Message styles for password change form */
+.password-message {
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px; /* Smaller margin */
+    font-size: 13px; /* Smaller font */
 }
 
-/* Contact Section */
+.password-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.password-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+
+/* Contact Section (Place outside main content wrapper) */
 .profile-contact {
   background-color: #f1f8f4;
-  margin: 0 24px 24px 24px;
+  margin: 24px 24px 24px 24px; /* Add margins */
   padding: 16px;
   border-radius: 8px;
   text-align: center;
@@ -462,50 +523,121 @@
 .contact-number {
   font-weight: 600;
   color: #043f2e;
-  margin-left: 5px; /* Add space */
+  margin-left: 5px;
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
-  .profile-section,
-  .profile-contact,
-  .profile-save-container {
-    margin: 0 16px 16px 16px;
+  .profile-main-content-wrapper {
+      flex-direction: column; /* Stack sidebar and content vertically */
+      padding: 16px; /* Adjusted padding */
+      gap: 16px; /* Smaller gap */
+  }
+
+  .profile-sidebar {
+      flex: none; /* Remove fixed width */
+      width: 100%; /* Full width */
+      flex-direction: row; /* Arrange links horizontally */
+      flex-wrap: wrap; /* Allow links to wrap */
+      padding: 10px; /* Adjusted padding */
+      gap: 5px; /* Smaller gap between horizontal links */
+  }
+   .profile-sidebar-link {
+       border-left: none; /* Remove vertical border */
+       border-bottom: 2px solid transparent; /* Add horizontal border */
+       padding: 8px 12px; /* Adjusted padding */
+       font-size: 14px; /* Smaller font */
+       text-align: center; /* Center text */
+   }
+   .profile-sidebar-link.active {
+       border-left-color: transparent; /* Remove left border */
+       border-bottom-color: #78C51C; /* Use bottom border */
+   }
+
+  .profile-content-area {
+    padding: 16px; /* Adjusted padding */
+    gap: 16px; /* Smaller gap between sections */
+  }
+
+  .profile-error-section,
+  .profile-contact {
+      margin: 16px; /* Adjust margins */
+  }
+
+  .section-title {
+      font-size: 18px;
   }
 
   .form-row {
-      flex-direction: column; /* Stack elements in rows vertically */
+      flex-direction: column;
+      gap: 10px; /* Smaller gap */
   }
+
+  .form-group {
+      gap: 6px; /* Smaller gap */
+  }
+
 
   .form-input,
   .form-textarea {
-    padding: 10px;
-    font-size: 14px;
+    padding: 8px; /* Smaller padding */
+    font-size: 13px; /* Smaller font */
   }
 
   .form-label {
-    font-size: 14px;
+    font-size: 13px; /* Smaller font */
+  }
+
+  .get-location-btn {
+      padding: 6px 10px; /* Smaller padding */
+      font-size: 12px; /* Smaller font */
+  }
+   .location-display, .location-coordinates {
+      font-size: 13px; /* Smaller font */
+   }
+
+
+  .upload-icon {
+    font-size: 18px;
   }
 
   .upload-text-main {
-    font-size: 14px;
+    font-size: 13px;
   }
 
-  .profile-save-btn {
-      padding: 12px 20px;
+  .image-upload-label {
+    height: 80px; /* Smaller height */
+    padding: 10px;
+  }
+
+  .image-grid {
+      gap: 6px; /* Smaller gap */
   }
 
   .image-preview-thumb {
-      width: 75px;   /* Slightly smaller on mobile */
-      height: 75px;
+      width: 60px;
+      height: 60px;
   }
 
   .remove-preview-image-btn,
   .remove-existing-image-btn {
-      width: 20px;
-      height: 20px;
-      font-size: 11px;
+      width: 18px;
+      height: 18px;
+      font-size: 9px;
   }
+
+  .button-container { /* Applied to the generic button container */
+      padding-top: 8px; /* Smaller padding */
+  }
+   .primary-button { /* Applied to the generic button */
+       padding: 10px 16px; /* Smaller padding */
+       font-size: 14px; /* Smaller font */
+   }
+
+   .password-message {
+       font-size: 12px;
+       padding: 8px;
+   }
 
 }
 
@@ -513,12 +645,19 @@
     .profile-title-text {
         font-size: 20px;
     }
-    .location-coordinates {
-        flex-direction: column; /* Stack lat/lon vertically */
+     .profile-sidebar {
+        padding: 8px;
+     }
+      .profile-sidebar-link {
+         padding: 6px 10px;
+         font-size: 13px;
+      }
+     .location-coordinates {
+        flex-direction: column;
         gap: 2px;
     }
      .image-preview-thumb {
-      width: 65px;
-      height: 65px;
+      width: 50px;
+      height: 50px;
     }
 }
