@@ -140,6 +140,34 @@ const registerDonor = asyncHandler(async (req, res) => {
   });
 
   if (donor) {
+    // Send welcome email
+    try {
+      const welcomeMessage = `Dear ${fullName},
+
+Welcome to EduSahasra! We are thrilled to have you join our community of generous donors.
+
+Your registration has been successful, and you are now part of a network dedicated to making a difference in education. Through your donations, you have the power to:
+- Provide essential educational supplies to schools in need
+- Support students' learning journey
+- Make a lasting impact on education in Sri Lanka
+
+If you need any assistance or have questions about making donations, please don't hesitate to contact our support team at support@edusahasra.com.
+
+Thank you for choosing to make a difference with EduSahasra.
+
+Best regards,
+The EduSahasra Team`;
+
+      await sendEmail({
+        email: donor.email,
+        subject: 'Welcome to EduSahasra - Thank You for Joining!',
+        message: welcomeMessage,
+      });
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // Don't throw error here, as registration was successful
+    }
+
     res.status(201).json({
       _id: donor._id,
       fullName: donor.fullName,

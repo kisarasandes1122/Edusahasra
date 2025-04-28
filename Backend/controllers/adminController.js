@@ -7,7 +7,66 @@ const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose'); // Import mongoose to check ObjectId validity
 const validator = require('validator'); // Import validator for email/password validation
+const multer = require('multer');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET, EMAIL_USER, EMAIL_PASS, NODE_ENV } = require('../config/config');
+const nodemailer = require('nodemailer');
 
+// --- Email Transporter Setup ---
+let transporter;
+
+try {
+    transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: EMAIL_USER,
+            pass: EMAIL_PASS,
+        },
+    });
+
+    if (NODE_ENV !== 'production') {
+         transporter.verify(function (error, success) {
+           if (error) {
+             console.error("Transporter verification failed:", error);
+           } else {
+             console.log("Server is ready to take our messages (Transporter verified)");
+           }
+         });
+     }
+} catch (error) {
+    console.error("Failed to create email transporter:", error);
+}
+
+// --- Helper function to send email ---
+const sendEmail = async (options) => {
+    if (!transporter) {
+        console.error("Email transporter is not configured or failed to initialize.");
+        throw new Error("Email service not available. Check backend logs.");
+    }
+
+    const senderEmail = EMAIL_USER;
+
+    if (!senderEmail) {
+         console.error("Sender email address is not defined in configuration (EMAIL_USER).");
+        throw new Error("Email service not properly configured.");
+    }
+
+    const mailOptions = {
+        from: `"EduSahasra" <${senderEmail}>`,
+        to: options.email,
+        subject: options.subject,
+        text: options.message,
+    };
+
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Message sent: %s', info.messageId);
+        console.log(`Email sent successfully to ${options.email}`);
+    } catch (error) {
+        console.error('Error sending email:', error);
+        throw new Error(`Failed to send email.`);
+    }
+};
 
 // @desc    Register admin (only by superadmin)
 // @route   POST /api/admin/register
@@ -358,6 +417,23 @@ const approveSchool = asyncHandler(async (req, res) => {
 
   const updatedSchool = await school.save();
 
+  // Send approval email
+  try {
+    const message = `Dear ${updatedSchool.schoolName},\n\n
+We are pleased to inform you that your school registration with EduSahasra has been approved. You can now log in to your account and start using our platform.\n\n
+If you have any questions or need assistance, please don't hesitate to contact us.\n\n
+Best regards,\nEduSahasra Team`;
+
+    await sendEmail({
+      email: updatedSchool.schoolEmail,
+      subject: 'EduSahasra School Registration Approved',
+      message: message,
+    });
+  } catch (emailError) {
+    console.error('Failed to send approval email:', emailError);
+    // Don't throw error here, as approval was successful
+  }
+
   // Respond with updated school details
   res.json({
     message: `School "${updatedSchool.schoolName}" has been approved successfully`,
@@ -413,8 +489,23 @@ const rejectSchool = asyncHandler(async (req, res) => {
 
   const updatedSchool = await school.save();
 
-  // Optionally: Delete the school record after rejection? Or keep it for records?
-  // For now, we keep it and just update the status/remarks.
+  // Send rejection email
+  try {
+    const message = `Dear ${updatedSchool.schoolName},\n\n
+We regret to inform you that your school registration with EduSahasra has not been approved at this time.\n\n
+Reason for rejection: ${updatedSchool.adminRemarks}\n\n
+If you believe this decision was made in error or if you would like to provide additional information, please contact us.\n\n
+Best regards,\nEduSahasra Team`;
+
+    await sendEmail({
+      email: updatedSchool.schoolEmail,
+      subject: 'EduSahasra School Registration Status Update',
+      message: message,
+    });
+  } catch (emailError) {
+    console.error('Failed to send rejection email:', emailError);
+    // Don't throw error here, as rejection was successful
+  }
 
   res.json({
     message: `School "${updatedSchool.schoolName}" registration has been rejected`,
@@ -631,5 +722,6 @@ module.exports = {
   updateAdminProfile, // Export the new profile update (optional for this task, but good to have)
   updateAdminPassword, // Export the new password update function
   getAdmins,
-  deleteAdmin
+  deleteAdmin,
+  sendEmail // Export the sendEmail function
 };

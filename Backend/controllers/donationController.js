@@ -4,6 +4,7 @@ const DonationRequest = require('../models/donationRequestModel');
 const School = require('../models/schoolModel'); // Ensure School model is imported
 const Donor = require('../models/donorModel');
 const mongoose = require('mongoose');
+const { sendEmail } = require('./adminController'); // Import the sendEmail function
 
 // --- Helper Function to check remaining quantity ---
 const checkRemainingQuantity = (request, itemsToDonate) => {
@@ -225,7 +226,9 @@ const updateDonationStatusByDonor = asyncHandler(async (req, res) => {
      }
 
 
-    const donation = await Donation.findById(donationId);
+    const donation = await Donation.findById(donationId)
+        .populate('donor', 'fullName email')
+        .populate('school', 'schoolName schoolEmail');
 
     if (!donation) {
         res.status(404);
@@ -233,7 +236,7 @@ const updateDonationStatusByDonor = asyncHandler(async (req, res) => {
     }
 
     // Authorization & Validation
-    if (donation.donor.toString() !== donorId.toString()) {
+    if (donation.donor._id.toString() !== donorId.toString()) {
         res.status(403);
         throw new Error('Not authorized to update this donation.');
     }
@@ -272,10 +275,41 @@ const updateDonationStatusByDonor = asyncHandler(async (req, res) => {
           throw new Error(`Cannot skip statuses. Next valid status after "${donation.trackingStatus}" is "${statusOrder[currentIndex + 1]}".`);
      }
 
+    // Store old status for email notification
+    const oldStatus = donation.trackingStatus;
 
     donation.trackingStatus = newStatus;
     donation.statusLastUpdatedAt = Date.now();
     const updatedDonation = await donation.save();
+
+    // Send email notification to school if status has changed
+    if (oldStatus !== newStatus) {
+        try {
+            const schoolMessage = `Dear ${donation.school.schoolName},
+
+The status of a self-delivery donation has been updated by the donor.
+
+Donation Details:
+- Previous Status: ${oldStatus}
+- New Status: ${newStatus}
+- Donor Name: ${donation.donor.fullName}
+- Donor Email: ${donation.donor.email}
+
+You can track this donation's status through your account.
+
+Best regards,
+EduSahasra Team`;
+
+            await sendEmail({
+                email: donation.school.schoolEmail,
+                subject: `Donation Status Update: ${newStatus}`,
+                message: schoolMessage,
+            });
+        } catch (emailError) {
+            console.error('Failed to send status update email to school:', emailError);
+            // Don't throw error here, as status update was successful
+        }
+    }
 
     res.json({ message: 'Donation status updated successfully.', donation: updatedDonation });
 });
@@ -295,7 +329,9 @@ const updateDonationStatusByAdmin = asyncHandler(async (req, res) => {
         throw new Error(`Invalid status update: "${newStatus}". Allowed for Admin: ${allowedStatuses.join(', ')}`);
     }
 
-    const donation = await Donation.findById(donationId);
+    const donation = await Donation.findById(donationId)
+        .populate('donor', 'email name') // Populate donor details
+        .populate('school', 'schoolEmail schoolName'); // Populate school details
 
     if (!donation) {
         res.status(404);
@@ -303,20 +339,58 @@ const updateDonationStatusByAdmin = asyncHandler(async (req, res) => {
     }
 
     // Admin can update status for both delivery methods if needed, but tracking ID applies mainly to Courier
-     if (donation.trackingStatus === 'Received by School' && newStatus !== 'Received by School') {
+    if (donation.trackingStatus === 'Received by School' && newStatus !== 'Received by School') {
         // Prevent changing status AFTER school has confirmed receipt, unless it's confirming it again (idempotent)
         res.status(400);
         throw new Error('Cannot change status after school has confirmed receipt.');
     }
 
+    // Store old status for email notification
+    const oldStatus = donation.trackingStatus;
 
     donation.trackingStatus = newStatus;
     donation.statusLastUpdatedAt = Date.now();
     if (adminTrackingId !== undefined) donation.adminTrackingId = adminTrackingId; // Admin can set/clear tracking ID
     if (adminRemarks !== undefined) donation.adminRemarks = adminRemarks; // Admin can add/update remarks
 
-
     const updatedDonation = await donation.save();
+
+    // Send email notifications if status has changed
+    if (oldStatus !== newStatus) {
+        try {
+            // Prepare email content
+            const donorMessage = `Dear ${donation.donor.name},\n\n
+Your donation status has been updated to "${newStatus}".\n\n
+${adminRemarks ? `Admin Remarks: ${adminRemarks}\n\n` : ''}
+${adminTrackingId ? `Tracking ID: ${adminTrackingId}\n\n` : ''}
+You can track your donation status through your account.\n\n
+Best regards,\nEduSahasra Team`;
+
+            const schoolMessage = `Dear ${donation.school.schoolName},\n\n
+A donation's status has been updated to "${newStatus}".\n\n
+${adminRemarks ? `Admin Remarks: ${adminRemarks}\n\n` : ''}
+${adminTrackingId ? `Tracking ID: ${adminTrackingId}\n\n` : ''}
+You can track this donation's status through your account.\n\n
+Best regards,\nEduSahasra Team`;
+
+            // Send email to donor
+            await sendEmail({
+                email: donation.donor.email,
+                subject: `Donation Status Update: ${newStatus}`,
+                message: donorMessage,
+            });
+
+            // Send email to school
+            await sendEmail({
+                email: donation.school.schoolEmail,
+                subject: `Donation Status Update: ${newStatus}`,
+                message: schoolMessage,
+            });
+        } catch (emailError) {
+            console.error('Failed to send status update emails:', emailError);
+            // Don't throw error here, as status update was successful
+        }
+    }
 
     res.json({ message: 'Donation status updated by admin.', donation: updatedDonation });
 });

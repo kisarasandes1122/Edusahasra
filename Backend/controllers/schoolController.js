@@ -5,8 +5,65 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../config/config');
+const { JWT_SECRET, EMAIL_USER, EMAIL_PASS, NODE_ENV } = require('../config/config');
 const validator = require('validator'); // Import validator
+const nodemailer = require('nodemailer');
+
+// --- Email Transporter Setup ---
+let transporter;
+
+try {
+    transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: EMAIL_USER,
+            pass: EMAIL_PASS,
+        },
+    });
+
+    if (NODE_ENV !== 'production') {
+         transporter.verify(function (error, success) {
+           if (error) {
+             console.error("Transporter verification failed:", error);
+           } else {
+             console.log("Server is ready to take our messages (Transporter verified)");
+           }
+         });
+     }
+} catch (error) {
+    console.error("Failed to create email transporter:", error);
+}
+
+// --- Helper function to send email ---
+const sendEmail = async (options) => {
+    if (!transporter) {
+        console.error("Email transporter is not configured or failed to initialize.");
+        throw new Error("Email service not available. Check backend logs.");
+    }
+
+    const senderEmail = EMAIL_USER;
+
+    if (!senderEmail) {
+         console.error("Sender email address is not defined in configuration (EMAIL_USER).");
+        throw new Error("Email service not properly configured.");
+    }
+
+    const mailOptions = {
+        from: `"EduSahasra" <${senderEmail}>`,
+        to: options.email,
+        subject: options.subject,
+        text: options.message,
+    };
+
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Message sent: %s', info.messageId);
+        console.log(`Email sent successfully to ${options.email}`);
+    } catch (error) {
+        console.error('Error sending email:', error);
+        throw new Error(`Failed to send email.`);
+    }
+};
 
 // --- Multer Config ---
 
@@ -202,6 +259,25 @@ const registerSchool = asyncHandler(async (req, res) => {
 
     try {
       const createdSchool = await school.save();
+      
+      // Send confirmation email
+      try {
+        const message = `Dear ${createdSchool.schoolName},\n\n
+Thank you for registering with EduSahasra. Your school registration has been received successfully.\n\n
+Your registration is currently pending verification. Our team will review your application within 24-72 hours. You will receive another email once your registration has been approved.\n\n
+If you have any questions, please don't hesitate to contact us.\n\n
+Best regards,\nEduSahasra Team`;
+
+        await sendEmail({
+          email: createdSchool.schoolEmail,
+          subject: 'EduSahasra School Registration Confirmation',
+          message: message,
+        });
+      } catch (emailError) {
+        console.error('Failed to send confirmation email:', emailError);
+        // Don't throw error here, as registration was successful
+      }
+
       res.status(201).json({
         _id: createdSchool._id,
         schoolName: createdSchool.schoolName,
@@ -216,7 +292,7 @@ const registerSchool = asyncHandler(async (req, res) => {
           fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up DB save failure file:", unlinkErr));
         });
       }
-      res.status(400); // Could be 500 for database errors, but 400 fits validation/data issues
+      res.status(400);
       throw new Error(`Failed to register school: ${error.message}`);
     }
   });
@@ -655,5 +731,6 @@ module.exports = {
   updateSchoolProfile,
   checkApprovalStatus,
   uploadProfileImages, // Export Multer middleware
-  updateSchoolPassword // Export the new password update function
+  updateSchoolPassword, // Export the new password update function
+  sendEmail // Export the sendEmail function
 };
