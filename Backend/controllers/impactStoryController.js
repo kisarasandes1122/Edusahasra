@@ -103,7 +103,11 @@ const getEligibleDonationsForStories = asyncHandler(async (req, res) => {
     confirmationDate: donation.schoolConfirmationAt || donation.createdAt,
   }));
 
-  res.json(formattedEligibleList);
+  // --- REMOVED DUPLICATE RESPONSE ---
+  // res.json(formattedEligibleList); // <-- THIS LINE WAS REMOVED
+
+  // --- KEEP ONLY THE CORRECT LINE ---
+  res.json(formattedEligibleList); // <-- ONLY THIS LINE REMAINS
 });
 
 
