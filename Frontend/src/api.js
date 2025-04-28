@@ -1,3 +1,5 @@
+// frontend/src/api.js
+
 import axios from 'axios';
 
 // Use environment variable for base URL in production, default to localhost for development
@@ -5,7 +7,7 @@ import axios from 'axios';
 axios.defaults.baseURL = 'http://localhost:5000'; // This is the base URL of your server
 
 const api = axios.create({
-  baseURL: `${axios.defaults.baseURL}/api`, // <--- ADDED /api prefix here
+  baseURL: axios.defaults.baseURL, // <--- Removed /api prefix here
   headers: {
     'Content-Type': 'application/json'
   }

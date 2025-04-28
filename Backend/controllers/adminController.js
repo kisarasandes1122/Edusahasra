@@ -2,17 +2,57 @@
 const asyncHandler = require('express-async-handler');
 const Admin = require('../models/adminModel');
 const School = require('../models/schoolModel');
-const { generateToken } = require('../utils/passwordUtils');
+const { generateToken } = require('../utils/passwordUtils'); // Assuming generateToken is needed elsewhere
 const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose'); // Import mongoose to check ObjectId validity
+const validator = require('validator'); // Import validator for email/password validation
 
 
 // @desc    Register admin (only by superadmin)
 // @route   POST /api/admin/register
 // @access  Private (SuperAdmin)
 const registerAdmin = asyncHandler(async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, confirmPassword, role } = req.body;
+
+   // Basic validation
+   if (!name || !email || !password || !confirmPassword || !role) {
+       res.status(400);
+       throw new Error('Please fill in all required fields.');
+   }
+
+    if (password !== confirmPassword) {
+        res.status(400);
+        throw new Error('Passwords do not match.');
+    }
+
+    if (!validator.isEmail(email)) {
+        res.status(400);
+        throw new Error('Please provide a valid email address.');
+    }
+     // Add password strength validation if needed (min length, complexity)
+     if (!validator.isLength(password, { min: 8 })) {
+        res.status(400);
+        throw new Error('Password must be at least 8 characters long.');
+     }
+     // Add checks for uppercase, number, special characters if required by model
+     if (!/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+         res.status(400);
+         throw new Error('Password must include uppercase, number, and special character.');
+     }
+
+
+  // Ensure role is either 'admin' or 'superadmin'
+   if (!['admin', 'superadmin'].includes(role)) {
+       res.status(400);
+       throw new Error('Invalid role specified.');
+   }
+    // Additional check: Only SuperAdmins can create other SuperAdmins
+    if (role === 'superadmin' && req.admin.role !== 'superadmin') {
+        res.status(403);
+        throw new Error('Only Super Admins can create other Super Admins.');
+    }
+
 
   // Check if admin already exists
   const adminExists = await Admin.findOne({ email });
@@ -26,18 +66,17 @@ const registerAdmin = asyncHandler(async (req, res) => {
   const admin = await Admin.create({
     name,
     email,
-    password,
-    role: role || 'admin' // Default to regular admin if not specified
+    password, // Password hashing happens in the model's pre-save middleware
+    role: role // Use the provided role
   });
 
   if (admin) {
-    // Password hashing happens in the model's pre-save middleware
     res.status(201).json({
       _id: admin._id,
       name: admin.name,
       email: admin.email,
-      role: admin.role,
-      token: generateToken(admin._id) // Usage remains the same
+      role: admin.role, // Return the role
+      // Do not return token for registration, user must log in separately
     });
   } else {
     res.status(400);
@@ -106,128 +145,47 @@ const getSchoolsForVerification = asyncHandler(async (req, res) => {
     // --- Add Search Filter ---
     if (search) {
         const searchRegex = new RegExp(search, 'i'); // Case-insensitive search
-        filterCriteria.$or = [
-            { schoolName: searchRegex },
-            { city: searchRegex },
-            { district: searchRegex },
-            { province: searchRegex },
-             // Add other searchable fields if needed (e.g., principalName, schoolEmail)
-             // { principalName: searchRegex },
-             // { schoolEmail: searchRegex }
-        ];
-         // If a status filter was also applied, combine with $and
-         // Note: This basic combination with $or/$and can be tricky.
-         // For simplicity, we apply search across relevant fields *within* the filtered status set.
-         // A more robust approach might use $regex on concatenated fields or text indexing.
-         // For now, let's refine: if status is set, search applies *within* that status.
-         const searchOrConditions = [
+        // Refined search logic to correctly combine with potential status filter
+        const searchOrConditions = [
              { schoolName: searchRegex },
              { city: searchRegex },
              { district: searchRegex },
              { province: searchRegex },
-         ];
+             { principalName: searchRegex }, // Added principal name search
+             { schoolEmail: searchRegex }    // Added school email search
+        ];
 
-         if (Object.keys(filterCriteria).length > 0 && !filterCriteria.$or) {
-             // Status filter already added, wrap existing filterCriteria and search conditions in $and
-             filterCriteria.$and = [
-                 { ...filterCriteria }, // Existing status filter
-                 { $or: searchOrConditions } // Search filter
-             ];
-             // Remove original keys to avoid conflict if only status filter existed
-             delete filterCriteria.isApproved;
-             delete filterCriteria.$or; // Assuming $or was only for pending status check initially
+         // Check if there are existing filter criteria (from status or district)
+         const existingFilters = Object.keys(filterCriteria).length > 0;
+
+         if (existingFilters) {
+             // If existing filters exist, combine them with search using $and
+             filterCriteria.$and = filterCriteria.$and || []; // Ensure $and is an array
+             // If existing filters were not already inside an $and (e.g., simple {isApproved: true}),
+             // wrap them before pushing search conditions
+             if (!filterCriteria.$or && !filterCriteria.$and.length) {
+                 const simpleFilter = { ...filterCriteria };
+                 for (const key in simpleFilter) { delete filterCriteria[key]; } // Clear original keys
+                 filterCriteria.$and.push(simpleFilter);
+             }
+             filterCriteria.$and.push({ $or: searchOrConditions });
+
          } else {
-             // No status filter, or status filter was already complex, just add $or for search
+             // No existing filters, search becomes the primary filter
              filterCriteria.$or = searchOrConditions;
          }
-          // Special handling for pending status combined with search
-          if (status === 'pending' && filterCriteria.$and) {
-               // Reconstruct the $and to include both pending status logic and search
-               const pendingStatusConditions = filterCriteria.$and[0];
-               filterCriteria.$and = [
-                   pendingStatusConditions,
-                   { $or: searchOrConditions }
-               ];
-          } else if (status === 'rejected' && filterCriteria.$and) {
-               const rejectedStatusConditions = filterCriteria.$and[0];
-               filterCriteria.$and = [
-                   rejectedStatusConditions,
-                   { $or: searchOrConditions }
-               ];
-          } else if (status === 'approved' && filterCriteria.$and) {
-              const approvedStatusConditions = filterCriteria.$and[0];
-               filterCriteria.$and = [
-                   approvedStatusConditions,
-                   { $or: searchOrConditions }
-               ];
-          }
-
     }
 
     // --- Add District Filter ---
      if (district && district !== 'All Districts') {
-        // If filterCriteria already has $and, add to it. Otherwise, create $and.
-        if (filterCriteria.$and) {
-             filterCriteria.$and.push({ district: district });
-        } else if (Object.keys(filterCriteria).length > 0) {
-             // Existing filter (status or search), wrap with district in $and
-             filterCriteria.$and = [{ ...filterCriteria }, { district: district }];
-             // Clear original keys (this part needs care based on filter complexity)
-             // A safer way for complex filters involving $or/$and is to build the $and array directly.
-             // Let's rebuild the filterCriteria structure more carefully if needed.
-              // Simpler approach: Just add the district filter directly if it doesn't conflict.
-              // If status or search already used $or/$and, this might need adjustment.
-              // For the current structure, let's assume simple additions or check if $and already exists.
-               if (!filterCriteria.$and) { // If $and wasn't needed before
-                    filterCriteria.district = district;
-               } else { // If $and was needed (e.g., for search + status)
-                     filterCriteria.$and.push({ district: district });
-                     // Need to ensure original $or/$and from search/status are correctly carried over
-                     // This requires more complex logic than simple pushing if multiple $ands were needed.
-                     // Let's stick to the single $and wrapping for now as implemented for search.
-               }
-        } else {
-            // No existing filter, just add district
-            filterCriteria.district = district;
-        }
-         // Clean up redundant keys if $and was created
-         if (filterCriteria.$and) {
-              // Example: if status and district were both set, and status wasn't 'all'
-              // We need to ensure isApproved/adminRemarks logic is inside the $and array
-              // Re-evaluate the combination logic based on query params
-              const combinedAndConditions = [];
+         // Ensure district filter is combined with others using $and
+         filterCriteria.$and = filterCriteria.$and || []; // Ensure $and is an array
+         filterCriteria.$and.push({ district: district });
+     }
 
-              // 1. Add Status conditions
-              if (status === 'pending') {
-                   combinedAndConditions.push({ isApproved: false, $or: [{ adminRemarks: { $exists: false } }, { adminRemarks: null }, { adminRemarks: '' }] });
-              } else if (status === 'approved') {
-                   combinedAndConditions.push({ isApproved: true });
-              } else if (status === 'rejected') {
-                   combinedAndConditions.push({ isApproved: false, $and: [{ adminRemarks: { $exists: true, $ne: null, $ne: '' } }] });
-              }
-
-              // 2. Add Search conditions (if any)
-              if (search) {
-                  combinedAndConditions.push({ $or: searchOrConditions });
-              }
-
-              // 3. Add District condition (if any)
-               if (district && district !== 'All Districts') {
-                   combinedAndConditions.push({ district: district });
-               }
-
-               // If any conditions were added, replace filterCriteria with $and
-               if (combinedAndConditions.length > 0) {
-                    filterCriteria.$and = combinedAndConditions;
-                    // Clear top-level keys that might have been set temporarily
-                    delete filterCriteria.isApproved;
-                    delete filterCriteria.$or;
-                    delete filterCriteria.district;
-               } else {
-                   // Should not happen if district is set, but fallback
-                   delete filterCriteria.$and;
-               }
-         }
+     // If $and array was created but is empty after checks, remove it
+     if (filterCriteria.$and && filterCriteria.$and.length === 0) {
+         delete filterCriteria.$and;
      }
 
 
@@ -318,6 +276,7 @@ const getSchoolDocument = asyncHandler(async (req, res) => {
     }
      // Note: Mongoose subdocument IDs are not standard ObjectIds, but they are ObjectId-like strings.
      // We can't strictly validate docId as ObjectId, but we can check if it's a non-empty string.
+     // A more robust check would involve querying the school and checking if the docId exists in the documents array.
 
 
   const school = await School.findById(req.params.id);
@@ -328,6 +287,7 @@ const getSchoolDocument = asyncHandler(async (req, res) => {
   }
 
   // Find the document by its subdocument _id (which is an ObjectId)
+  // .id() method is the correct way to find a subdocument by its _id
   const document = school.documents.id(req.params.docId); // Use Mongoose .id() method
 
   if (!document) {
@@ -335,16 +295,8 @@ const getSchoolDocument = asyncHandler(async (req, res) => {
     throw new Error('Document not found');
   }
 
-  // The filePath stored in the model is likely relative (e.g., 'uploads/school-documents/...')
-  // Or it could be relative to the project root if Multer was configured that way.
-  // Assuming Multer stored paths relative to the project root, e.g., 'backend/uploads/school-documents/...'
-  // Or assuming Multer stored paths relative to the uploads dir, e.g., 'school-documents/...'
-  // Based on your multer config (`path.join(__dirname, '..', 'uploads', 'school-documents')`),
-  // `file.path` will be a full system path. `path.relative` was not used for saving registration docs.
-  // So `document.filePath` will be a full system path like `/path/to/your/project/backend/uploads/school-documents/filename.pdf`
-
-  // Let's assume filePath is the *full system path* as saved by multer.
-  const filePath = document.filePath; // Use the saved full path
+  // The filePath stored in the model is the full system path as saved by multer for registration documents.
+  const filePath = document.filePath;
 
   // Check if file exists
   if (!fs.existsSync(filePath)) {
@@ -357,7 +309,16 @@ const getSchoolDocument = asyncHandler(async (req, res) => {
   res.sendFile(filePath, (err) => {
       if (err) {
           console.error(`Error sending file ${filePath}:`, err);
-          res.status(500).send('Error sending file.'); // Send a generic error response
+          // Check if headers have already been sent before trying to send a 500 status
+          if (!res.headersSent) {
+              res.status(500).send('Error sending file.'); // Send a generic error response
+          } else {
+              // If headers were sent, just end the response stream if it hasn't finished
+              if (!res.writableEnded) {
+                  res.end();
+              }
+              console.error('Headers already sent, cannot send 500 status.');
+          }
       }
   });
 });
@@ -459,7 +420,7 @@ const rejectSchool = asyncHandler(async (req, res) => {
     message: `School "${updatedSchool.schoolName}" registration has been rejected`,
     school: { // Return key updated fields
       _id: updatedSchool._id,
-      schoolName: updatedUpdatedSchool.schoolName,
+      schoolName: updatedSchool.schoolName,
       schoolEmail: updatedSchool.schoolEmail,
       isApproved: updatedSchool.isApproved, // Should be false
       adminRemarks: updatedSchool.adminRemarks,
@@ -494,13 +455,181 @@ const getAdminProfile = asyncHandler(async (req, res) => {
   res.json(adminProfile);
 });
 
+// @desc    Update admin profile (e.g., name, email, phone - NOT password)
+// @route   PUT /api/admin/profile
+// @access  Private (Admin)
+// NOTE: This is a placeholder/example. Implement if needed.
+const updateAdminProfile = asyncHandler(async (req, res) => {
+    // Access the logged-in admin via req.admin (populated by protectAdmin)
+    const admin = await Admin.findById(req.admin._id).select('-password'); // Re-fetch without password for consistency
+
+    if (!admin) {
+        res.status(404);
+        throw new Error('Admin not found.'); // Should not happen with protectAdmin, but for safety
+    }
+
+    // Update fields if they are provided in the request body
+    // Add validation as needed (e.g., email format, uniqueness)
+    if (req.body.name !== undefined) admin.name = req.body.name;
+    if (req.body.email !== undefined && req.body.email !== admin.email) {
+         if (!validator.isEmail(req.body.email)) {
+             res.status(400);
+             throw new Error('Please provide a valid email address.');
+         }
+        const emailExists = await Admin.findOne({ email: req.body.email, _id: { $ne: admin._id } });
+        if(emailExists) {
+            res.status(400);
+            throw new Error('Email address is already in use by another admin.');
+        }
+        admin.email = req.body.email;
+    }
+     // Add other fields like phone number here if they exist in your Admin model
+     // if (req.body.phoneNumber !== undefined) admin.phoneNumber = req.body.phoneNumber;
+     // if (req.body.notificationPreferences !== undefined) admin.notificationPreferences = req.body.notificationPreferences;
+
+
+    await admin.save(); // Password hashing middleware won't run unless password field is modified
+
+    res.json({
+        message: 'Profile updated successfully.',
+        // Return updated profile data (excluding password)
+        _id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        role: admin.role,
+        // Include other fields returned by getAdminProfile if updated
+        // phoneNumber: admin.phoneNumber,
+        // notificationPreferences: admin.notificationPreferences,
+    });
+});
+
+
+// @desc    Update logged-in admin's password
+// @route   PUT /api/admin/profile/password
+// @access  Private (Admin)
+const updateAdminPassword = asyncHandler(async (req, res) => {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    // Access the logged-in admin's ID from the token payload via req.admin
+    const adminId = req.admin._id;
+
+    // --- Validation ---
+    if (!currentPassword || !newPassword || !confirmPassword) {
+        res.status(400);
+        throw new Error('Please provide current password, new password, and confirm password.');
+    }
+
+    if (newPassword !== confirmPassword) {
+        res.status(400);
+        throw new Error('New password and confirm password do not match.');
+    }
+
+    // Add password strength validation for the new password
+    if (!validator.isLength(newPassword, { min: 8 })) {
+        res.status(400);
+        throw new Error('New password must be at least 8 characters long.');
+    }
+     // Add checks for uppercase, number, special characters if required by model
+     if (!/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword) || !/[!@#$%^&*(),.?":{}|<>]/.test(newPassword)) {
+         res.status(400);
+         throw new Error('New password must include uppercase, number, and special character.');
+     }
+
+
+    // --- Verify Current Password & Update ---
+    // Fetch the admin again, explicitly including the password field for comparison
+    const admin = await Admin.findById(adminId).select('+password');
+
+    if (!admin) {
+        // This case should ideally not be reached if protectAdmin works correctly,
+        // but check for safety.
+        res.status(404);
+        throw new Error('Admin user not found.');
+    }
+
+    // Use the matchPassword instance method to compare the provided current password
+    const isMatch = await admin.matchPassword(currentPassword);
+
+    if (!isMatch) {
+        res.status(401); // Unauthorized
+        throw new Error('Incorrect current password.');
+    }
+
+    // If current password matches, update the password field
+    admin.password = newPassword; // Mongoose pre-save hook will hash this automatically
+
+    await admin.save(); // Save the updated admin document
+
+    // --- Success Response ---
+    res.status(200).json({ message: 'Password has been successfully changed.' });
+});
+
+
+// @desc    Get all admin users (for Admin to manage)
+// @route   GET /api/admin/admins
+// @access  Private (Admin)
+const getAdmins = asyncHandler(async (req, res) => {
+    // Exclude password and other sensitive fields
+    // Ensure the _id field is selected as it's used as the key in the frontend table
+    const admins = await Admin.find().select('_id name email role').sort('name').lean();
+
+    // In a real app, you might need pagination here
+    res.json(admins);
+});
+
+
+// @desc    Delete an admin user
+// @route   DELETE /api/admin/admins/:id
+// @access  Private (SuperAdmin)
+const deleteAdmin = asyncHandler(async (req, res) => {
+    const adminToDeleteId = req.params.id;
+    const loggedInAdminId = req.admin._id.toString(); // ID of the admin performing the deletion
+
+    // Validate ID format
+    if (!mongoose.Types.ObjectId.isValid(adminToDeleteId)) {
+        res.status(400);
+        throw new Error('Invalid Admin ID format.');
+    }
+
+    // Find the admin to delete
+    const adminToDelete = await Admin.findById(adminToDeleteId);
+
+    if (!adminToDelete) {
+        res.status(404);
+        throw new Error('Admin user not found.');
+    }
+
+    // Prevent deleting the logged-in admin
+    if (adminToDeleteId === loggedInAdminId) {
+        res.status(403);
+        throw new Error('You cannot delete your own admin account.');
+    }
+
+    // Prevent deleting Super Admins (only Super Admins can delete regular Admins)
+    if (adminToDelete.role === 'superadmin') {
+        res.status(403);
+        throw new Error('You cannot delete Super Admin accounts.');
+    }
+
+    // If all checks pass, proceed with deletion
+    // Using findByIdAndDelete is a bit cleaner than findById then deleteOne
+    await Admin.findByIdAndDelete(adminToDeleteId);
+
+    res.json({ message: `Admin "${adminToDelete.name}" deleted successfully.` });
+});
+
+
 module.exports = {
   registerAdmin,
   loginAdmin,
-  getSchoolsForVerification, // Export the new function
+  getSchoolsForVerification,
   getSchoolDetails,
   getSchoolDocument,
   approveSchool,
   rejectSchool,
-  getAdminProfile
+  getAdminProfile,
+  updateAdminProfile, // Export the new profile update (optional for this task, but good to have)
+  updateAdminPassword, // Export the new password update function
+  getAdmins,
+  deleteAdmin
 };

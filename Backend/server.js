@@ -21,7 +21,12 @@ const app = express();
 connectDB();
 
 // --- Core Middlewares ---
-app.use(cors()); // Allow cross-origin requests
+// Update CORS middleware
+app.use(cors({
+  origin: 'http://localhost:5173', // Update with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // --- Body Parsing Middlewares ---
 // !! IMPORTANT: These should be placed before routes that need req.body !!
