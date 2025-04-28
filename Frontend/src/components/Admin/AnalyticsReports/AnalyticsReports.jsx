@@ -1,25 +1,24 @@
 // frontend/src/components/Admin/AnalyticsReports/AnalyticsReports.jsx
 
-import React, { useState, useEffect, useCallback } from 'react'; // Import useCallback
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  LineChart, Line, PieChart, Pie, Cell, AreaChart, Area, // Removed redundant import of AreaChart, Area
-  // Ensure you have the required recharts components imported
+  LineChart, Line, PieChart, Pie, Cell, AreaChart, Area,
 } from 'recharts';
 import { Calendar, Download, Filter, Map, RefreshCw, FileText } from 'lucide-react';
 import api from '../../../api'; // Import your custom API instance
 import './AnalyticsReports.css';
 
-// Colors for charts - Keep these
+// Colors for charts
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#a4dfdf', '#d0f0c0', '#f0d9e8', '#c2b280'];
 
 
 const AnalyticsReports = () => {
   const [activeTab, setActiveTab] = useState('donation');
-  const [timeRange, setTimeRange] = useState('month');
+  const [timeRange, setTimeRange] = useState('month'); // Ensure default is set
   const [isLoading, setIsLoading] = useState(true);
   const [reportData, setReportData] = useState({
-    donation: null, // Change from empty object to null or initial structure
+    donation: null,
     users: null,
     resources: null,
     impact: null,
@@ -32,15 +31,22 @@ const AnalyticsReports = () => {
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     setError(null); // Clear previous errors
+    console.log(`[AnalyticsReports] Fetching data for tab: ${activeTab}, time range: ${timeRange}`); // Frontend log
 
     try {
-        // Determine which endpoint to call based on the active tab
-        const endpoint = `/admin/analytics/${activeTab}`; // Match backend route
+        // Corrected endpoint path to include /api prefix based on server.js routing
+        // api.js baseURL is http://localhost:5000
+        // Backend route is /api/admin/analytics/:reportType
+        const endpoint = `/api/admin/analytics/${activeTab}`; // Corrected endpoint
+
+        console.debug(`[AnalyticsReports] Making API GET request to: ${endpoint} with params: { timeRange: ${timeRange} }`); // Debug log
 
         // Fetch data for the active tab
         const response = await api.get(endpoint, {
             params: { timeRange: timeRange } // Pass timeRange as a query parameter
         });
+
+        console.debug(`[AnalyticsReports] Received data for ${activeTab}:`, response.data); // Debug log
 
         // Update state based on the active tab
         setReportData(prevData => ({
@@ -49,13 +55,14 @@ const AnalyticsReports = () => {
         }));
 
     } catch (err) {
-        console.error(`Error fetching data for ${activeTab}:`, err);
+        console.error(`[AnalyticsReports] Error fetching data for ${activeTab}:`, err.response || err.message); // Debug log
         setError(`Failed to fetch ${activeTab} data: ${err.response?.data?.message || err.message}`);
          setReportData(prevData => ({ // Clear data for the failed tab
              ...prevData,
              [activeTab]: null
          }));
     } finally {
+        console.debug(`[AnalyticsReports] Finished fetching data for ${activeTab}. setIsLoading(false)`); // Debug log
         setIsLoading(false);
     }
   }, [activeTab, timeRange]); // Dependencies for useCallback
@@ -63,18 +70,28 @@ const AnalyticsReports = () => {
 
   // Effect to fetch data whenever the active tab or time range changes
   useEffect(() => {
+    console.log(`[AnalyticsReports] useEffect triggered. Fetching data...`); // Frontend log
     fetchData();
   }, [fetchData]); // fetchData is the dependency
 
   // Function to handle exporting reports
   const handleExportReport = async (format) => {
-    console.log(`Exporting report for ${activeTab} in ${format} format (Time Range: ${timeRange})`);
+    console.log(`[AnalyticsReports] Exporting report for ${activeTab} in ${format} format (Time Range: ${timeRange})`);
     try {
-        const exportEndpoint = `/admin/analytics/export/${activeTab}/${format}`; // Match backend route
+        // Corrected export endpoint path to include /api prefix based on server.js routing
+        // api.js baseURL is http://localhost:5000
+        // Backend route is /api/admin/analytics/export/:reportType/:format
+        const exportEndpoint = `/api/admin/analytics/export/${activeTab}/${format}`; // Corrected endpoint
+
+        console.debug(`[AnalyticsReports] Making API GET request to: ${exportEndpoint} with params: { timeRange: ${timeRange} }, responseType: 'blob'`); // Debug log
+
         const response = await api.get(exportEndpoint, {
-            params: { timeRange: timeRange },
-             responseType: 'blob', // Crucial for receiving binary data like files
+          responseType: 'blob', // Important for file downloads
+          timeout: 30000, // Add timeout
+          params: { timeRange: timeRange } // Pass timeRange as a query parameter
         });
+
+        console.debug(`[AnalyticsReports] Received blob response for export.`); // Debug log
 
         // Create a blob URL and trigger download
         const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -87,19 +104,53 @@ const AnalyticsReports = () => {
               const filenameMatch = contentDisposition.match(/filename="(.+)"/);
               if (filenameMatch && filenameMatch[1]) {
                   filename = filenameMatch[1];
+              } else {
+                  console.warn('[AnalyticsReports] Content-Disposition header found but filename could not be parsed:', contentDisposition);
               }
+         } else {
+             console.warn('[AnalyticsReports] No Content-Disposition header received. Using default filename:', filename);
          }
-        link.setAttribute('download', filename);
-        document.body.appendChild(link); // Append link to body
-        link.click(); // Programmatically click the link
-        link.remove(); // Remove link after download starts (or immediately for cleanliness)
 
-        // Clean up the blob URL
-        window.URL.revokeObjectURL(url);
+        console.debug(`[AnalyticsReports] Setting download filename: ${filename}`); // Debug log
+        link.setAttribute('download', filename);
+
+        // Append, click, and remove the link to trigger the download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Use removeChild for better compatibility than link.remove()
+
+        // Clean up the blob URL after a short delay
+        setTimeout(() => {
+            window.URL.revokeObjectURL(url);
+            console.debug('[AnalyticsReports] Revoked blob URL.'); // Debug log
+        }, 100); // Short delay to ensure download starts
+
+         console.log(`[AnalyticsReports] Export initiated successfully for ${activeTab}.${format}`); // Frontend log
 
     } catch (err) {
-        console.error(`Error exporting report for ${activeTab} in ${format}:`, err);
-        alert(`Failed to export report: ${err.response?.data?.message || err.message}`);
+        console.error(`[AnalyticsReports] Error exporting report for ${activeTab} in ${format}:`, err.response?.data || err.message); // Debug log
+        // Try to read error message from blob if available (though often not possible on 500)
+        let errorMessage = err.response?.data?.message || err.message;
+         if (err.response?.data instanceof Blob) {
+             const reader = new FileReader();
+             reader.onload = function() {
+                 try {
+                     const errorJson = JSON.parse(reader.result);
+                     alert(`Failed to export report: ${errorJson.message || 'Unknown error'}`);
+                 } catch (e) {
+                      console.warn('[AnalyticsReports] Could not parse error blob as JSON:', e);
+                      alert(`Failed to export report: ${err.message} (See console for details)`);
+                 }
+             };
+             reader.onerror = function() {
+                  console.warn('[AnalyticsReports] Error reading error blob:', reader.error);
+                  alert(`Failed to export report: ${err.message} (See console for details)`);
+             };
+             // Attempt to read the blob, assuming it contains text (like JSON error)
+             reader.readAsText(err.response.data.slice(0, 2000)); // Read first 2KB to avoid memory issues with large blobs
+         } else {
+             alert(`Failed to export report: ${errorMessage}`);
+         }
     }
   };
 
@@ -129,7 +180,7 @@ const AnalyticsReports = () => {
             {donationStats && (
                 <div className="stats-summary">
                     <div className="stat-card"><h4>Total Donations</h4><p className="stat-value">{donationStats.totalDonations}</p></div>
-                    <div className="stat-card"><h4>Avg. Donation Value</h4><p className="stat-value">{donationStats.avgDonationValue}</p></div> {/* Using proxy */}
+                    <div className="stat-card"><h4>Avg. Donation Value</h4><p className="stat-value">{donationStats.avgDonationValue}</p></div>
                     <div className="stat-card"><h4>Fulfillment Rate</h4><p className="stat-value">{donationStats.fulfillmentRate}</p></div>
                     <div className="stat-card"><h4>Active Requests</h4><p className="stat-value">{donationStats.activeRequests}</p></div>
                 </div>
@@ -187,7 +238,7 @@ const AnalyticsReports = () => {
                      <Tooltip />
                      <Legend />
                       <Bar dataKey="donations" fill="#82ca9d" name="Donations" />
-                      <Bar dataKey="requests" fill="#8884d8" name="Requests (Mock)" /> {/* Label as mock */}
+                      <Bar dataKey="requests" fill="#8884d8" name="Requests (Mock)" />
                    </BarChart>
                  </ResponsiveContainer>
               </div>
@@ -204,8 +255,8 @@ const AnalyticsReports = () => {
                 <div className="stats-summary">
                     <div className="stat-card"><h4>Total Schools</h4><p className="stat-value">{userStats.totalSchools}</p></div>
                     <div className="stat-card"><h4>Total Donors</h4><p className="stat-value">{userStats.totalDonors}</p></div>
-                    <div className="stat-card"><h4>Avg. Session Duration</h4><p className="stat-value">{userStats.avgSessionDuration}</p></div> {/* Mocked */}
-                    <div className="stat-card"><h4>Returning Users</h4><p className="stat-value">{userStats.returningUsersRate}</p></div> {/* Mocked */}
+                    <div className="stat-card"><h4>Avg. Session Duration</h4><p className="stat-value">{userStats.avgSessionDuration}</p></div>
+                    <div className="stat-card"><h4>Returning Users</h4><p className="stat-value">{userStats.returningUsersRate}</p></div>
                 </div>
              )}
             <div className="chart-row">
@@ -233,7 +284,7 @@ const AnalyticsReports = () => {
                     <YAxis domain={[0, 100]} />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="rate" stroke="#ff7300" activeDot={{ r: 8 }} name="Retention Rate (Mock)" /> {/* Label as mock */}
+                    <Line type="monotone" dataKey="rate" stroke="#ff7300" activeDot={{ r: 8 }} name="Retention Rate (Mock)" />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -269,7 +320,7 @@ const AnalyticsReports = () => {
                      <XAxis dataKey="region" />
                      <YAxis domain={[0, 100]} />
                      <Tooltip />
-                     <Bar dataKey="coverage" fill="#8884d8" name="Coverage % (Mock)" /> {/* Label as mock */}
+                     <Bar dataKey="coverage" fill="#8884d8" name="Coverage % (Mock)" />
                    </BarChart>
                  </ResponsiveContainer>
               </div>
@@ -291,27 +342,27 @@ const AnalyticsReports = () => {
           <div className="analytics-content">
             <div className="chart-row">
               <div className="chart-container">
-                <h3>Confirmed Donations Received by Schools (Proxy for Students Benefited)</h3> {/* Adjusted title */}
+                <h3>Confirmed Donations Received by Schools (Proxy for Students Benefited)</h3>
                  <ResponsiveContainer width="100%" height={300}>
                    <AreaChart data={studentsBenefited} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                      <CartesianGrid strokeDasharray="3 3" />
                      <XAxis dataKey="month" />
                      <YAxis />
                      <Tooltip />
-                     <Area type="monotone" dataKey="count" stroke="#8884d8" fill="#8884d8" name="Confirmed Donations" /> {/* Adjusted label */}
+                     <Area type="monotone" dataKey="count" stroke="#8884d8" fill="#8884d8" name="Confirmed Donations" />
                    </AreaChart>
                  </ResponsiveContainer>
               </div>
 
               <div className="chart-container">
-                <h3>Donation Impact Areas (Mock)</h3> {/* Label as mock */}
+                <h3>Donation Impact Areas (Mock)</h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={donationImpact} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="number" domain={[0, 100]} />
-                    <YAxis dataKey="category" type="category" width={150} /> {/* Give YAxis more space */}
+                    <YAxis dataKey="category" type="category" width={150} />
                     <Tooltip />
-                    <Bar dataKey="impact" fill="#82ca9d" name="Impact Score (Mock)" /> {/* Label as mock */}
+                    <Bar dataKey="impact" fill="#82ca9d" name="Impact Score (Mock)" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -319,7 +370,6 @@ const AnalyticsReports = () => {
 
             <div className="testimonials-section">
                <h3>School Testimonials</h3>
-               {/* This section is static in the current mock, no backend fetch here */}
                <div className="testimonials-container">
                  <div className="testimonial-card">
                    <p>"The textbooks donated through Edusahasra have significantly improved our students' learning experience. We are grateful for this platform."</p>
@@ -344,7 +394,7 @@ const AnalyticsReports = () => {
           <div className="analytics-content">
             <div className="chart-row">
               <div className="chart-container">
-                <h3>Average Delivery Time (Days) for Confirmed Donations</h3> {/* Adjusted title */}
+                <h3>Average Delivery Time (Days) for Confirmed Donations</h3>
                  <ResponsiveContainer width="100%" height={300}>
                    <BarChart data={deliveryTime} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                      <CartesianGrid strokeDasharray="3 3" />
@@ -365,11 +415,11 @@ const AnalyticsReports = () => {
                        cx="50%"
                        cy="50%"
                        labelLine={false}
-                       label={({ name, percent, value }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`} // Show count and percentage
-                       outerRadius={100} // Increased radius
+                       label={({ name, percent, value }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
+                       outerRadius={100}
                        fill="#8884d8"
                        dataKey="value"
-                       nameKey="name" // Specify name key
+                       nameKey="name"
                      >
                        {deliveryStatus.map((entry, index) => (
                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -385,7 +435,7 @@ const AnalyticsReports = () => {
             <div className="table-container">
               <h3>Recent Deliveries</h3>
                {recentDeliveries && recentDeliveries.length > 0 ? (
-                  <div style={{ overflowX: 'auto' }}> {/* Add horizontal scroll for small screens */}
+                  <div style={{ overflowX: 'auto' }}>
                      <table className="analytics-table">
                        <thead>
                          <tr>
@@ -394,17 +444,17 @@ const AnalyticsReports = () => {
                            <th>Items</th>
                            <th>Delivery Method</th>
                            <th>Status</th>
-                           <th>Date</th> {/* Changed from Estimated Delivery */}
+                           <th>Date</th>
                          </tr>
                        </thead>
                        <tbody>
                          {recentDeliveries.map((delivery, index) => (
-                           <tr key={index}> {/* Use a unique key if possible, index is fallback */}
+                           <tr key={index}>
                              <td>{delivery.donationId}</td>
                              <td>{delivery.schoolName} ({delivery.schoolCity})</td>
                              <td>{delivery.itemsSummary}</td>
                              <td>{delivery.deliveryMethod}</td>
-                             <td><span className={`status-${delivery.status.toLowerCase().replace(/\s+/g, '-')}`}>{delivery.status}</span></td> {/* Apply status class */}
+                             <td><span className={`status-${delivery.status.toLowerCase().replace(/\s+/g, '-')}`}>{delivery.status}</span></td>
                              <td>{delivery.date}</td>
                            </tr>
                          ))}
@@ -425,7 +475,7 @@ const AnalyticsReports = () => {
              {/* Stats Summary */}
              {verificationStats && (
                  <div className="verification-summary">
-                     <div className="stat-card"><h4>Total Processed Verifications</h4><p className="stat-value">{verificationStats.totalVerifications}</p></div> {/* Adjusted title */}
+                     <div className="stat-card"><h4>Total Processed Verifications</h4><p className="stat-value">{verificationStats.totalVerifications}</p></div>
                      <div className="stat-card"><h4>Approval Rate</h4><p className="stat-value">{verificationStats.approvalRate}</p></div>
                      <div className="stat-card"><h4>Avg. Processing Time</h4><p className="stat-value">{verificationStats.avgProcessingTime}</p></div>
                      <div className="stat-card"><h4>Pending Verifications</h4><p className="stat-value">{verificationStats.pendingVerifications}</p></div>
@@ -433,7 +483,7 @@ const AnalyticsReports = () => {
              )}
             <div className="chart-row">
               <div className="chart-container">
-                <h3>School Verification Statistics (Approved vs Rejected)</h3> {/* Adjusted title */}
+                <h3>School Verification Statistics (Approved vs Rejected)</h3>
                  <ResponsiveContainer width="100%" height={300}>
                    <BarChart data={verificationRate} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                      <CartesianGrid strokeDasharray="3 3" />
@@ -448,7 +498,7 @@ const AnalyticsReports = () => {
               </div>
 
               <div className="chart-container">
-                <h3>Average Processing Time for Verified Schools (Days)</h3> {/* Adjusted title */}
+                <h3>Average Processing Time for Verified Schools (Days)</h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={processingTime} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -476,15 +526,15 @@ const AnalyticsReports = () => {
           <div className="time-range-selector">
             <Calendar size={16} />
             <select value={timeRange} onChange={(e) => setTimeRange(e.target.value)}>
-              <option value="week">Last 7 Days</option> {/* Changed to Last 7 Days */}
-              <option value="month">Last 30 Days</option> {/* Changed to Last 30 Days */}
-              <option value="quarter">Last 90 Days</option> {/* Changed to Last 90 Days */}
-              <option value="year">Last 365 Days</option> {/* Changed to Last 365 Days */}
+              <option value="week">Last 7 Days</option>
+              <option value="month">Last 30 Days</option>
+              <option value="quarter">Last 90 Days</option>
+              <option value="year">Last 365 Days</option>
               <option value="all">All Time</option>
             </select>
           </div>
           <button className="refresh-btn" onClick={fetchData} disabled={isLoading}>
-            {isLoading ? <RefreshCw size={16} className="spin" /> : <RefreshCw size={16} />} {/* Add spin class for loading */}
+            {isLoading ? <RefreshCw size={16} className="spin" /> : <RefreshCw size={16} />}
             {isLoading ? 'Refreshing...' : 'Refresh Data'}
           </button>
           <div className="export-dropdown">
@@ -494,7 +544,6 @@ const AnalyticsReports = () => {
             </button>
             <div className="export-dropdown-content">
               <button onClick={() => handleExportReport('csv')}>CSV</button>
-               {/* Add Excel if you implement that format backend */}
               <button onClick={() => handleExportReport('pdf')}>PDF</button>
             </div>
           </div>
@@ -542,33 +591,29 @@ const AnalyticsReports = () => {
 
       <div className="custom-report-builder">
         <div className="custom-report-header">
-          <h3>Custom Report Builder (Future Feature)</h3> {/* Label as future */}
-          <button className="generate-report-btn" disabled> {/* Disable for now */}
+          <h3>Custom Report Builder (Future Feature)</h3>
+          <button className="generate-report-btn" disabled>
             <FileText size={16} />
             Generate Custom Report
           </button>
         </div>
-         {/* Keep filter options but disable inputs */}
         <div className="filter-options">
           <div className="filter-option">
             <label>Region:</label>
             <select disabled>
               <option value="all">All Regions</option>
-              {/* Add dynamic regions later */}
             </select>
           </div>
           <div className="filter-option">
             <label>School Type:</label>
             <select disabled>
               <option value="all">All Types</option>
-               {/* Add dynamic types later */}
             </select>
           </div>
           <div className="filter-option">
             <label>Resource Category:</label>
             <select disabled>
               <option value="all">All Categories</option>
-               {/* Add dynamic categories later */}
             </select>
           </div>
           <div className="filter-option">
@@ -580,7 +625,7 @@ const AnalyticsReports = () => {
         </div>
       </div>
 
-      {/* Render the content based on the active tab */}
+      {/* This calls the function that renders the content based on the active tab */}
       {renderTabContent()}
 
     </div>
