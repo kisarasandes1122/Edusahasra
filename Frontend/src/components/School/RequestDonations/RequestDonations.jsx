@@ -165,7 +165,7 @@ const RequestDonations = () => {
         }
 
         try {
-            const response = await api.post('/api/requests', {
+            const response = await api.post('/api/requests/create', {
                 requestedItems: requestedItemsPayload,
             });
 
@@ -214,7 +214,7 @@ const RequestDonations = () => {
                            {translations.please_select_supplies}
                        </p>
                        <p className="form-min-threshold" style={{ color: '#666', marginTop: '5px' }}>
-                          {translations.minimum_quantity} {MINIMUM_THRESHOLD}.
+                          {translations.minimum_quantity}
                        </p>
                     </div>
 

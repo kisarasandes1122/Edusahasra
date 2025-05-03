@@ -1,413 +1,452 @@
 /* DonationManagement.css */
 
 .edusahasra-donation-management {
-    font-family: 'Inter', sans-serif;
-    color: #333;
-    background-color: #f7f9fc;
-    min-height: 100vh;
-    padding: 20px;
-  }
-  
-  .edusahasra-donation-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 24px;
-  }
-  
-  .edusahasra-donation-header h1 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #2d3748;
-    margin: 0;
-  }
-  
-  .edusahasra-user-info {
-    font-size: 14px;
-    font-weight: 500;
-    color: #4a5568;
-  }
-  
-  .edusahasra-donation-container {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 24px;
-  }
-  
-  .edusahasra-donation-top-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 24px;
-  }
-  
-  .edusahasra-donation-title h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0 0 8px 0;
-    color: #2d3748;
-  }
-  
-  .edusahasra-donation-subtitle {
-    font-size: 14px;
-    color: #718096;
-    margin: 0;
-  }
-  
-  .edusahasra-donation-actions {
-    display: flex;
-    gap: 12px;
-  }
-  
-  .edusahasra-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-  }
-  
-  .edusahasra-btn-icon {
-    font-size: 16px;
-  }
-  
-  .edusahasra-filter-btn {
-    background-color: #4299e1;
-    color: #fff;
-  }
-  
-  .edusahasra-filter-btn:hover {
-    background-color: #3182ce;
-  }
-  
-  .edusahasra-export-btn {
-    background-color: #f7fafc;
-    color: #4a5568;
-    border: 1px solid #e2e8f0;
-  }
-  
-  .edusahasra-export-btn:hover {
-    background-color: #edf2f7;
-  }
-  
-  .edusahasra-donation-filters {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-  }
-  
-  .edusahasra-search-container {
-    position: relative;
-    flex-grow: 1;
-    min-width: 250px;
-  }
-  
-  .edusahasra-search-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #a0aec0;
-    font-size: 16px;
-  }
-  
-  .edusahasra-search-input {
-    width: 100%;
-    padding: 10px 10px 10px 36px;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
-    font-size: 14px;
-    transition: border-color 0.2s ease;
-  }
-  
-  .edusahasra-search-input:focus {
-    outline: none;
-    border-color: #4299e1;
-    box-shadow: 0 0 0 1px rgba(66, 153, 225, 0.5);
-  }
-  
-  .edusahasra-filter-container {
-    width: 180px;
-  }
-  
-  .edusahasra-select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
-    font-size: 14px;
-    background-color: #fff;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a0aec0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 16px;
-  }
-  
-  .edusahasra-select:focus {
-    outline: none;
-    border-color: #4299e1;
-    box-shadow: 0 0 0 1px rgba(66, 153, 225, 0.5);
-  }
-  
-  .edusahasra-date-container {
-    width: 180px;
-  }
-  
-  .edusahasra-date-wrapper {
-    position: relative;
-  }
-  
-  .edusahasra-date-input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
-    font-size: 14px;
-  }
-  
-  .edusahasra-date-input:focus {
-    outline: none;
-    border-color: #4299e1;
-    box-shadow: 0 0 0 1px rgba(66, 153, 225, 0.5);
-  }
-  
-  .edusahasra-calendar-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #a0aec0;
-    pointer-events: none;
-  }
-  
-  .edusahasra-donation-table {
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 24px;
-  }
-  
-  .edusahasra-table-header {
-    display: flex;
-    background-color: #f7fafc;
-    padding: 12px 16px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #4a5568;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-  
-  .edusahasra-header-cell {
-    padding: 0 8px;
-  }
-  
-  .edusahasra-table-row {
-    display: flex;
-    padding: 16px;
-    border-top: 1px solid #e2e8f0;
-    transition: background-color 0.2s ease;
-  }
-  
-  .edusahasra-table-row:hover {
-    background-color: #f7fafc;
-  }
-  
-  .edusahasra-cell {
-    padding: 0 8px;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .edusahasra-donor-column {
-    width: 15%;
-  }
-  
-  .edusahasra-school-column {
-    width: 20%;
-  }
-  
-  .edusahasra-items-column {
-    width: 20%;
-  }
-  
-  .edusahasra-method-column {
-    width: 15%;
-  }
-  
-  .edusahasra-status-column {
-    width: 10%;
-  }
-  
-  .edusahasra-date-column {
-    width: 10%;
-  }
-  
-  .edusahasra-actions-column {
-    width: 10%;
-  }
-  
-  .edusahasra-donor-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .edusahasra-donor-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .edusahasra-donor-name {
-    font-weight: 500;
-  }
-  
-  .edusahasra-school-info {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .edusahasra-school-name {
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-  
-  .edusahasra-school-location {
-    font-size: 12px;
-    color: #718096;
-  }
-  
-  .edusahasra-delivery-method {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .edusahasra-delivery-icon {
-    color: #718096;
-    font-size: 16px;
-  }
-  
-  .edusahasra-status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-  }
-  
-  .edusahasra-status-delivered {
-    background-color: #c6f6d5;
-    color: #2f855a;
-  }
-  
-  .edusahasra-status-transit {
-    background-color: #feebc8;
-    color: #c05621;
-  }
-  
-  .edusahasra-status-pending {
-    background-color: #e9d8fd;
-    color: #6b46c1;
-  }
-  
-  .edusahasra-status-processing {
-    background-color: #bee3f8;
-    color: #2b6cb0;
-  }
-  
-  .edusahasra-details-btn {
-    background-color: transparent;
-    color: #4299e1;
-    padding: 6px 12px;
-    font-weight: 500;
-  }
-  
-  .edusahasra-details-btn:hover {
-    background-color: #ebf8ff;
-  }
-  
-  .edusahasra-pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-  }
-  
-  .edusahasra-pagination-info {
-    color: #718096;
-  }
-  
-  .edusahasra-pagination-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .edusahasra-pagination-btn {
-    padding: 6px 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background-color: transparent;
-    color: #4a5568;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .edusahasra-pagination-btn:hover:not(:disabled) {
-    background-color: #edf2f7;
-  }
-  
-  .edusahasra-pagination-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  .edusahasra-pagination-pages {
-    display: flex;
-    gap: 4px;
-  }
-  
-  .edusahasra-page-btn {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
-    background-color: transparent;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .edusahasra-page-btn:hover {
-    background-color: #edf2f7;
-  }
-  
-  .edusahasra-page-active {
-    background-color: #4299e1;
-    color: #fff;
-    border-color: #4299e1;
-  }
-  
-  .edusahasra-page-active:hover {
-    background-color: #3182ce;
-  }
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  background-color: #f7f9fc;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.edusahasra-donation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.edusahasra-donation-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+}
+
+.edusahasra-user-info {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.edusahasra-donation-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+}
+
+.edusahasra-donation-top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.edusahasra-donation-title h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #2d3748;
+}
+
+.edusahasra-donation-subtitle {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
+}
+
+.edusahasra-donation-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.edusahasra-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.edusahasra-btn-icon {
+  font-size: 16px;
+}
+
+.edusahasra-filter-btn {
+  background-color: #4299e1;
+  color: #fff;
+}
+
+.edusahasra-filter-btn:hover {
+  background-color: #3182ce;
+}
+
+.edusahasra-export-btn {
+  background-color: #f7fafc;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+}
+
+.edusahasra-export-btn:hover {
+  background-color: #edf2f7;
+}
+
+.edusahasra-donation-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.edusahasra-search-container {
+  position: relative;
+  flex-grow: 1;
+  min-width: 250px;
+}
+
+.edusahasra-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0aec0;
+  font-size: 16px;
+}
+
+.edusahasra-search-input {
+  width: 100%;
+  padding: 10px 10px 10px 36px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.edusahasra-search-input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 1px rgba(66, 153, 225, 0.5);
+}
+
+.edusahasra-filter-container {
+  width: 180px;
+}
+
+.edusahasra-select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  background-color: #fff;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a0aec0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+}
+
+.edusahasra-select:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 1px rgba(66, 153, 225, 0.5);
+}
+
+.edusahasra-date-container {
+  width: 180px;
+}
+
+.edusahasra-date-wrapper {
+  position: relative;
+}
+
+.edusahasra-date-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+}
+
+.edusahasra-date-input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 1px rgba(66, 153, 225, 0.5);
+}
+
+.edusahasra-calendar-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0aec0;
+  pointer-events: none;
+}
+
+.edusahasra-donation-table {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.edusahasra-table-header {
+  display: flex;
+  background-color: #f7fafc;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a5568;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.edusahasra-header-cell {
+  padding: 0 8px;
+}
+
+.edusahasra-table-row {
+  display: flex;
+  padding: 16px;
+  border-top: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
+}
+
+.edusahasra-table-row:hover {
+  background-color: #f7fafc;
+}
+
+.edusahasra-cell {
+  padding: 0 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.edusahasra-donor-column {
+  width: 15%;
+}
+
+.edusahasra-school-column {
+  width: 18%;
+}
+
+.edusahasra-items-column {
+  width: 25%;
+}
+
+.edusahasra-method-column {
+  width: 12%;
+}
+
+.edusahasra-status-column {
+  width: 10%;
+}
+
+.edusahasra-date-column {
+  width: 12%;
+}
+
+.edusahasra-actions-column {
+  width: 8%;
+}
+
+.edusahasra-donor-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edusahasra-donor-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.edusahasra-donor-name {
+  font-weight: 500;
+}
+
+.edusahasra-school-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.edusahasra-school-name {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.edusahasra-school-location {
+  font-size: 12px;
+  color: #718096;
+}
+
+.edusahasra-delivery-method {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edusahasra-delivery-icon {
+  color: #718096;
+  font-size: 16px;
+}
+
+.edusahasra-status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.edusahasra-status-delivered {
+  background-color: #c6f6d5;
+  color: #2f855a;
+}
+
+.edusahasra-status-transit {
+  background-color: #feebc8;
+  color: #c05621;
+}
+
+.edusahasra-status-pending {
+  background-color: #e9d8fd;
+  color: #6b46c1;
+}
+
+.edusahasra-status-processing {
+  background-color: #bee3f8;
+  color: #2b6cb0;
+}
+
+.edusahasra-status-cancelled {
+  background-color: #fed7d7;
+  color: #9b2c2c;
+}
+
+.edusahasra-details-btn {
+  background-color: transparent;
+  color: #4299e1;
+  padding: 6px 12px;
+  font-weight: 500;
+}
+
+.edusahasra-details-btn:hover {
+  background-color: #ebf8ff;
+}
+
+.edusahasra-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.edusahasra-pagination-info {
+  color: #718096;
+}
+
+.edusahasra-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edusahasra-pagination-btn {
+  padding: 6px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #4a5568;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edusahasra-pagination-btn:hover:not(:disabled) {
+  background-color: #edf2f7;
+}
+
+.edusahasra-pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.edusahasra-pagination-pages {
+  display: flex;
+  gap: 4px;
+}
+
+.edusahasra-page-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background-color: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edusahasra-page-btn:hover {
+  background-color: #edf2f7;
+}
+
+.edusahasra-page-active {
+  background-color: #4299e1;
+  color: #fff;
+  border-color: #4299e1;
+}
+
+.edusahasra-page-active:hover {
+  background-color: #3182ce;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.edusahasra-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* New styles for fixing the items display */
+.edusahasra-items-column-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 100%;
+}
+
+.edusahasra-item-pill {
+  display: inline-block;
+  background-color: #f1f5f9;
+  border-radius: 12px;
+  padding: 3px 8px;
+  margin: 2px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.edusahasra-item-quantity {
+  color: #718096;
+  font-weight: normal;
+  margin-left: 3px;
+}

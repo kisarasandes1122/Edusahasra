@@ -589,41 +589,7 @@ const AnalyticsReports = () => {
         </button>
       </div>
 
-      <div className="custom-report-builder">
-        <div className="custom-report-header">
-          <h3>Custom Report Builder (Future Feature)</h3>
-          <button className="generate-report-btn" disabled>
-            <FileText size={16} />
-            Generate Custom Report
-          </button>
-        </div>
-        <div className="filter-options">
-          <div className="filter-option">
-            <label>Region:</label>
-            <select disabled>
-              <option value="all">All Regions</option>
-            </select>
-          </div>
-          <div className="filter-option">
-            <label>School Type:</label>
-            <select disabled>
-              <option value="all">All Types</option>
-            </select>
-          </div>
-          <div className="filter-option">
-            <label>Resource Category:</label>
-            <select disabled>
-              <option value="all">All Categories</option>
-            </select>
-          </div>
-          <div className="filter-option">
-            <label>Date Range:</label>
-            <input type="date" disabled />
-            <span>to</span>
-            <input type="date" disabled />
-          </div>
-        </div>
-      </div>
+      {/* Custom Report Builder section has been removed */}
 
       {/* This calls the function that renders the content based on the active tab */}
       {renderTabContent()}

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-.header {
+.edu-header {
   background-color: #ffffff;
   padding: 8px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -8,7 +8,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.header-content {
+.edu-header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -18,27 +18,33 @@
   padding: 0 24px;
 }
 
-.logo {
+.edu-header-res {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edu-logo {
   margin-right: 32px;
 }
 
-.logo img {
+.edu-logo img {
   height: 52px;
   width: 52px;
   transition: transform 0.2s ease;
 }
 
-.logo img:hover {
+.edu-logo img:hover {
   transform: scale(1.05);
 }
 
-.nav {
+.edu-nav {
   flex: 1;
   display: flex;
   justify-content: center;
 }
 
-.nav ul {
+.edu-nav-list {
   list-style: none;
   display: flex;
   margin: 0;
@@ -46,12 +52,12 @@
   align-items: center;
 }
 
-.nav ul li {
+.edu-nav-item {
   margin: 0 16px;
   position: relative;
 }
 
-.nav ul li a {
+.edu-nav-link {
   text-decoration: none;
   color: #333333;
   font-weight: 500;
@@ -63,7 +69,7 @@
 }
 
 /* Green underline effect on hover */
-.nav ul li a::after {
+.edu-nav-link::after {
   content: '';
   position: absolute;
   width: 0;
@@ -74,22 +80,22 @@
   transition: width 0.3s ease;
 }
 
-.nav ul li a:hover {
+.edu-nav-link:hover {
   color: #4CAF50;
 }
 
-.nav ul li a:hover::after {
+.edu-nav-link:hover::after {
   width: 100%;
 }
 
 /* Dropdown styles - modernized */
-.dropdown-container {
+.edu-dropdown-container {
   position: relative;
   display: flex;
   justify-content: center;
 }
 
-.dropdown-trigger {
+.edu-dropdown-trigger {
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -105,7 +111,7 @@
   position: relative;
 }
 
-.dropdown-trigger::after {
+.edu-dropdown-trigger::after {
   content: '';
   position: absolute;
   width: 0;
@@ -116,33 +122,33 @@
   transition: width 0.3s ease;
 }
 
-.dropdown-trigger:hover {
+.edu-dropdown-trigger:hover {
   color: #4CAF50;
 }
 
-.dropdown-trigger:hover::after {
+.edu-dropdown-trigger:hover::after {
   width: 100%;
 }
 
-.dropdown-arrow {
+.edu-dropdown-arrow {
   font-size: 18px;
   transition: transform 0.3s ease;
   color: #666;
   margin-left: 4px; /* Add a little spacing */
 }
 
-.dropdown-arrow.rotated {
+.edu-dropdown-arrow.edu-rotated {
   transform: rotate(180deg);
   color: #4CAF50;
 }
 
-.dropdown-container .dropdown-menu {
+.edu-dropdown-container .edu-dropdown-menu {
   display: block;
-  width: auto;
+  width: 350px;
   padding: 15px 10px;
 }
 
-.dropdown-menu {
+.edu-dropdown-menu {
   position: absolute;
   top: calc(100% + 12px);
   left: 0; /* Change from 50% to 0 */
@@ -156,10 +162,10 @@
   z-index: 5000;
   display: none;
   opacity: 0;
-  animation: fadeIn 0.2s ease forwards;
+  animation: eduFadeIn 0.2s ease forwards;
 }
 
-@keyframes fadeIn {
+@keyframes eduFadeIn {
   from {
     opacity: 0;
     transform: translateY(-8px);
@@ -170,11 +176,11 @@
   }
 }
 
-.dropdown-container .dropdown-menu {
+.edu-dropdown-container .edu-dropdown-menu {
   display: block;
 }
 
-.dropdown-title {
+.edu-dropdown-title {
   font-weight: 600;
   font-size: 15px;
   color: #333;
@@ -183,19 +189,19 @@
   padding: 0 20px;
 }
 
-.dropdown-menu hr {
+.edu-dropdown-menu hr {
   border: none;
   border-top: 1px solid #f0f0f0;
   margin: 8px 16px;
 }
 
-.dropdown-items {
+.edu-dropdown-items {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.dropdown-item {
+.edu-dropdown-item {
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -206,30 +212,30 @@
   text-decoration: none;
 }
 
-.dropdown-item:hover {
+.edu-dropdown-item:hover {
   background-color: rgba(76, 175, 80, 0.08);
 }
 
-.dropdown-icon {
+.edu-dropdown-icon {
   width: 20px;
   height: 20px;
   color: #4CAF50;
   margin-top: 2px;
 }
 
-.dropdown-content {
+.edu-dropdown-content {
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
-.dropdown-item-title {
+.edu-dropdown-item-title {
   font-weight: 500;
   color: #333;
   font-size: 14px;
 }
 
-.dropdown-item-description {
+.edu-dropdown-item-description {
   color: #666;
   font-size: 12px;
   font-weight: 400;
@@ -237,18 +243,18 @@
 }
 
 /* Header user section */
-.header-user {
+.edu-header-user {
   display: flex;
   align-items: center;
   margin-left: 24px;
 }
 
 /* User dropdown styles */
-.user-dropdown-container {
+.edu-user-dropdown-container {
   position: relative;
 }
 
-.user-dropdown-trigger {
+.edu-user-dropdown-trigger {
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -265,16 +271,16 @@
   white-space: nowrap;
 }
 
-.user-dropdown-trigger:hover {
+.edu-user-dropdown-trigger:hover {
   background-color: rgba(76, 175, 80, 0.1);
   color: #4CAF50;
 }
 
-.user-name {
+.edu-user-name {
   font-weight: 500;
 }
 
-.user-dropdown-menu {
+.edu-user-dropdown-menu {
   position: absolute;
   top: calc(100% + 12px);
   right: 0;
@@ -285,30 +291,30 @@
   padding: 8px;
   border: none;
   z-index: 5000;
-  animation: fadeIn 0.2s ease forwards;
+  animation: eduFadeIn 0.2s ease forwards;
 }
 
-.user-dropdown-header {
+.edu-user-dropdown-header {
   padding: 12px 16px;
   border-bottom: 1px solid #f0f0f0;
   margin-bottom: 8px;
 }
 
-.user-dropdown-title {
+.edu-user-dropdown-title {
   font-weight: 600;
   font-size: 15px;
   color: #333;
   margin: 0;
 }
 
-.user-dropdown-items {
+.edu-user-dropdown-items {
   display: flex;
   flex-direction: column;
   padding: 4px 0;
   gap: 4px;
 }
 
-.user-dropdown-item {
+.edu-user-dropdown-item {
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -325,11 +331,11 @@
   border-radius: 8px;
 }
 
-.user-dropdown-item:hover {
+.edu-user-dropdown-item:hover {
   background-color: rgba(76, 175, 80, 0.08);
 }
 
-.icon-wrapper {
+.edu-icon-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -339,39 +345,39 @@
   border-radius: 8px;
 }
 
-.icon {
+.edu-icon {
   font-size: 16px;
 }
 
-.dropdown-content {
+.edu-dropdown-content {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.dropdown-item:active, 
-.user-dropdown-item:active {
+.edu-dropdown-item:active, 
+.edu-user-dropdown-item:active {
   background-color: rgba(76, 175, 80, 0.2);
 }
 
-.item-title {
+.edu-item-title {
   font-weight: 500;
   font-size: 14px;
   color: #333;
 }
 
-.item-description {
+.edu-item-description {
   font-size: 12px;
   color: #666;
 }
 
 /* Button styles */
-.header-buttons {
+.edu-header-buttons {
   display: flex;
   gap: 12px;
 }
 
-.btn {
+.edu-btn {
   padding: 10px 20px !important;
   border: none !important;
   border-radius: 24px !important;
@@ -384,25 +390,25 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
 }
 
-.btn-primary {
+.edu-btn-primary {
   background-color: #4CAF50 !important;
   color: white !important;
   border: none !important;
 }
 
-.btn-primary:hover {
+.edu-btn-primary:hover {
   background-color: #3d8b40 !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2) !important;
 }
 
-.btn-secondary {
+.edu-btn-secondary {
   background-color: white !important;
   color: #4CAF50 !important;
   border: 1px solid rgba(76, 175, 80, 0.3) !important;
 }
 
-.btn-secondary:hover {
+.edu-btn-secondary:hover {
   background-color: rgba(76, 175, 80, 0.05) !important;
   color: #3d8b40 !important;
   transform: translateY(-1px) !important;
@@ -410,7 +416,7 @@
 }
 
 /* Mobile menu controls */
-.mobile-menu-toggle {
+.edu-mobile-menu-toggle {
   display: none;
   background: none;
   border: none;
@@ -422,33 +428,33 @@
   transition: all 0.2s ease;
 }
 
-.mobile-menu-toggle:hover {
+.edu-mobile-menu-toggle:hover {
   background-color: rgba(76, 175, 80, 0.08);
   color: #4CAF50;
 }
 
 /* Mobile menu visibility and desktop/mobile button toggling */
-.mobile-only-buttons {
+.edu-mobile-only-buttons {
   display: none;
 }
 
 @media (max-width: 1024px) {
-  .nav ul li {
+  .edu-nav-item {
     margin: 0 10px;
   }
   
-  .nav ul li a, .dropdown-trigger {
+  .edu-nav-link, .edu-dropdown-trigger {
     font-size: 15px;
   }
   
-  .btn {
+  .edu-btn {
     padding: 8px 16px !important;
     font-size: 14px !important;
   }
 }
 
 @media (max-width: 768px) {
-  .mobile-menu-toggle {
+  .edu-mobile-menu-toggle {
     display: flex;
     position: relative;
     z-index: 5001;
@@ -458,29 +464,29 @@
     justify-content: center;
   }
   
-  .header-content {
+  .edu-header-content {
     height: 64px;
     padding: 0 16px;
   }
 
-  .header-res {
+  .edu-header-res {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
   }
   
-  .logo {
+  .edu-logo {
     margin-right: 0;
   }
   
-  .logo img {
+  .edu-logo img {
     height: 44px;
     width: 44px;
   }
   
   /* Improved mobile menu positioning and styling */
-  .nav {
+  .edu-nav {
     position: fixed;
     top: 0;
     left: -100%;
@@ -496,12 +502,12 @@
     justify-content: flex-start;
   }
   
-  .nav.open {
+  .edu-nav.edu-open {
     left: 0;
   }
   
   /* Improved navigation items spacing */
-  .nav ul {
+  .edu-nav-list {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
@@ -509,38 +515,38 @@
     padding: 0;
   }
   
-  .nav ul li {
+  .edu-nav-item {
     margin: 0;
     width: 100%;
   }
   
-  .nav ul li a {
+  .edu-nav-link {
     font-size: 16px;
     padding: 12px 0;
     width: 100%;
   }
   
-  .nav ul li a::after {
+  .edu-nav-link::after {
     bottom: 8px;
   }
   
   /* Fix for dropdowns in mobile view */
-  .dropdown-container {
+  .edu-dropdown-container {
     width: 100%;
   }
   
-  .dropdown-trigger {
+  .edu-dropdown-trigger {
     width: 100%;
     justify-content: space-between;
     padding: 12px 0;
     font-size: 16px;
   }
   
-  .dropdown-trigger::after {
+  .edu-dropdown-trigger::after {
     bottom: 8px;
   }
   
-  .dropdown-menu {
+  .edu-dropdown-menu {
     position: static;
     width: 100%;
     box-shadow: none;
@@ -555,31 +561,31 @@
   }
   
   /* Mobile only buttons */
-  .mobile-only-buttons {
+  .edu-mobile-only-buttons {
     display: block;
     margin-top: 24px;
     width: 100%;
   }
   
-  .mobile-only-buttons .header-buttons {
+  .edu-mobile-only-buttons .edu-header-buttons {
     flex-direction: column;
     gap: 12px;
     width: 100%;
   }
   
-  .mobile-only-buttons .btn {
+  .edu-mobile-only-buttons .edu-btn {
     width: 100%;
     text-align: center;
     padding: 12px 16px !important;
     font-size: 15px !important;
   }
   
-  .desktop-only-buttons {
+  .edu-desktop-only-buttons {
     display: none;
   }
   
   /* Mobile menu overlay */
-  .mobile-menu-overlay {
+  .edu-mobile-menu-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -592,24 +598,24 @@
     transition: opacity 0.3s ease, visibility 0.3s ease;
   }
   
-  .mobile-menu-overlay.active {
+  .edu-mobile-menu-overlay.edu-active {
     opacity: 1;
     visibility: visible;
   }
   
   /* Prevent body scrolling when mobile menu is open */
-  body.menu-open {
+  body.edu-menu-open {
     overflow: hidden;
   }
   
   /* User dropdown positioning */
-  .user-dropdown-menu {
+  .edu-user-dropdown-menu {
     width: 260px;
     right: -10px;
   }
   
   /* Fade animation doesn't work well on mobile */
-  @keyframes fadeIn {
+  @keyframes eduFadeIn {
     from {
       opacity: 0;
     }
@@ -621,58 +627,58 @@
 }
 
 @media (max-width: 480px) {
-  .header {
+  .edu-header {
     padding: 8px 0;
   }
 
-  .header-content {
+  .edu-header-content {
     height: 60px;
     padding: 0 12px;
   }
   
-  .logo img {
+  .edu-logo img {
     height: 40px;
     width: 40px;
   }
   
-  .mobile-menu-toggle {
+  .edu-mobile-menu-toggle {
     font-size: 22px;
   }
   
-  .nav {
+  .edu-nav {
     padding: 70px 20px 20px;
   }
   
-  .btn {
+  .edu-btn {
     padding: 8px 16px !important;
     font-size: 14px !important;
   }
   
-  .header-buttons {
+  .edu-header-buttons {
     gap: 8px;
   }
   
-  .user-dropdown-menu {
+  .edu-user-dropdown-menu {
     width: 240px;
   }
 }
 
 /* Very small screens */
 @media (max-width: 360px) {
-  .header-content {
+  .edu-header-content {
     padding: 0 10px;
   }
   
-  .logo img {
+  .edu-logo img {
     height: 36px;
     width: 36px;
   }
   
-  .mobile-menu-toggle {
+  .edu-mobile-menu-toggle {
     font-size: 20px;
   }
   
-  .nav {
+  .edu-nav {
     width: 90%;
     padding: 60px 16px 16px;
   }

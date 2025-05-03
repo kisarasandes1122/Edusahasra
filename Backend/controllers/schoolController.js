@@ -391,6 +391,11 @@ const updateSchoolProfile = asyncHandler(async (req, res) => {
     throw new Error('School associated with your token could not be found.');
   }
 
+  // Helper function to safely check properties
+  const hasProperty = (obj, prop) => {
+    return obj && typeof obj === 'object' && Object.prototype.hasOwnProperty.call(obj, prop);
+  };
+
   let needsSave = false; // Flag to track if DB save is necessary
 
   // --- Update Text Fields ---
@@ -399,9 +404,8 @@ const updateSchoolProfile = asyncHandler(async (req, res) => {
     'description', 'principalName', 'principalEmail', 'phoneNumber'
   ];
   textFields.forEach(field => {
-    // Check if the field is provided in the body and is different from current value
-    // Also handle cases where the field might be intentionally set to an empty string
-    if (req.body.hasOwnProperty(field) && school[field] !== req.body[field]) {
+    // Use the safe property check method instead of direct hasOwnProperty
+    if (hasProperty(req.body, field) && school[field] !== req.body[field]) {
         // Basic sanitization/trimming
         school[field] = typeof req.body[field] === 'string' ? req.body[field].trim() : req.body[field];
         needsSave = true;
@@ -409,83 +413,81 @@ const updateSchoolProfile = asyncHandler(async (req, res) => {
   });
 
   // Add validation for updated fields if necessary (e.g., email format/uniqueness)
-   if (req.body.hasOwnProperty('schoolEmail') && req.body.schoolEmail.trim() !== school.schoolEmail) {
-       const newEmail = req.body.schoolEmail.trim();
-       if (!validator.isEmail(newEmail)) {
-            if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file invalid email update:", unlinkErr))); }
-            res.status(400);
-            throw new Error('Please provide a valid school email address.');
-       }
-       const emailExists = await School.findOne({ schoolEmail: newEmail, _id: { $ne: school._id } });
-       if(emailExists) {
-            if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file existing email update:", unlinkErr))); }
-            res.status(400);
-            throw new Error('Email address is already in use by another school.');
-       }
-       school.schoolEmail = newEmail;
-       needsSave = true;
-   }
-
-    if (req.body.hasOwnProperty('principalEmail') && req.body.principalEmail.trim() !== school.principalEmail) {
-        const newPrincipalEmail = req.body.principalEmail.trim();
-        if (!validator.isEmail(newPrincipalEmail)) {
-             if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file invalid principal email update:", unlinkErr))); }
-             res.status(400);
-             throw new Error('Please provide a valid principal email address.');
-        }
-        school.principalEmail = newPrincipalEmail;
-        needsSave = true;
+  if (hasProperty(req.body, 'schoolEmail') && req.body.schoolEmail.trim() !== school.schoolEmail) {
+    const newEmail = req.body.schoolEmail.trim();
+    if (!validator.isEmail(newEmail)) {
+      if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file invalid email update:", unlinkErr))); }
+      res.status(400);
+      throw new Error('Please provide a valid school email address.');
     }
-
-    if (req.body.hasOwnProperty('phoneNumber') && req.body.phoneNumber.trim() !== school.phoneNumber) {
-        const newPhoneNumber = req.body.phoneNumber.trim();
-         if (newPhoneNumber !== '' && !/^(?:\+94|0)[0-9]{9}$/.test(newPhoneNumber)) {
-             if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file invalid phone update:", unlinkErr))); }
-             res.status(400);
-             throw new Error('Invalid phone number format. Use +94xxxxxxxxx or 0xxxxxxxxx.');
-         }
-         school.phoneNumber = newPhoneNumber;
-         needsSave = true;
+    const emailExists = await School.findOne({ schoolEmail: newEmail, _id: { $ne: school._id } });
+    if (emailExists) {
+      if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file existing email update:", unlinkErr))); }
+      res.status(400);
+      throw new Error('Email address is already in use by another school.');
     }
+    school.schoolEmail = newEmail;
+    needsSave = true;
+  }
 
+  if (hasProperty(req.body, 'principalEmail') && req.body.principalEmail.trim() !== school.principalEmail) {
+    const newPrincipalEmail = req.body.principalEmail.trim();
+    if (!validator.isEmail(newPrincipalEmail)) {
+      if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file invalid principal email update:", unlinkErr))); }
+      res.status(400);
+      throw new Error('Please provide a valid principal email address.');
+    }
+    school.principalEmail = newPrincipalEmail;
+    needsSave = true;
+  }
+
+  if (hasProperty(req.body, 'phoneNumber') && req.body.phoneNumber.trim() !== school.phoneNumber) {
+    const newPhoneNumber = req.body.phoneNumber.trim();
+    if (newPhoneNumber !== '' && !/^(?:\+94|0)[0-9]{9}$/.test(newPhoneNumber)) {
+      if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file invalid phone update:", unlinkErr))); }
+      res.status(400);
+      throw new Error('Invalid phone number format. Use +94xxxxxxxxx or 0xxxxxxxxx.');
+    }
+    school.phoneNumber = newPhoneNumber;
+    needsSave = true;
+  }
 
   // --- Update Location ---
   // Handle explicit null/empty string for clearing location
-  const latitudeInput = req.body.hasOwnProperty('latitude') ? req.body.latitude : undefined;
-  const longitudeInput = req.body.hasOwnProperty('longitude') ? req.body.longitude : undefined;
+  const latitudeInput = hasProperty(req.body, 'latitude') ? req.body.latitude : undefined;
+  const longitudeInput = hasProperty(req.body, 'longitude') ? req.body.longitude : undefined;
 
   let locationUpdated = false;
 
   if (latitudeInput !== undefined && longitudeInput !== undefined) {
-      const lat = parseFloat(latitudeInput);
-      const lon = parseFloat(longitudeInput);
+    const lat = parseFloat(latitudeInput);
+    const lon = parseFloat(longitudeInput);
 
-      if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-          // Valid coordinates provided
-           if (!school.location || !school.location.coordinates || school.location.coordinates[0] !== lon || school.location.coordinates[1] !== lat) {
-               school.location = { type: 'Point', coordinates: [lon, lat] };
-               locationUpdated = true;
-               needsSave = true;
-           }
-      } else if (latitudeInput === '' && longitudeInput === '') {
-          // Explicitly requesting to clear location
-           if (school.location) { // Only needs save if location previously existed
-               school.location = undefined; // Or null, depending on schema
-               locationUpdated = true;
-               needsSave = true;
-           }
-      } else {
-           // Invalid coordinates provided (e.g., non-empty non-numeric)
-           if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file invalid coords update:", unlinkErr))); }
-           res.status(400);
-           throw new Error('Invalid latitude or longitude provided for location.');
+    if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      // Valid coordinates provided
+      if (!school.location || !school.location.coordinates || school.location.coordinates[0] !== lon || school.location.coordinates[1] !== lat) {
+        school.location = { type: 'Point', coordinates: [lon, lat] };
+        locationUpdated = true;
+        needsSave = true;
       }
+    } else if (latitudeInput === '' && longitudeInput === '') {
+      // Explicitly requesting to clear location
+      if (school.location) { // Only needs save if location previously existed
+        school.location = undefined; // Or null, depending on schema
+        locationUpdated = true;
+        needsSave = true;
+      }
+    } else {
+      // Invalid coordinates provided (e.g., non-empty non-numeric)
+      if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file invalid coords update:", unlinkErr))); }
+      res.status(400);
+      throw new Error('Invalid latitude or longitude provided for location.');
+    }
   }
-
 
   // --- Process Images to Delete ---
   let imagesWereDeleted = false; // Keep track for potential file cleanup on error
-  if (req.body.imagesToDelete) {
+  if (hasProperty(req.body, 'imagesToDelete')) {
     try {
       const imagesToDelete = JSON.parse(req.body.imagesToDelete);
       if (Array.isArray(imagesToDelete) && imagesToDelete.length > 0) {
@@ -504,26 +506,40 @@ const updateSchoolProfile = asyncHandler(async (req, res) => {
 
           // Delete the corresponding files from storage ASYNCHRONOUSLY
           pathsToDelete.forEach(imgPath => {
-              // Construct the full path. Ensure imgPath starts with the correct uploads subdirectory
-               const fullPath = path.join(__dirname, '..', 'uploads', imgPath.replace('/uploads/', '')); // Assuming imgPath comes in like '/uploads/school-profile-images/...'
-               console.log(`Attempting to delete file: ${fullPath}`); // Debug log
-            fs.unlink(fullPath, (err) => {
-              if (err && err.code !== 'ENOENT') { // Log error if deletion fails (and file existed)
-                console.error(`Error deleting image file ${fullPath}:`, err);
-                // Consider if this error should fail the whole request. For now, just log.
-              } else if (!err) {
-                  console.log(`Successfully deleted file: ${fullPath}`); // Debug log
+            try {
+              // Improved path construction with better error handling
+              let fullPath;
+              if (imgPath.startsWith('/uploads/')) {
+                fullPath = path.join(__dirname, '..', imgPath.slice(1)); // Remove leading slash
+              } else if (imgPath.startsWith('uploads/')) {
+                fullPath = path.join(__dirname, '..', imgPath);
               } else {
-                  console.warn(`Attempted to delete file ${fullPath} but it was not found (ENOENT).`); // Debug log
+                fullPath = path.join(__dirname, '..', 'uploads', imgPath);
               }
-            });
+              
+              console.log(`Attempting to delete file: ${fullPath}`);
+              
+              fs.unlink(fullPath, (err) => {
+                if (err && err.code !== 'ENOENT') { // Log error if deletion fails (and file existed)
+                  console.error(`Error deleting image file ${fullPath}:`, err);
+                  // Consider if this error should fail the whole request. For now, just log.
+                } else if (!err) {
+                  console.log(`Successfully deleted file: ${fullPath}`);
+                } else {
+                  console.warn(`Attempted to delete file ${fullPath} but it was not found (ENOENT).`);
+                }
+              });
+            } catch (fileError) {
+              console.error(`Error during file path processing for ${imgPath}:`, fileError);
+              // Don't throw here to prevent the entire request from failing
+            }
           });
         }
       }
     } catch (parseError) {
       console.error('Error parsing imagesToDelete JSON:', parseError);
-       // Clean up newly uploaded files if parsing fails
-       if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file JSON parse error:", unlinkErr))); }
+      // Clean up newly uploaded files if parsing fails
+      if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file JSON parse error:", unlinkErr))); }
       res.status(400);
       throw new Error('Invalid format for imagesToDelete field.');
       // Note: Files marked for deletion *from the DB* will not be deleted from storage
@@ -534,16 +550,16 @@ const updateSchoolProfile = asyncHandler(async (req, res) => {
   // --- Handle Newly Uploaded Images ---
   let newImagePaths = [];
   if (req.files && Array.isArray(req.files) && req.files.length > 0) {
-      // Multer stores the file path on the file object.
-      // We want to save the path relative to the 'uploads' directory.
-      newImagePaths = req.files.map(file => {
-           // file.path is something like 'C:\...\backend\uploads\school-profile-images\filename.jpg'
-           // path.join(__dirname, '..', 'uploads') is 'C:\...\backend\uploads'
-           // path.relative calculates the relative path: 'school-profile-images\filename.jpg'
-           // Replace backslashes with forward slashes for URL consistency
-          const relativePath = path.relative(path.join(__dirname, '..', 'uploads'), file.path).replace(/\\/g, '/');
-          return relativePath;
-      });
+    // Multer stores the file path on the file object.
+    // We want to save the path relative to the 'uploads' directory.
+    newImagePaths = req.files.map(file => {
+      // file.path is something like 'C:\...\backend\uploads\school-profile-images\filename.jpg'
+      // path.join(__dirname, '..', 'uploads') is 'C:\...\backend\uploads'
+      // path.relative calculates the relative path: 'school-profile-images\filename.jpg'
+      // Replace backslashes with forward slashes for URL consistency
+      const relativePath = path.relative(path.join(__dirname, '..', 'uploads'), file.path).replace(/\\/g, '/');
+      return relativePath;
+    });
     school.images = school.images.concat(newImagePaths); // Add new images
     needsSave = true; // Always needs save if new files are uploaded
   }
@@ -562,23 +578,16 @@ const updateSchoolProfile = asyncHandler(async (req, res) => {
     delete data.password; // Ensure password hash is never sent
     delete data.__v;      // Remove Mongoose version key
     delete data.documents; // Typically registration documents aren't returned in profile update response
-    // Decide if admin remarks, approval status etc should be returned here.
-    // Based on previous getSchoolProfile, they were included, so keep them.
-    // delete data.adminRemarks;
-    // delete data.approvedAt;
-    // delete data.registeredAt;
-
 
     // Format image paths in the response to be relative to /uploads
     // The frontend's getFullImageUrl will prepend the base URL and /uploads
     data.images = data.images.map(imgPath => {
-         // Ensure the path is relative to 'uploads' and uses forward slashes
-         // It should already be in this format if saved correctly by multer config above
-         const relativePath = imgPath.replace(/\\/g, '/'); // Convert backslashes if any slipped through
-         // Strip any leading /uploads/ if it was accidentally included
-         return relativePath.startsWith('uploads/') ? relativePath.substring('uploads/'.length) : relativePath;
+      // Ensure the path is relative to 'uploads' and uses forward slashes
+      // It should already be in this format if saved correctly by multer config above
+      const relativePath = imgPath.replace(/\\/g, '/'); // Convert backslashes if any slipped through
+      // Strip any leading /uploads/ if it was accidentally included
+      return relativePath.startsWith('uploads/') ? relativePath.substring('uploads/'.length) : relativePath;
     });
-
 
     return data;
   };
@@ -606,29 +615,28 @@ const updateSchoolProfile = asyncHandler(async (req, res) => {
     // return the current state of the school profile.
     // Re-fetch to ensure data consistency, but exclude password and private fields.
     const currentSchoolData = await School.findById(req.school._id)
-       .select('-password -documents._id -documents.filePath -__v')
-       .lean(); // Use lean as we are just returning data, no modifications needed.
+      .select('-password -documents._id -documents.filePath -__v')
+      .lean(); // Use lean as we are just returning data, no modifications needed.
 
     if (!currentSchoolData) {
-        // Should not happen, but handle defensively
-         res.status(500);
-         throw new Error('Failed to retrieve current profile data after update attempt.');
+      // Should not happen, but handle defensively
+      res.status(500);
+      throw new Error('Failed to retrieve current profile data after update attempt.');
     }
 
     // Prepare the response data manually from the lean object
     const responseData = {
-        ...currentSchoolData,
-        latitude: currentSchoolData.location?.coordinates?.[1] ?? null,
-        longitude: currentSchoolData.location?.coordinates?.[0] ?? null,
+      ...currentSchoolData,
+      latitude: currentSchoolData.location?.coordinates?.[1] ?? null,
+      longitude: currentSchoolData.location?.coordinates?.[0] ?? null,
     };
     delete responseData.location; // Remove the original location object
 
-     // Re-format image paths manually for the lean object response
-     responseData.images = (responseData.images || []).map(imgPath => {
-         const relativePath = imgPath.replace(/\\/g, '/');
-          return relativePath.startsWith('uploads/') ? relativePath.substring('uploads/'.length) : relativePath;
-     });
-
+    // Re-format image paths manually for the lean object response
+    responseData.images = (responseData.images || []).map(imgPath => {
+      const relativePath = imgPath.replace(/\\/g, '/');
+      return relativePath.startsWith('uploads/') ? relativePath.substring('uploads/'.length) : relativePath;
+    });
 
     res.json(responseData);
   }

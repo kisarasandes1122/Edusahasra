@@ -1,116 +1,201 @@
-/* --- DonationModal.css --- */
+/* --- EduDonationModal.css with unique class names --- */
 
 :root { /* Define variables if not already global */
-  --font-primary: 'Inter', sans-serif;
-  --color-text: #111827;
-  --color-text-secondary: #6B7280;
-  --color-primary-action: #2A6F2B;
-  --color-primary-action-hover: #225a23;
-  --color-modal-bg: white;
-  --color-modal-section-bg: #F9FAFB;
-  --color-modal-border: #e5e7eb;
-  --color-login-button-text: var(--color-primary-action);
-  --color-login-button-bg: white;
-  --color-login-button-border: var(--color-primary-action);
-  --color-login-button-hover-bg: var(--color-primary-action);
-  --color-login-button-hover-text: white;
-  --border-radius-large: 20px;
-  --border-radius-medium: 12px;
-  --border-radius-small: 8px;
+  --edu-font-primary: 'Inter', sans-serif;
+  --edu-color-text: #111827;
+  --edu-color-text-secondary: #6B7280;
+  --edu-color-primary: #2A6F2B;
+  --edu-color-primary-hover: #225a23;
+  --edu-color-primary-light: rgba(42, 111, 43, 0.08);
+  --edu-color-modal-bg: white;
+  --edu-color-modal-section-bg: #F9FAFB;
+  --edu-color-modal-border: #e5e7eb;
+  --edu-color-button-text: white;
+  --edu-color-login-button-text: var(--edu-color-primary);
+  --edu-color-login-button-bg: white;
+  --edu-color-login-button-border: var(--edu-color-primary);
+  --edu-color-login-button-hover-bg: var(--edu-color-primary);
+  --edu-color-login-button-hover-text: white;
+  --edu-border-radius-large: 24px;
+  --edu-border-radius-medium: 16px;
+  --edu-border-radius-small: 12px;
+  --edu-box-shadow-modal: 0 10px 30px rgba(0, 0, 0, 0.15);
+  --edu-transition-default: all 0.25s ease;
 }
 
-.modal-overlay {
+.edu-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1100;
   padding: 20px;
   overflow-y: auto;
+  backdrop-filter: blur(4px);
+  animation: eduFadeIn 0.3s ease forwards;
 }
 
-.modal-container {
-  background-color: var(--color-modal-bg);
-  border-radius: var(--border-radius-large);
-  padding: 32px;
+@keyframes eduFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.edu-modal-container {
+  background-color: var(--edu-color-modal-bg);
+  border-radius: var(--edu-border-radius-large);
+  padding: 40px;
   width: 100%;
-  max-width: 600px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  box-shadow: var(--edu-box-shadow-modal);
   margin: auto;
-  text-align: center; /* Center all text content */
+  text-align: center;
+  animation: eduSlideUp 0.4s ease forwards;
+  position: relative;
 }
 
-.modal-content {
+@keyframes eduSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.edu-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--edu-color-text-secondary);
+  opacity: 0.6;
+  transition: var(--edu-transition-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.edu-modal-close:hover {
+  background-color: var(--edu-color-modal-section-bg);
+  color: var(--edu-color-text);
+  opacity: 1;
+}
+
+.edu-modal-content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  align-items: center; /* Center flex items horizontally */
+  gap: 28px;
+  align-items: center;
 }
 
-.modal-title {
-  font-family: var(--font-primary);
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--color-text);
+.edu-modal-title {
+  font-family: var(--edu-font-primary);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--edu-color-text);
   text-align: center;
   margin: 0;
-  width: 100%; /* Full width for proper centering */
+  width: 100%;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
-.modal-subtitle {
-  font-family: var(--font-primary);
-  font-size: 15px;
-  color: var(--color-text-secondary);
+.edu-modal-subtitle {
+  font-family: var(--edu-font-primary);
+  font-size: 16px;
+  color: var(--edu-color-text-secondary);
   text-align: center;
   margin: -10px 0 5px 0;
   line-height: 1.5;
-  width: 100%; /* Full width for proper centering */
+  width: 100%;
 }
 
-.registration-section,
-.login-section {
-  background-color: var(--color-modal-section-bg);
-  border-radius: var(--border-radius-medium);
-  padding: 24px;
-  border: 1px solid var(--color-modal-border);
-  width: 100%; /* Full width for proper centering */
-  text-align: center; /* Center content within sections */
+.edu-registration-section,
+.edu-login-section {
+  background-color: var(--edu-color-modal-section-bg);
+  border-radius: var(--edu-border-radius-medium);
+  padding: 28px;
+  border: 1px solid var(--edu-color-modal-border);
+  width: 100%;
+  text-align: center;
+  transition: var(--edu-transition-default);
 }
 
-.section-title {
-  font-family: var(--font-primary);
+.edu-registration-section:hover,
+.edu-login-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+}
+
+.edu-section-heading-container {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.edu-section-title {
+  font-family: var(--edu-font-primary);
   font-size: 18px;
   font-weight: 700;
-  color: var(--color-primary-action);
-  margin: 0 0 8px 0;
+  color: var(--edu-color-primary);
+  margin: 0;
   text-align: center;
 }
 
-.section-description {
-  font-family: var(--font-primary);
+.edu-section-divider {
+  height: 1px;
+  background-color: var(--edu-color-modal-border);
+  margin: 12px auto 0;
+  position: relative;
+}
+
+.edu-section-divider-accent {
+  position: absolute;
+  height: 3px;
+  width: 60px;
+  background-color: var(--edu-color-primary);
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 1.5px;
+}
+
+.edu-section-description {
+  font-family: var(--edu-font-primary);
   font-size: 14px;
-  color: var(--color-text-secondary);
-  margin: 0 0 16px 0;
+  color: var(--edu-color-text-secondary);
+  margin: 0 0 24px 0;
   line-height: 1.5;
   text-align: center;
 }
 
-/* Button Styles - Updated for centered look */
-.modal-button {
+.edu-modal-button {
   display: inline-block;
   width: 100%;
-  padding: 12px 24px;
-  border-radius: var(--border-radius-small);
-  font-family: var(--font-primary);
+  padding: 14px 24px;
+  border-radius: var(--edu-border-radius-small);
+  font-family: var(--edu-font-primary);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: var(--edu-transition-default);
   border: 1px solid transparent;
   text-align: center;
   text-decoration: none !important;
@@ -118,72 +203,83 @@
 }
 
 /* Style for Register button */
-.modal-button.register-button {
-  background-color: var(--color-primary-action);
-  color: white;
-  border-color: var(--color-primary-action);
+.edu-modal-button.edu-register-button {
+  background-color: var(--edu-color-primary);
+  color: var(--edu-color-button-text);
+  border-color: var(--edu-color-primary);
 }
 
-.modal-button.register-button:hover {
-  background-color: var(--color-primary-action-hover);
-  border-color: var(--color-primary-action-hover);
-  color: white;
+.edu-modal-button.edu-register-button:hover {
+  background-color: var(--edu-color-primary-hover);
+  border-color: var(--edu-color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(42, 111, 43, 0.2);
 }
 
 /* Style for Login button */
-.modal-button.login-button {
-  background-color: var(--color-login-button-bg);
-  color: var(--color-login-button-text);
-  border: 1px solid var(--color-login-button-border);
+.edu-modal-button.edu-login-button {
+  background-color: var(--edu-color-login-button-bg);
+  color: var(--edu-color-login-button-text);
+  border: 1px solid var(--edu-color-login-button-border);
 }
 
 /* Hover style for Login button */
-.modal-button.login-button:hover {
-  background-color: var(--color-login-button-hover-bg);
-  color: var(--color-login-button-hover-text);
-  border-color: var(--color-login-button-hover-bg);
+.edu-modal-button.edu-login-button:hover {
+  background-color: var(--edu-color-login-button-hover-bg);
+  color: var(--edu-color-login-button-hover-text);
+  border-color: var(--edu-color-login-button-hover-bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(42, 111, 43, 0.15);
 }
 
 /* Responsive Modal */
 @media (max-width: 640px) {
-  .modal-container {
-    padding: 24px 20px;
+  .edu-modal-container {
+    padding: 30px 24px;
     max-width: 95%;
   }
-  .modal-title {
-    font-size: 20px;
+  .edu-modal-title {
+    font-size: 22px;
   }
-  .modal-subtitle {
-    font-size: 14px;
+  .edu-modal-subtitle {
+    font-size: 15px;
   }
-  .section-title {
+  .edu-section-title {
     font-size: 17px;
   }
-  .section-description {
+  .edu-section-description {
     font-size: 13px;
+    margin-bottom: 20px;
   }
-  .modal-button {
+  .edu-modal-button {
     font-size: 15px;
-    padding: 11px 20px;
+    padding: 12px 20px;
   }
-  .registration-section,
-  .login-section {
-    padding: 20px 15px;
+  .edu-registration-section,
+  .edu-login-section {
+    padding: 24px 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .modal-container {
-    padding: 20px 15px;
+  .edu-modal-container {
+    padding: 24px 20px;
   }
-  .modal-title {
-    font-size: 18px;
+  .edu-modal-content {
+    gap: 20px;
   }
-  .modal-subtitle {
-    font-size: 13px;
+  .edu-modal-title {
+    font-size: 20px;
   }
-  .modal-button {
+  .edu-modal-subtitle {
     font-size: 14px;
-    padding: 10px 16px;
+  }
+  .edu-modal-button {
+    font-size: 14px;
+    padding: 12px 16px;
+  }
+  .edu-registration-section,
+  .edu-login-section {
+    padding: 20px;
   }
 }

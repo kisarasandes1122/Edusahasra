@@ -346,14 +346,16 @@ const DonationManagement = () => {
               </div>
 
               <div className="edusahasra-cell edusahasra-items-column">
-                {Array.isArray(donation.itemsDonated) // Use itemsDonated from backend
-                  ? donation.itemsDonated.map((item, index) => (
-                      <span key={index}>
-                        {item.categoryNameEnglish || 'N/A'} ({item.quantityDonated ?? 'N/A'}) {/* Safely access nested properties */}
-                        {index < donation.itemsDonated.length - 1 ? ', ' : ''}
-                      </span>
-                    ))
-                  : 'N/A'}
+                <div className="edusahasra-items-column-wrapper">
+                  {Array.isArray(donation.itemsDonated) 
+                    ? donation.itemsDonated.map((item, index) => (
+                        <span key={index} className="edusahasra-item-pill">
+                          {item.categoryNameEnglish || 'N/A'}
+                          <span className="edusahasra-item-quantity">({item.quantityDonated || 'N/A'})</span>
+                        </span>
+                      ))
+                    : 'N/A'}
+                </div>
               </div>
 
               <div className="edusahasra-cell edusahasra-method-column">

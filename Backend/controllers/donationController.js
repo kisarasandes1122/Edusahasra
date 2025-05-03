@@ -330,7 +330,8 @@ const updateDonationStatusByAdmin = asyncHandler(async (req, res) => {
     }
 
     const donation = await Donation.findById(donationId)
-        .populate('donor', 'email name') // Populate donor details
+        // CHANGE THIS LINE: Populate 'fullName' instead of 'name'
+        .populate('donor', 'fullName email') // Corrected population field
         .populate('school', 'schoolEmail schoolName'); // Populate school details
 
     if (!donation) {
@@ -359,7 +360,8 @@ const updateDonationStatusByAdmin = asyncHandler(async (req, res) => {
     if (oldStatus !== newStatus) {
         try {
             // Prepare email content
-            const donorMessage = `Dear ${donation.donor.name},\n\n
+            // CHANGE THIS LINE: Use donation.donor.fullName
+            const donorMessage = `Dear ${donation.donor.fullName},\n\n // Corrected email personalization
 Your donation status has been updated to "${newStatus}".\n\n
 ${adminRemarks ? `Admin Remarks: ${adminRemarks}\n\n` : ''}
 ${adminTrackingId ? `Tracking ID: ${adminTrackingId}\n\n` : ''}
@@ -374,18 +376,28 @@ You can track this donation's status through your account.\n\n
 Best regards,\nEduSahasra Team`;
 
             // Send email to donor
-            await sendEmail({
-                email: donation.donor.email,
-                subject: `Donation Status Update: ${newStatus}`,
-                message: donorMessage,
-            });
+            if (donation.donor && donation.donor.email) { // Add check if donor/email exists
+                 await sendEmail({
+                    email: donation.donor.email,
+                    subject: `Donation Status Update: ${newStatus}`,
+                    message: donorMessage,
+                 });
+            } else {
+                 console.warn(`Donor email missing for donation ${donation._id}. Cannot send status update email.`);
+            }
+
 
             // Send email to school
-            await sendEmail({
-                email: donation.school.schoolEmail,
-                subject: `Donation Status Update: ${newStatus}`,
-                message: schoolMessage,
-            });
+             if (donation.school && donation.school.schoolEmail) { // Add check if school/email exists
+                 await sendEmail({
+                    email: donation.school.schoolEmail,
+                    subject: `Donation Status Update: ${newStatus}`,
+                    message: schoolMessage,
+                 });
+             } else {
+                 console.warn(`School email missing for donation ${donation._id}. Cannot send status update email.`);
+             }
+
         } catch (emailError) {
             console.error('Failed to send status update emails:', emailError);
             // Don't throw error here, as status update was successful

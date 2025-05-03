@@ -67,36 +67,35 @@ const SchoolVerification = () => {
   }, [activeTab, searchQuery, selectedLocation, selectedSortOrder]); // Depend on filter states
 
   // --- Filtering and Sorting (Client-Side) ---
-  // This memo filters based on the tab (already done by backend query now)
-  // and applies client-side sorting based on fetched data order.
-  // It also performs client-side pagination slicing.
+  // Apply additional client-side filtering to ensure only schools matching the active tab are shown
   const filteredAndSortedSchools = useMemo(() => {
-    // Backend already filters by tab, search, location, and sorts.
-    // This memo primarily serves to apply pagination slicing on the fetched data.
+    // Make sure we're only showing schools that match the active tab status
+    const filteredByStatus = allSchools.filter(school => {
+      if (activeTab === 'all') return true;
+      return school.status === activeTab;
+    });
 
-    const schoolsToPaginate = [...allSchools]; // Start with the fetched list
-
-    // Note: If you wanted full client-side filtering/sorting on a large dataset
-    // fetched once, the logic below would expand significantly.
-    // For this setup, we assume backend filtering/sorting is primary.
-
-    // Apply client-side pagination
+    // Apply client-side pagination to the filtered schools
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentSchools = schoolsToPaginate.slice(indexOfFirstItem, indexOfLastItem);
+    const currentSchools = filteredByStatus.slice(indexOfFirstItem, indexOfLastItem);
 
     return currentSchools;
+  }, [allSchools, activeTab, currentPage, itemsPerPage]);
 
-     // No need to depend on filter states here if backend handles it
-  }, [allSchools, currentPage, itemsPerPage]); // Depend on the fetched data and pagination state
-
-  // Calculate total counts for tabs
+  // Calculate total counts for tabs from the full dataset
   const pendingCount = useMemo(() => allSchools.filter(s => s.status === 'pending').length, [allSchools]);
   const approvedCount = useMemo(() => allSchools.filter(s => s.status === 'approved').length, [allSchools]);
   const rejectedCount = useMemo(() => allSchools.filter(s => s.status === 'rejected').length, [allSchools]);
-  const totalRequests = allSchools.length; // Total matching filter criteria
+  
+  // Calculate totals based on the filtered-by-status schools for pagination
+  const statusFilteredSchools = useMemo(() => {
+    if (activeTab === 'all') return allSchools;
+    return allSchools.filter(school => school.status === activeTab);
+  }, [allSchools, activeTab]);
+  
+  const totalRequests = statusFilteredSchools.length;
   const totalPages = Math.ceil(totalRequests / itemsPerPage);
-
 
   const handleReview = (school) => {
      // Pass the selected school object to the review modal state
@@ -325,7 +324,7 @@ const SchoolVerification = () => {
           {totalRequests > 0 && (
               <div className="sv-pagination">
                 <div className="sv-pagination-info">
-                   Showing {Math.min(filteredAndSortedSchools.length, (currentPage - 1) * itemsPerPage + 1)} to {Math.min(filteredAndSortedSchools.length, currentPage * itemsPerPage)} of {totalRequests} entries
+                   Showing {Math.min(filteredAndSortedSchools.length, (currentPage - 1) * itemsPerPage + 1)} to {Math.min(currentPage * itemsPerPage, totalRequests)} of {totalRequests} entries
                 </div>
                 <div className="sv-pagination-controls">
                   <button

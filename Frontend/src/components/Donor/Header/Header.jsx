@@ -4,10 +4,10 @@ import './Header.css';
 import './DonationModal.css';
 import logo from '../../../assets/images/Edusahasra.png';
 import { IoCalendarOutline, IoLeafOutline } from 'react-icons/io5';
-import { FiTool, FiHeart, FiChevronDown, FiMenu, FiX } from 'react-icons/fi';
+import { FiTool, FiHeart, FiChevronDown, FiMenu, FiX, FiChevronRight } from 'react-icons/fi';
 import { IoChatbox, IoSchoolOutline } from "react-icons/io5";
 
-// --- DonationModal Component (unchanged) ---
+// --- Updated DonationModal Component with unique class names ---
 const DonationModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
 
@@ -17,31 +17,66 @@ const DonationModal = ({ isOpen, onClose }) => {
         onClose();
       }
     };
+    
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscKey);
+      document.body.style.overflow = 'hidden';
     }
+    
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscKey);
+      document.body.style.overflow = 'visible';
     };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-container" ref={modalRef}>
-        <div className="modal-content">
-          <h2 className="modal-title">Get Started with Your Donation</h2>
-          <p className="modal-subtitle">Create an account or Log in to Donate and manage donations</p>
-          <div className="registration-section">
-            <h3 className="section-title">Donor Registration</h3>
-            <p className="section-description">New Here? Sign up start making an impact.</p>
-            <a href="/donor-register"><button className="modal-button register-button">Register Now</button></a>
+    <div className="edu-modal-overlay">
+      <div className="edu-modal-container" ref={modalRef}>
+        <button className="edu-modal-close" onClick={onClose} aria-label="Close modal">
+          <FiX />
+        </button>
+        <div className="edu-modal-content">
+          <h2 className="edu-modal-title">Get Started with Your Donation</h2>
+          <p className="edu-modal-subtitle">Create an account or log in to donate and track your impact</p>
+          
+          <div className="edu-registration-section">
+            <div className="edu-section-heading-container">
+              <h3 className="edu-section-title">Donor Registration</h3>
+              <div className="edu-section-divider">
+                <div className="edu-section-divider-accent"></div>
+              </div>
+            </div>
+            <p className="edu-section-description">New here? Sign up to start making an impact.</p>
+            <a href="/donor-register">
+              <button className="edu-modal-button edu-register-button">
+                Register Now <FiChevronRight style={{ marginLeft: '6px', verticalAlign: 'middle' }} />
+              </button>
+            </a>
           </div>
-          <div className="login-section">
-            <h3 className="section-title">Donor Login</h3>
-            <p className="section-description">Already have an account? Log in to continue Donating</p>
-            <a href="/donor-login"><button className="modal-button login-button">Login Now</button></a>
+          
+          <div className="edu-login-section">
+            <div className="edu-section-heading-container">
+              <h3 className="edu-section-title">Donor Login</h3>
+              <div className="edu-section-divider">
+                <div className="edu-section-divider-accent"></div>
+              </div>
+            </div>
+            <p className="edu-section-description">Already have an account? Log in to continue donating.</p>
+            <a href="/donor-login">
+              <button className="edu-modal-button edu-login-button">
+                Login Now <FiChevronRight style={{ marginLeft: '6px', verticalAlign: 'middle' }} />
+              </button>
+            </a>
           </div>
         </div>
       </div>
@@ -49,7 +84,7 @@ const DonationModal = ({ isOpen, onClose }) => {
   );
 };
 
-// --- RequestModal Component (unchanged) ---
+// --- Updated RequestModal Component with unique class names ---
 const RequestModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
 
@@ -59,31 +94,66 @@ const RequestModal = ({ isOpen, onClose }) => {
         onClose();
       }
     };
+    
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscKey);
+      document.body.style.overflow = 'hidden';
     }
+    
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscKey);
+      document.body.style.overflow = 'visible';
     };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-container" ref={modalRef}>
-        <div className="modal-content">
-          <h2 className="modal-title">Get Started with Your Education Support</h2>
-          <p className="modal-subtitle">Create an account or log in to access learning resources and assistance.</p>
-          <div className="registration-section">
-            <h3 className="section-title">School/Teacher Registration</h3>
-            <p className="section-description">New Here? Sign up to get the support you need.</p>
-            <a href="/school-register"><button className="modal-button register-button">Register Now</button></a>
+    <div className="edu-modal-overlay">
+      <div className="edu-modal-container" ref={modalRef}>
+        <button className="edu-modal-close" onClick={onClose} aria-label="Close modal">
+          <FiX />
+        </button>
+        <div className="edu-modal-content">
+          <h2 className="edu-modal-title">Get Started with Your Education Support</h2>
+          <p className="edu-modal-subtitle">Create an account or log in to access learning resources and assistance</p>
+          
+          <div className="edu-registration-section">
+            <div className="edu-section-heading-container">
+              <h3 className="edu-section-title">School/Teacher Registration</h3>
+              <div className="edu-section-divider">
+                <div className="edu-section-divider-accent"></div>
+              </div>
+            </div>
+            <p className="edu-section-description">New here? Sign up to get the support you need.</p>
+            <a href="/school-register">
+              <button className="edu-modal-button edu-register-button">
+                Register Now <FiChevronRight style={{ marginLeft: '6px', verticalAlign: 'middle' }} />
+              </button>
+            </a>
           </div>
-          <div className="login-section">
-            <h3 className="section-title">School/Teacher Login</h3>
-            <p className="section-description">Already have an account? Log in to continue request.</p>
-            <a href="/school-login"><button className="modal-button login-button">Login Now</button></a>
+          
+          <div className="edu-login-section">
+            <div className="edu-section-heading-container">
+              <h3 className="edu-section-title">School/Teacher Login</h3>
+              <div className="edu-section-divider">
+                <div className="edu-section-divider-accent"></div>
+              </div>
+            </div>
+            <p className="edu-section-description">Already have an account? Log in to continue request.</p>
+            <a href="/school-login">
+              <button className="edu-modal-button edu-login-button">
+                Login Now <FiChevronRight style={{ marginLeft: '6px', verticalAlign: 'middle' }} />
+              </button>
+            </a>
           </div>
         </div>
       </div>
@@ -91,8 +161,7 @@ const RequestModal = ({ isOpen, onClose }) => {
   );
 };
 
-
-// --- Updated Header Component with Modern Look and Green Theme ---
+// --- Updated Header Component with unique class names ---
 const Header = () => {
   const [isDonorsDropdownOpen, setIsDonorsDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -110,13 +179,13 @@ const Header = () => {
   // Toggle body class when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
-      document.body.classList.add('menu-open');
+      document.body.classList.add('edu-menu-open');
     } else {
-      document.body.classList.remove('menu-open');
+      document.body.classList.remove('edu-menu-open');
     }
     
     return () => {
-      document.body.classList.remove('menu-open');
+      document.body.classList.remove('edu-menu-open');
     };
   }, [mobileMenuOpen]);
 
@@ -171,7 +240,7 @@ const Header = () => {
       if (mobileMenuOpen && 
           mobileMenuRef.current && 
           !mobileMenuRef.current.contains(event.target) &&
-          !event.target.closest('.mobile-menu-toggle')) {
+          !event.target.closest('.edu-mobile-menu-toggle')) {
         setMobileMenuOpen(false);
       }
     };
@@ -237,16 +306,16 @@ const Header = () => {
 
   return (
     <>
-      <header className="header">
-        <div className="header-content">
-          <div className="header-res">
-            <div className="logo">
+      <header className="edu-header">
+        <div className="edu-header-content">
+          <div className="edu-header-res">
+            <div className="edu-logo">
               <a href="/"><img src={logo} alt="EduSahasra Logo" /></a>
             </div>
 
             {/* Mobile menu toggle button */}
             <button 
-              className="mobile-menu-toggle" 
+              className="edu-mobile-menu-toggle" 
               onClick={toggleMobileMenu}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
@@ -255,58 +324,58 @@ const Header = () => {
           </div>
 
           {/* Mobile menu overlay - improves UX */}
-          <div className={`mobile-menu-overlay ${mobileMenuOpen ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
+          <div className={`edu-mobile-menu-overlay ${mobileMenuOpen ? 'edu-active' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
 
           {/* Main navigation */}
-          <nav className={`nav ${mobileMenuOpen ? 'open' : ''}`} ref={mobileMenuRef}>
-            <ul>
-              <li><a href="/" onClick={handleNavLinkClick}>Home</a></li>
-              <li className="dropdown-container" ref={donorsDropdownRef}>
+          <nav className={`edu-nav ${mobileMenuOpen ? 'edu-open' : ''}`} ref={mobileMenuRef}>
+            <ul className="edu-nav-list">
+              <li className="edu-nav-item"><a className="edu-nav-link" href="/" onClick={handleNavLinkClick}>Home</a></li>
+              <li className="edu-nav-item edu-dropdown-container" ref={donorsDropdownRef}>
                 <button
-                  className="dropdown-trigger"
+                  className="edu-dropdown-trigger"
                   onClick={toggleDonorsDropdown}
                 >
-                  Donors <FiChevronDown className={`dropdown-arrow ${isDonorsDropdownOpen ? 'rotated' : ''}`} />
+                  Donors <FiChevronDown className={`edu-dropdown-arrow ${isDonorsDropdownOpen ? 'edu-rotated' : ''}`} />
                 </button>
                 {isDonorsDropdownOpen && (
-                  <div className="dropdown-menu">
-                    <div className="dropdown-items">
-                      <a href="/needs" className="dropdown-item" onClick={handleNavLinkClick}>
-                        <IoCalendarOutline className="dropdown-icon" />
-                        <div className="dropdown-content">
-                          <span className="dropdown-item-title">Browse Needs</span>
-                          <span className="dropdown-item-description">Filter Requests by location, needs, or urgency</span>
+                  <div className="edu-dropdown-menu">
+                    <div className="edu-dropdown-items">
+                      <a href="/needs" className="edu-dropdown-item" onClick={handleNavLinkClick}>
+                        <IoCalendarOutline className="edu-dropdown-icon" />
+                        <div className="edu-dropdown-content">
+                          <span className="edu-dropdown-item-title">Browse Needs</span>
+                          <span className="edu-dropdown-item-description">Filter Requests by location, needs, or urgency</span>
                         </div>
                       </a>
-                      <a href="/how-it-works" className="dropdown-item" onClick={handleNavLinkClick}>
-                        <FiTool className="dropdown-icon" />
-                        <div className="dropdown-content">
-                          <span className="dropdown-item-title">How It Works</span>
-                          <span className="dropdown-item-description">Step-by-step donation process</span>
+                      <a href="/how-it-works" className="edu-dropdown-item" onClick={handleNavLinkClick}>
+                        <FiTool className="edu-dropdown-icon" />
+                        <div className="edu-dropdown-content">
+                          <span className="edu-dropdown-item-title">How It Works</span>
+                          <span className="edu-dropdown-item-description">Step-by-step donation process</span>
                         </div>
                       </a>
-                      <a href="/feedbacks" className="dropdown-item" onClick={handleNavLinkClick}>
-                        <IoChatbox className="dropdown-icon" />
-                        <div className="dropdown-content">
-                          <span className="dropdown-item-title">Feedbacks</span>
-                          <span className="dropdown-item-description">See what others say about their experience</span>
+                      <a href="/feedbacks" className="edu-dropdown-item" onClick={handleNavLinkClick}>
+                        <IoChatbox className="edu-dropdown-icon" />
+                        <div className="edu-dropdown-content">
+                          <span className="edu-dropdown-item-title">Feedbacks</span>
+                          <span className="edu-dropdown-item-description">See what others say about their experience</span>
                         </div>
                       </a>
                     </div>
                   </div>
                 )}
               </li>
-              <li><a href="/about-us" onClick={handleNavLinkClick}>About</a></li>
-              <li><a href="/impact-stories" onClick={handleNavLinkClick}>Impact</a></li>
+              <li className="edu-nav-item"><a className="edu-nav-link" href="/about-us" onClick={handleNavLinkClick}>About</a></li>
+              <li className="edu-nav-item"><a className="edu-nav-link" href="/impact-stories" onClick={handleNavLinkClick}>Impact</a></li>
               
               {/* Mobile-only buttons (visible in mobile menu) */}
               {!isLoggedIn && (
-                <li className="mobile-only-buttons">
-                  <div className="header-buttons">
-                    <button className="btn btn-secondary" onClick={handleStartDonate}>
+                <li className="edu-mobile-only-buttons">
+                  <div className="edu-header-buttons">
+                    <button className="edu-btn edu-btn-secondary" onClick={handleStartDonate}>
                       <FiHeart style={{ marginRight: '6px' }} /> Start Donate
                     </button>
-                    <button className="btn btn-primary" onClick={handleRequestDonation}>
+                    <button className="edu-btn edu-btn-primary" onClick={handleRequestDonation}>
                       <IoSchoolOutline style={{ marginRight: '6px' }} /> Request Donation
                     </button>
                   </div>
@@ -315,48 +384,48 @@ const Header = () => {
             </ul>
           </nav>
 
-          <div className="header-user">
+          <div className="edu-header-user">
             {isLoggedIn && currentUser ? (
-              <div className="user-dropdown-container" ref={userDropdownRef}>
+              <div className="edu-user-dropdown-container" ref={userDropdownRef}>
                 <button
-                  className="user-dropdown-trigger"
+                  className="edu-user-dropdown-trigger"
                   onClick={toggleUserDropdown}
                 >
-                  <span className="user-name">{currentUser.fullName || 'User'}</span>
-                  <FiChevronDown className={`dropdown-arrow ${isUserDropdownOpen ? 'rotated' : ''}`} />
+                  <span className="edu-user-name">{currentUser.fullName || 'User'}</span>
+                  <FiChevronDown className={`edu-dropdown-arrow ${isUserDropdownOpen ? 'edu-rotated' : ''}`} />
                 </button>
                 {isUserDropdownOpen && (
-                  <div className="user-dropdown-menu">
-                    <div className="user-dropdown-header">
-                      <h3 className="user-dropdown-title">{currentUser.fullName || 'User'}</h3>
+                  <div className="edu-user-dropdown-menu">
+                    <div className="edu-user-dropdown-header">
+                      <h3 className="edu-user-dropdown-title">{currentUser.fullName || 'User'}</h3>
                     </div>
-                    <div className="user-dropdown-items">
-                      <a href="/my-donations" className="user-dropdown-item">
-                        <div className="icon-wrapper"><IoLeafOutline /></div>
-                        <div className="dropdown-content">
-                          <span className="item-title">My Donations</span>
-                          <span className="item-description">Track your contributions</span>
+                    <div className="edu-user-dropdown-items">
+                      <a href="/my-donations" className="edu-user-dropdown-item">
+                        <div className="edu-icon-wrapper"><IoLeafOutline /></div>
+                        <div className="edu-dropdown-content">
+                          <span className="edu-item-title">My Donations</span>
+                          <span className="edu-item-description">Track your contributions</span>
                         </div>
                       </a>
-                      <a href="/messages" className="user-dropdown-item">
-                        <div className="icon-wrapper"><IoChatbox /></div>
-                        <div className="dropdown-content">
-                          <span className="item-title">Messages</span>
-                          <span className="item-description">View messages from schools</span>
+                      <a href="/messages" className="edu-user-dropdown-item">
+                        <div className="edu-icon-wrapper"><IoChatbox /></div>
+                        <div className="edu-dropdown-content">
+                          <span className="edu-item-title">Messages</span>
+                          <span className="edu-item-description">View messages from schools</span>
                         </div>
                       </a>
-                      <a href="/profile" className="user-dropdown-item">
-                        <div className="icon-wrapper"><FiHeart /></div>
-                        <div className="dropdown-content">
-                          <span className="item-title">Edit Profile</span>
-                          <span className="item-description">Manage account & preferences</span>
+                      <a href="/profile" className="edu-user-dropdown-item">
+                        <div className="edu-icon-wrapper"><FiHeart /></div>
+                        <div className="edu-dropdown-content">
+                          <span className="edu-item-title">Edit Profile</span>
+                          <span className="edu-item-description">Manage account & preferences</span>
                         </div>
                       </a>
-                      <button onClick={handleLogout} className="user-dropdown-item logout-button">
-                        <div className="icon-wrapper"><FiX /></div>
-                        <div className="dropdown-content">
-                          <span className="item-title">Log out</span>
-                          <span className="item-description">Securely exit your account</span>
+                      <button onClick={handleLogout} className="edu-user-dropdown-item edu-logout-button">
+                        <div className="edu-icon-wrapper"><FiX /></div>
+                        <div className="edu-dropdown-content">
+                          <span className="edu-item-title">Log out</span>
+                          <span className="edu-item-description">Securely exit your account</span>
                         </div>
                       </button>
                     </div>
@@ -365,11 +434,11 @@ const Header = () => {
               </div>
             ) : (
               // Show these buttons only on desktop
-              <div className="header-buttons desktop-only-buttons">
-                <button className="btn btn-secondary" onClick={handleStartDonate}>
+              <div className="edu-header-buttons edu-desktop-only-buttons">
+                <button className="edu-btn edu-btn-secondary" onClick={handleStartDonate}>
                   <FiHeart style={{ marginRight: '6px' }} /> Start Donate
                 </button>
-                <button className="btn btn-primary" onClick={handleRequestDonation}>
+                <button className="edu-btn edu-btn-primary" onClick={handleRequestDonation}>
                   <IoSchoolOutline style={{ marginRight: '6px' }} /> Request Donation
                 </button>
               </div>
@@ -378,7 +447,7 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Modals remain the same */}
+      {/* Updated Modals */}
       <DonationModal
         isOpen={isDonationModalOpen}
         onClose={() => setIsDonationModalOpen(false)}

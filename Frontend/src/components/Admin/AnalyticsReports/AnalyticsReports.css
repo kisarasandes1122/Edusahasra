@@ -336,70 +336,6 @@
   font-weight: 500;
 }
 
-
-/* Custom Report Builder */
-.custom-report-builder {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-   opacity: 0.7; /* Visually indicate disabled */
-   pointer-events: none; /* Disable interactions */
-}
-
-.custom-report-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.custom-report-header h3 {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-}
-
-.filter-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.filter-option {
-  flex: 1;
-  min-width: 200px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.filter-option label {
-  font-size: 13px;
-  color: #666;
-  font-weight: 500;
-}
-
-.filter-option select, .filter-option input {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  background-color: #f9f9f9; /* Indicate disabled */
-  cursor: not-allowed;
-}
-
-
-
-.filter-option span {
-  text-align: center;
-  font-size: 13px;
-  color: #666;
-  padding-top: 8px; /* Align with input */
-}
-
 /* Resource Map Placeholder */
 .resource-map-container {
   margin-top: 24px;
@@ -486,10 +422,6 @@
   color: #666 !important;
 }
 
-/* Verification Summary Styles - same as Stats Summary */
- /* .verification-summary is combined with .stats-summary above */
-
-
 /* Responsive Adjustments */
 @media (max-width: 992px) { /* Adjusted breakpoint slightly */
   .analytics-actions {
@@ -552,14 +484,6 @@
      padding-bottom: 8px; /* Add padding for scrollbar */
   }
 
-   .custom-report-builder .filter-options {
-       flex-direction: column; /* Stack filter options */
-   }
-
-   .filter-option {
-       min-width: 100%;
-   }
-
     /* Adjust stat cards again for smaller screens */
     .stats-summary .stat-card,
     .verification-summary .stat-card {
@@ -570,7 +494,6 @@
        min-width: 100%; /* Stack testimonials */
        max-width: none;
     }
-
 }
 
  @media (max-width: 480px) {

@@ -269,11 +269,7 @@
 }
 
 /* --- Added Back Button Styles from ViewDonations.css --- */
-.view-donations-back-btn-container {
-padding: 16px 24px 0 24px; /* Adjust padding as needed for layout */
-max-width: 800px; /* Match container width */
-margin: 0 auto; /* Center like container */
-}
+
 
 .view-donations-back-btn {
 display: flex;

@@ -128,19 +128,33 @@ const NeedPage = () => {
   };
 
   // Helper function to construct full image URLs
-   const getFullImageUrl = (relativePath) => {
-     if (!relativePath) return null;
-     // If it's already an absolute URL, return it
-     if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
-         return relativePath;
-     }
-     // Ensure base URL doesn't have trailing slash and path starts with one
-     const cleanBase = IMAGE_BASE_URL.endsWith('/') ? IMAGE_BASE_URL.slice(0, -1) : IMAGE_BASE_URL;
-     const cleanPath = relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
-     const fullUrl = `${cleanBase}${cleanPath}`;
-     console.log(`NeedPage: Constructed Image URL: ${fullUrl}`); // Log constructed URL
-     return fullUrl;
-  };
+
+const getFullImageUrl = (relativePath) => {
+  if (!relativePath) return null;
+  
+  // If it's already an absolute URL, return it
+  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+      return relativePath;
+  }
+  
+  // If it already includes the /uploads path, we don't need to add it
+  if (relativePath.startsWith('/uploads/')) {
+    const cleanBase = IMAGE_BASE_URL.endsWith('/') ? IMAGE_BASE_URL.slice(0, -1) : IMAGE_BASE_URL;
+    return `${cleanBase}${relativePath}`;
+  }
+  
+  // Ensure base URL doesn't have trailing slash
+  const cleanBase = IMAGE_BASE_URL.endsWith('/') ? IMAGE_BASE_URL.slice(0, -1) : IMAGE_BASE_URL;
+  
+  // Normalize the path to ensure it doesn't start with a slash
+  const cleanPath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
+  
+  // Construct the full URL with the /uploads prefix
+  const fullUrl = `${cleanBase}/uploads/${cleanPath}`;
+  
+  console.log(`NeedPage: Constructed Image URL: ${fullUrl}`);
+  return fullUrl;
+}; 
 
 
   // --- Render Logic ---
