@@ -1,3 +1,5 @@
+/* Home.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* Base styles */
@@ -142,7 +144,7 @@
   font-weight: 600;
   font-size: 16px;
   text-decoration: none;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; /* REMOVED - Handled by Framer Motion */
   display: inline-block;
 }
 
@@ -153,9 +155,9 @@
 }
 
 .home__button--primary:hover {
-  background-color: #69b119;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  /* background-color: #69b119; /* Can be handled by Framer Motion or kept if preferred */
+  /* transform: translateY(-3px); /* REMOVED - Handled by Framer Motion */
+  /* box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Can be handled by Framer Motion or kept */
 }
 
 .home__button--secondary {
@@ -165,8 +167,8 @@
 }
 
 .home__button--secondary:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-3px);
+  /* background-color: rgba(255, 255, 255, 0.2); /* Can be handled by Framer Motion or kept */
+  /* transform: translateY(-3px); /* REMOVED - Handled by Framer Motion */
 }
 
 /* Schools Donations Section */
@@ -279,13 +281,13 @@
   text-decoration: none;
   display: block;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: auto;
+  /* transition: all 0.2s ease; /* REMOVED - Handled by Framer Motion */
+  margin-top: auto; /* IMPORTANT: Keep for layout */
 }
 
 .home__donate-button:hover {
-  background-color: #3d9c40;
-  transform: translateY(-2px);
+  /* background-color: #3d9c40; /* Handled by Framer Motion */
+  /* transform: translateY(-2px); /* Handled by Framer Motion */
 }
 
 .home__view-all-container {
@@ -303,13 +305,13 @@
   border-radius: 24px;
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; /* REMOVED - Handled by Framer Motion */
 }
 
 .home__view-all-button:hover {
-  background-color: #043f2e;
-  color: white;
-  gap: 12px;
+  /* background-color: #043f2e; /* Handled by Framer Motion */
+  /* color: white; /* Handled by Framer Motion */
+  /* gap: 12px; /* Handled by Framer Motion for hover */
 }
 
 /* How It Works Section */
@@ -330,12 +332,12 @@
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* transition: transform 0.3s ease, box-shadow 0.3s ease; /* REMOVED - Handled by Framer Motion */
 }
 
 .home__how-works-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  /* transform: translateY(-5px); /* Handled by Framer Motion */
+  /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Handled by Framer Motion */
 }
 
 .home__how-works-icon-container {
@@ -409,11 +411,11 @@
   padding: 24px;
   flex: 1;
   text-align: center;
-  transition: transform 0.3s ease;
+  /* transition: transform 0.3s ease; /* REMOVED - Handled by Framer Motion */
 }
 
 .home__impact-stat-card:hover {
-  transform: translateY(-5px);
+  /* transform: translateY(-5px); /* Handled by Framer Motion */
 }
 
 .home__impact-icon-container {
@@ -456,11 +458,11 @@
   padding: 32px;
   position: relative;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
+  /* transition: transform 0.3s ease; /* REMOVED - Handled by Framer Motion */
 }
 
 .home__testimonial-card:hover {
-  transform: translateY(-5px);
+  /* transform: translateY(-5px); /* Handled by Framer Motion */
 }
 
 .home__quote-icon {
@@ -539,13 +541,13 @@
   font-weight: 600;
   font-size: 16px;
   text-decoration: none;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; /* REMOVED - Handled by Framer Motion */
   display: inline-block;
 }
 
 .home__button--get-involved-primary:hover {
-  background-color: #f0f0f0;
-  transform: translateY(-2px);
+  /* background-color: #f0f0f0; /* Handled by Framer Motion */
+  /* transform: translateY(-2px); /* Handled by Framer Motion */
 }
 
 .home__button--get-involved-secondary {
@@ -556,16 +558,16 @@
   font-weight: 600;
   font-size: 16px;
   text-decoration: none;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; /* REMOVED - Handled by Framer Motion */
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
 .home__button--get-involved-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-  gap: 12px;
+  /* background-color: rgba(255, 255, 255, 0.3); /* Handled by Framer Motion */
+  /* transform: translateY(-2px); /* Handled by Framer Motion */
+  /* gap: 12px; /* Handled by Framer Motion for hover */
 }
 
 /* Responsive styles */

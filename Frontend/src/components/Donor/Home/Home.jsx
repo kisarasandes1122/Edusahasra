@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react'; // Import hooks
-import { useNavigate } from 'react-router-dom';    // Import useNavigate
+// Home.jsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion'; // Import motion
 import { ArrowRight, School, Users, Gift, TrendingUp, Clock, BookOpen, GraduationCap, Heart, MapPin, User } from 'lucide-react';
-import api from '../../../api'; // Import your api instance
+import api from '../../../api';
 import './Home.css';
-import LoadingSpinner from '../../Common/LoadingSpinner/LoadingSpinner'; // Optional: if you have one
+import LoadingSpinner from '../../Common/LoadingSpinner/LoadingSpinner';
 
-// Import images (keep these)
 import rural1 from '../../../assets/images/image1.jpg';
 import rural2 from '../../../assets/images/image2.webp';
 import rural3 from '../../../assets/images/image3.jpg';
 
-// Helper function to shuffle an array (Fisher-Yates shuffle)
+// Helper function to shuffle an array
 function shuffleArray(array) {
   let currentIndex = array.length, randomIndex;
   while (currentIndex !== 0) {
@@ -22,35 +23,75 @@ function shuffleArray(array) {
   return array;
 }
 
-// Helper function to format location (similar to SchoolsInNeedPage)
+// Helper function to format location
 const formatLocation = (school) => {
     if (!school) return 'Location Unavailable';
     const parts = [school.city, school.district, school.province].filter(Boolean);
     return parts.join(', ') || 'Location details missing';
 }
 
+// --- Animation Variants ---
+const sectionVariant = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
+};
+
+const cardGridVariant = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const cardItemVariant = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut"
+    }
+  }
+};
+
+const buttonHoverTap = {
+  hover: { scale: 1.05, y: -3 },
+  tap: { scale: 0.95 }
+};
+
+const cardHoverEffect = {
+  hover: { y: -5, boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)" },
+};
+
 
 const Home = () => {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
-  // --- State for fetched requests ---
   const [featuredRequests, setFeaturedRequests] = useState([]);
   const [loadingRequests, setLoadingRequests] = useState(true);
   const [fetchError, setFetchError] = useState(null);
 
-  // --- Fetch featured requests on component mount ---
   useEffect(() => {
     const fetchRequests = async () => {
       setLoadingRequests(true);
       setFetchError(null);
       try {
-        // Fetch a few requests (e.g., 9 lowest progress ones) to get a pool
         const response = await api.get('/api/requests', {
-          params: { limit: 9, sortBy: 'lowest' } // Fetch 9 lowest progress requests
+          params: { limit: 9, sortBy: 'lowest' }
         });
-
         if (response.data && response.data.requests) {
-          // Shuffle the fetched requests and take the first 3
           const shuffled = shuffleArray([...response.data.requests]);
           setFeaturedRequests(shuffled.slice(0, 3));
         } else {
@@ -64,11 +105,9 @@ const Home = () => {
         setLoadingRequests(false);
       }
     };
-
     fetchRequests();
-  }, []); // Empty dependency array means run once on mount
+  }, []);
 
-  // --- Keep other static data ---
   const impactStats = [
     { id: 1, icon: <School className="home__impact-icon" />, count: '70+', label: 'Schools Supported' },
     { id: 2, icon: <Users className="home__impact-icon" />, count: '12,000+', label: 'Students Reached' },
@@ -123,38 +162,75 @@ const Home = () => {
     }
   ];
 
-  // REMOVED the static schoolDonations array
-
   return (
     <div className="home">
       {/* Hero Section */}
       <section className="home__hero">
-        {/* ... hero content ... */}
          <div className="home__hero-slideshow">
           <div className="home__hero-slide" style={{ backgroundImage: `url(${rural1})` }}></div>
           <div className="home__hero-slide" style={{ backgroundImage: `url(${rural2})` }}></div>
           <div className="home__hero-slide" style={{ backgroundImage: `url(${rural3})` }}></div>
           <div className="home__hero-overlay"></div>
         </div>
-        <div className="home__hero-content">
-          <h1 className="home__hero-title">Bridge the Education Gap in Rural Sri Lanka</h1>
-          <p className="home__hero-subtitle">
+        <motion.div 
+          className="home__hero-content"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+        >
+          <motion.h1 
+            className="home__hero-title"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5, ease: "easeOut" }}
+          >
+            Bridge the Education Gap in Rural Sri Lanka
+          </motion.h1>
+          <motion.p 
+            className="home__hero-subtitle"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.7, ease: "easeOut" }}
+          >
             Connect directly with schools in need and provide essential educational resources
             to students who need them most
-          </p>
-          <div className="home__hero-buttons">
-            <a href="/donor-register" className="home__button home__button--primary">
+          </motion.p>
+          <motion.div 
+            className="home__hero-buttons"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.9, ease: "easeOut" }}
+          >
+            <motion.a 
+              href="/donor-register" 
+              className="home__button home__button--primary"
+              whileHover="hover"
+              whileTap="tap"
+              variants={buttonHoverTap}
+            >
               Start Donating Today
-            </a>
-            <a href="/school-register" className="home__button home__button--secondary">
+            </motion.a>
+            <motion.a 
+              href="/school-register" 
+              className="home__button home__button--secondary"
+              whileHover="hover"
+              whileTap="tap"
+              variants={buttonHoverTap}
+            >
               Request Donations
-            </a>
-          </div>
-        </div>
+            </motion.a>
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* Schools Donation Section - NOW DYNAMIC */}
-      <section className="home__schools">
+      {/* Schools Donation Section */}
+      <motion.section 
+        className="home__schools"
+        variants={sectionVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="home__section-container">
           <h2 className="home__section-title">Schools Currently Seeking Support</h2>
           <p className="home__section-subtitle">
@@ -162,33 +238,36 @@ const Home = () => {
           </p>
 
           {loadingRequests ? (
-            <LoadingSpinner /> // Show loading spinner while fetching
+            <LoadingSpinner />
           ) : fetchError ? (
-            <p className="home__error-message">{fetchError}</p> // Show error message
+            <p className="home__error-message">{fetchError}</p>
           ) : featuredRequests.length > 0 ? (
-            <div className="home__schools-grid">
-              {/* Map over the fetched featuredRequests */}
+            <motion.div 
+              className="home__schools-grid"
+              variants={cardGridVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+            >
               {featuredRequests.map((request) => (
-                <div key={request._id} className="home__school-card"> {/* Use request._id */}
+                <motion.div 
+                  key={request._id} 
+                  className="home__school-card" 
+                  variants={cardItemVariant}
+                  // Removed cardHoverEffect for now, as it has more complex content
+                >
                   <h3 className="home__school-name">{request.schoolInfo?.schoolName || 'School Name Unavailable'}</h3>
                   <div className="home__school-info">
                     <div className="home__school-location">
                       <MapPin size={16} />
-                      {/* Use helper function for location */}
                       <span>{formatLocation(request.schoolInfo)}</span>
                     </div>
-                    {/* Removed student count as it's not reliably in the request data */}
-                    {/* <div className="home__school-students">
-                      <User size={16} />
-                      <span>{request.schoolInfo?.studentCount} Students in need</span>
-                    </div> */}
                     <div className="home__school-needs-list">
                       <div className="home__needs-header">Needs Summary:</div>
-                       {/* Summarize requested items */}
                       <div className="home__needs-items">
                           {request.requestedItems
-                              ?.map(item => item.categoryNameEnglish) // Just show names for brevity
-                              .slice(0, 3) // Show first 3
+                              ?.map(item => item.categoryNameEnglish)
+                              .slice(0, 3)
                               .join(', ')}
                           {request.requestedItems?.length > 3 ? '...' : ''}
                       </div>
@@ -196,127 +275,222 @@ const Home = () => {
                   </div>
                   <div className="home__progress-section">
                     <div className="home__progress-label">Progress</div>
-                    {/* Use progress from fetched data */}
                     <div className="home__progress-percentage">{Math.round(request.progress || 0)}% Done</div>
                   </div>
                   <div className="home__progress-bar-container">
                     <div className="home__progress-bar" style={{ width: `${request.progress || 0}%` }}></div>
                   </div>
-                  {/* Link to the Request Details page */}
-                  <button
-                      onClick={() => navigate(`/requests/${request._id}`)} // Use navigate
+                  <motion.button
+                      onClick={() => navigate(`/requests/${request._id}`)}
                       className="home__donate-button"
+                      whileHover={{ scale: 1.03, y: -2, backgroundColor: "#3d9c40" }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ duration: 0.2 }}
                     >
                       View Details & Donate
-                  </button>
-                </div>
+                  </motion.button>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           ) : (
-            <p>No active donation requests found at the moment.</p> // Message if no requests fetched
+            <p>No active donation requests found at the moment.</p>
           )}
 
-          <div className="home__view-all-container">
-            <a href="/needs" className="home__view-all-button">
+          <motion.div 
+            className="home__view-all-container"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ delay: 0.3 }}
+          >
+            <motion.a 
+              href="/needs" 
+              className="home__view-all-button"
+              whileHover={{ scale: 1.05, backgroundColor: "#043f2e", color: "white", gap: "12px" }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
               View All Requests <ArrowRight size={16} />
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Impact Statistics Section */}
-      <section className="home__impact">
-         {/* ... impact content ... */}
+      <motion.section 
+        className="home__impact"
+        variants={sectionVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
           <div className="home__impact-background"></div>
           <div className="home__section-container">
             <h2 className="home__section-title">Our Impact</h2>
             <p className="home__section-subtitle">
               Together, we're creating meaningful change in education across rural Sri Lanka
             </p>
-
-            <div className="home__impact-stats-container">
+            <motion.div 
+              className="home__impact-stats-container"
+              variants={cardGridVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+            >
               {impactStats.map((stat) => (
-                <div key={stat.id} className="home__impact-stat-card">
+                <motion.div 
+                  key={stat.id} 
+                  className="home__impact-stat-card"
+                  variants={cardItemVariant}
+                  whileHover={{ y: -5, scale: 1.03 }}
+                  transition={{ duration: 0.2 }}
+                >
                   <div className="home__impact-icon-container">
                     {stat.icon}
                   </div>
                   <div className="home__impact-stat-count">{stat.count}</div>
                   <div className="home__impact-stat-label">{stat.label}</div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
-      </section>
+      </motion.section>
 
 
       {/* How It Works Section */}
-      <section className="home__how-works">
-         {/* ... how it works content ... */}
+      <motion.section 
+        className="home__how-works"
+        variants={sectionVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
          <div className="home__section-container">
           <h2 className="home__section-title">How EduSahasra Works</h2>
           <p className="home__section-subtitle">
             Our platform makes it easy to connect donors with schools in need through a simple, transparent process
           </p>
-
-          <div className="home__how-works-grid">
+          <motion.div 
+            className="home__how-works-grid"
+            variants={cardGridVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             {howItWorks.map((item) => (
-              <div key={item.id} className="home__how-works-card">
+              <motion.div 
+                key={item.id} 
+                className="home__how-works-card"
+                variants={cardItemVariant}
+                whileHover={cardHoverEffect.hover} // using defined object
+                transition={{ duration: 0.2 }}
+              >
                 <div className="home__how-works-icon-container">
                   {item.icon}
                 </div>
                 <h3 className="home__how-works-title">{item.title}</h3>
                 <p className="home__how-works-description">{item.description}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Get Involved CTA Section */}
-      <section className="home__get-involved">
-         {/* ... get involved content ... */}
+      <motion.section 
+        className="home__get-involved"
+        // No sectionVariant here, as it has a background gradient that might look odd fading
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.7 }}
+      >
           <div className="home__section-container">
-          <div className="home__get-involved-content">
+          <motion.div 
+            className="home__get-involved-content"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <h2 className="home__get-involved-title">Ready to Make a Difference?</h2>
             <p className="home__get-involved-description">
               Join thousands of donors who are helping bridge the education gap in rural Sri Lanka.
               Every donation, no matter how small, creates a brighter future for students in need.
             </p>
-            <div className="home__get-involved-buttons">
-              <a href="/donor-register" className="home__button--get-involved-primary">
+            <motion.div 
+              className="home__get-involved-buttons"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{
+                visible: { transition: { staggerChildren: 0.2, delayChildren: 0.4 }}
+              }}
+            >
+              <motion.a 
+                href="/donor-register" 
+                className="home__button--get-involved-primary"
+                variants={cardItemVariant} // Reuse for simple fade-up
+                whileHover={{ scale: 1.05, y: -2, backgroundColor: "#f0f0f0" }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
                 Start Donating
-              </a>
-              <a href="/needs" className="home__button--get-involved-secondary">
+              </motion.a>
+              <motion.a 
+                href="/needs" 
+                className="home__button--get-involved-secondary"
+                variants={cardItemVariant} // Reuse for simple fade-up
+                whileHover={{ scale: 1.05, y: -2, backgroundColor: "rgba(255, 255, 255, 0.3)", gap: "12px" }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
                 Browse Requests <ArrowRight size={16} />
-              </a>
-            </div>
-          </div>
+              </motion.a>
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Testimonials Section */}
-      <section className="home__testimonials">
-         {/* ... testimonials content ... */}
+      <motion.section 
+        className="home__testimonials"
+        variants={sectionVariant}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
          <div className="home__section-container">
           <h2 className="home__section-title">What People Say</h2>
           <p className="home__section-subtitle">
             Hear from donors and schools about their experience with EduSahasra
           </p>
-
-          <div className="home__testimonials-grid">
+          <motion.div 
+            className="home__testimonials-grid"
+            variants={cardGridVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             {testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="home__testimonial-card">
+              <motion.div 
+                key={testimonial.id} 
+                className="home__testimonial-card"
+                variants={cardItemVariant}
+                whileHover={cardHoverEffect.hover} // using defined object
+                transition={{ duration: 0.2 }}
+              >
                 <div className="home__quote-icon">"</div>
                 <p className="home__testimonial-quote">{testimonial.quote}</p>
                 <div className="home__testimonial-author">
                   <p className="home__testimonial-name">{testimonial.name}</p>
                   <p className="home__testimonial-role">{testimonial.role}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 };

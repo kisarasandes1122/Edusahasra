@@ -44,8 +44,13 @@
   font-size: 14px;
   background-color: transparent;
   margin-left: 8px;
-  cursor: pointer; /* Added cursor */
+  cursor: pointer;
 }
+.time-range-selector select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 
 /* Button Styles */
 .refresh-btn, .export-btn, .generate-report-btn {
@@ -63,7 +68,7 @@
   white-space: nowrap; /* Prevent text wrapping */
 }
 
-.refresh-btn:hover, .export-btn:hover {
+.refresh-btn:hover:not(:disabled), .export-btn:hover:not(:disabled) {
   background-color: #f0f0f0;
 }
 
@@ -78,9 +83,10 @@
   border: none;
 }
 
-.generate-report-btn:hover {
+.generate-report-btn:hover:not(:disabled) {
   background-color: #0066cc;
 }
+
 
 /* Add spin animation for loading */
 @keyframes spin {
@@ -88,7 +94,8 @@
   100% { transform: rotate(360deg); }
 }
 
-.refresh-btn .spin {
+.refresh-btn .spin,
+.export-btn .spin { /* Apply spin to export button icon as well */
   animation: spin 1s linear infinite;
 }
 
@@ -113,10 +120,14 @@
   margin-top: 4px; /* Small space below button */
 }
 
+/* Only show dropdown content if the button is hovered or focused AND NOT disabled */
 .export-dropdown:hover .export-dropdown-content,
-.export-btn:focus + .export-dropdown-content { /* Keep dropdown open on button focus */
-  display: block;
+.export-btn:focus + .export-dropdown-content {
+    .export-btn:not(:disabled) + & {
+        display: block;
+    }
 }
+
 
  /* Add a tiny triangle indicator maybe? */
 .export-btn::after {
@@ -124,10 +135,15 @@
      font-size: 10px;
      margin-left: 8px;
      color: #666;
+     transition: color 0.2s ease;
  }
-  .export-btn:hover::after {
+  .export-btn:hover:not(:disabled)::after {
       color: #333;
   }
+
+ .export-btn:disabled::after {
+     content: none; /* Hide the arrow when disabled */
+ }
 
 
 .export-dropdown-content button {
@@ -167,7 +183,7 @@
    flex-shrink: 0; /* Prevent tabs from shrinking */
 }
 
-.analytics-tabs button:hover {
+.analytics-tabs button:hover:not(:disabled) {
   color: #333;
 }
 
@@ -175,6 +191,13 @@
   border-bottom: 2px solid #0088FE;
   color: #0088FE;
 }
+
+/* Add disabled state for tabs */
+.analytics-tabs button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 
 /* Chart Container Styles */
 .analytics-content {
@@ -198,7 +221,20 @@
   border-radius: 8px;
   padding: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  min-height: 320px; /* Added minimum height to prevent charts from collapsing */
+  display: flex; /* Use flexbox for centering loading/no data message */
+  flex-direction: column; /* Stack title and chart area */
 }
+.chart-container > div { /* Target chart content area */
+    flex-grow: 1; /* Allow chart area to take remaining space */
+    display: flex; /* Use flexbox for centering loading/no data message */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+.chart-container .recharts-responsive-container {
+    flex-grow: 1; /* Allow recharts container to grow */
+}
+
 
 .chart-container h3 {
   font-size: 16px;
@@ -206,6 +242,7 @@
   color: #333;
   margin-top: 0;
   margin-bottom: 16px;
+  text-align: left; /* Align title left */
 }
 
 .chart-container.full-width {
@@ -219,21 +256,30 @@
   padding: 40px;
   font-size: 16px;
   color: #666;
+  display: flex; /* Added to center icon and text */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  gap: 8px; /* Space between icon and text */
+  flex-grow: 1; /* Allow loading indicator to take space within chart container */
+}
+.loading-indicator.error {
+    color: red;
 }
 
+
 /* Stats Summary Styles */
-.stats-summary, .verification-summary { /* Combined rule */
+.stats-summary, .verification-summary {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   margin-top: 24px;
-  margin-bottom: 24px; /* Added margin-bottom */
+  margin-bottom: 24px;
 }
 
 .stat-card {
   flex: 1;
   min-width: 200px;
-   max-width: 280px; /* Limit max width */
+   max-width: 280px;
   background-color: #fff;
   border-radius: 8px;
   padding: 16px;
@@ -311,28 +357,29 @@
 }
 
 /* Status Classes */
+/* Ensure class names match backend status exactly, lowercased and hyphenated */
 .status-pending-confirmation,
 .status-preparing,
-.status-processing { /* Use lowercase and dashes */
-  color: #FF9800;
+.status-processing {
+  color: #FF9800; /* Orange */
   font-weight: 500;
 }
 
 .status-in-transit {
-  color: #2196F3;
+  color: #2196F3; /* Blue */
   font-weight: 500;
 }
 
 .status-delivered,
- .status-received-by-school, /* Added based on backend status */
- .status-approved { /* Added for verification status */
-  color: #4CAF50;
+.status-received-by-school,
+.status-approved {
+  color: #4CAF50; /* Green */
   font-weight: 500;
 }
 
- .status-cancelled,
- .status-rejected { /* Added for cancelled/rejected */
-  color: #F44336;
+.status-cancelled,
+.status-rejected {
+  color: #F44336; /* Red */
   font-weight: 500;
 }
 
@@ -388,12 +435,12 @@
 .testimonial-card {
   flex: 1;
   min-width: 250px;
-   max-width: 350px; /* Limit max width */
+   max-width: 350px;
   background-color: #f8f9fa;
   border-radius: 8px;
   padding: 16px;
   position: relative;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Added slight shadow */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .testimonial-card p {
@@ -423,29 +470,27 @@
 }
 
 /* Responsive Adjustments */
-@media (max-width: 992px) { /* Adjusted breakpoint slightly */
+@media (max-width: 992px) {
   .analytics-actions {
-      flex-wrap: wrap; /* Allow actions to wrap */
-      justify-content: flex-start; /* Align left when wrapped */
+      flex-wrap: wrap;
+      justify-content: flex-start;
   }
 
   .time-range-selector,
   .refresh-btn,
   .export-dropdown,
   .generate-report-btn {
-      /* Allow these to take up more space or stack */
-      width: auto; /* Reset width */
-      flex-grow: 0; /* Prevent excessive stretching */
+      width: auto;
+      flex-grow: 0;
   }
 
-   /* Adjust dropdown position if actions wrap */
    .export-dropdown-content {
-      right: auto; /* Remove right alignment */
-      left: 0; /* Align left with parent button */
+      right: auto;
+      left: 0;
    }
 
     .export-btn::after {
-       content: none; /* Hide arrow when wrapped/stacked */
+       content: none;
     }
 }
 
@@ -458,7 +503,7 @@
   .chart-container {
     width: 100%;
     min-width: 100%;
-     min-height: 250px; /* Ensure chart container has minimum height */
+     min-height: 250px; /* Adjust minimum height for smaller screens */
   }
 
   .analytics-header {
@@ -469,55 +514,52 @@
 
   .analytics-actions {
     width: 100%;
-    justify-content: space-between; /* Distribute items */
+    justify-content: space-between;
   }
 
-  /* Adjust flex basis for stat cards to allow 2 or 3 per row */
   .stat-card {
-      min-width: calc(50% - 8px); /* Two cards per row with gap */
-      max-width: none; /* Remove max-width constraint */
+      min-width: calc(50% - 8px);
+      max-width: none;
   }
 
 
   .analytics-tabs {
-    overflow-x: auto; /* Ensure tabs are scrollable */
-     padding-bottom: 8px; /* Add padding for scrollbar */
+    overflow-x: auto;
+     padding-bottom: 8px;
   }
-
-    /* Adjust stat cards again for smaller screens */
-    .stats-summary .stat-card,
-    .verification-summary .stat-card {
-        min-width: 100%; /* Stack stat cards on smallest screens */
-    }
-
-    .testimonial-card {
-       min-width: 100%; /* Stack testimonials */
-       max-width: none;
-    }
 }
 
  @media (max-width: 480px) {
      .analytics-actions {
-         flex-direction: column; /* Stack action buttons */
-         align-items: stretch; /* Stretch buttons to full width */
+         flex-direction: column;
+         align-items: stretch;
      }
      .time-range-selector,
      .refresh-btn,
      .export-dropdown,
      .generate-report-btn {
-         width: 100%; /* Full width */
+         width: 100%;
      }
       .export-dropdown-content {
            left: 0;
            right: auto;
-           width: 100%; /* Full width dropdown */
-           box-sizing: border-box; /* Include padding/border in width */
+           width: 100%;
+           box-sizing: border-box;
       }
        .export-btn::after {
-          content: none; /* Hide arrow */
+          content: none;
        }
 
       .analytics-tabs button {
-           padding: 10px 15px; /* Reduce tab padding */
+           padding: 10px 15px;
+      }
+
+      .stat-card {
+        min-width: 100%;
+      }
+
+      .testimonial-card {
+         min-width: 100%;
+         max-width: none;
       }
  }

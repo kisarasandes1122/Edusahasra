@@ -82,8 +82,7 @@ const isSuperAdmin = asyncHandler(async (req, res, next) => {
 });
 
 
-// --- NEW: Attempt Authentication Middleware ---
-// Tries to authenticate user if token is present, but continues even if not successful.
+
 const attemptAuth = asyncHandler(async (req, res, next) => {
     let token;
 
@@ -92,44 +91,31 @@ const attemptAuth = asyncHandler(async (req, res, next) => {
             token = req.headers.authorization.split(' ')[1];
             const decoded = jwt.verify(token, JWT_SECRET);
 
-            // Attempt to find user in different models
-            // Use lean() for better performance since we're not saving changes here
-            // Add checks for null results in case user was deleted after token issued
-            const [donorUser, schoolUser, adminUser] = await Promise.allSettled([ // Use settled to get results even if one fails
+            const [donorUser, schoolUser, adminUser] = await Promise.allSettled([ 
                 Donor.findById(decoded.id).select('-password').lean(),
                 School.findById(decoded.id).select('-password').lean(),
                 Admin.findById(decoded.id).select('-password').lean(),
             ]);
-
-            // Attach user if found (prioritizing order as needed, or check by presence)
-            // Check status ('fulfilled' or 'rejected') and value
-            if (adminUser.status === 'fulfilled' && adminUser.value) { // Prioritize admin if applicable
+            
+            if (adminUser.status === 'fulfilled' && adminUser.value) { 
                 req.admin = adminUser.value;
                  console.log("AttemptAuth: Admin authenticated.");
             } else if (schoolUser.status === 'fulfilled' && schoolUser.value) {
                 req.school = schoolUser.value;
                  console.log("AttemptAuth: School authenticated.");
-                // Optional: check isApproved here if needed for this route, or handle in controller
             } else if (donorUser.status === 'fulfilled' && donorUser.value) {
                 req.donor = donorUser.value;
                  console.log("AttemptAuth: Donor authenticated.");
             } else {
-                // Token was valid, but user ID not found in any expected collection, or DB lookup failed
                  console.warn("AttemptAuth: Token valid, but user not found in any model or lookup failed.");
             }
 
         } catch (error) {
-            // Token verification failed (invalid signature, expired, etc.)
             console.error('AttemptAuth: Token verification failed:', error.message);
-            // Do NOT send 401/403 here. Just continue as if no token was provided.
-            // The error is logged, but the request proceeds to the next middleware/controller.
         }
     } else {
-         // No token provided in headers
          console.log("AttemptAuth: No token provided.");
     }
-
-    // Always call next(), allowing the request to proceed to the controller
     next();
 });
 
