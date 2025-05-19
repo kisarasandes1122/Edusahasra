@@ -354,13 +354,6 @@ const Header = () => {
                           <span className="edu-dropdown-item-description">Step-by-step donation process</span>
                         </div>
                       </a>
-                      <a href="/feedbacks" className="edu-dropdown-item" onClick={handleNavLinkClick}>
-                        <IoChatbox className="edu-dropdown-icon" />
-                        <div className="edu-dropdown-content">
-                          <span className="edu-dropdown-item-title">Feedbacks</span>
-                          <span className="edu-dropdown-item-description">See what others say about their experience</span>
-                        </div>
-                      </a>
                     </div>
                   </div>
                 )}
