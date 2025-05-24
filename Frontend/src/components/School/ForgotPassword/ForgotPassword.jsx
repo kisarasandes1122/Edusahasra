@@ -14,7 +14,7 @@ const ForgotPassword = () => {
 
   const translations = {
     title: language === 'english' ? 'Forgot Password' : 'මුරපදය අමතක වුණාද?',
-    subtitle: language === 'english' 
+    subtitle: language === 'english'
       ? 'Enter your school email address and we will send you a link to reset your password.'
       : 'ඔබගේ පාසල් විද්‍යුත් තැපෑල ලිපිනය ඇතුළත් කරන්න. අපි ඔබට මුරපදය යළි පිහිටුවීමට සබැඳියක් යවන්නෙමු.',
     emailLabel: language === 'english' ? 'School Email Address' : 'පාසල් විද්‍යුත් තැපෑල ලිපිනය',
@@ -49,12 +49,12 @@ const ForgotPassword = () => {
     setIsSubmitting(true);
     try {
       const response = await api.post('/api/schools/forgot-password', { schoolEmail: email });
-      setSuccess(language === 'english' 
+      setSuccess(language === 'english'
         ? 'Password reset link has been sent to your email'
         : 'මුරපදය යළි පිහිටුවීමේ සබැඳිය ඔබගේ විද්‍යුත් තැපෑලට යවන ලදී');
       setEmail('');
     } catch (err) {
-      setError(err.response?.data?.message || (language === 'english' 
+      setError(err.response?.data?.message || (language === 'english'
         ? 'Failed to send reset link. Please try again.'
         : 'යළි පිහිටුවීමේ සබැඳිය යැවීම අසාර්ථක විය. කරුණාකර නැවත උත්සාහ කරන්න.'));
     } finally {
@@ -124,4 +124,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword; 
+export default ForgotPassword;

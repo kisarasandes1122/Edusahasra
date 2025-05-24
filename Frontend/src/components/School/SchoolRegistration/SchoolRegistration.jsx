@@ -5,16 +5,11 @@ import { BsShieldLock } from 'react-icons/bs';
 import './SchoolRegistration.css';
 import RegistrationSuccessPopup from './RegistrationSuccessPopup.jsx';
 import translations from './translation.jsx';
-import api from '../../../api.js'; // Adjust path if needed
+import api from '../../../api.js';
 
 const SchoolRegistration = () => {
-  // Language state
   const [language, setLanguage] = useState('en');
-
-  // Current step tracking
   const [currentStep, setCurrentStep] = useState(1);
-
-  // Form data state
   const [formData, setFormData] = useState({
     schoolName: '',
     schoolEmail: '',
@@ -34,7 +29,6 @@ const SchoolRegistration = () => {
     agreeToTerms: false
   });
 
-  // Other state variables
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
@@ -43,7 +37,6 @@ const SchoolRegistration = () => {
   const [submitError, setSubmitError] = useState('');
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
 
-  // Error state
   const [errors, setErrors] = useState({
     schoolName: '',
     schoolEmail: '',
@@ -61,11 +54,9 @@ const SchoolRegistration = () => {
     agreeToTerms: ''
   });
 
-  // Refs
   const passwordRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Password strength state
   const [passwordStrength, setPasswordStrength] = useState({
     hasMinLength: false,
     hasUpperCase: false,
@@ -74,7 +65,6 @@ const SchoolRegistration = () => {
     hasSpecialChar: false
   });
 
-  // Static data
   const sriLankanDistricts = [
     "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo",
     "Galle", "Gampaha", "Hambantota", "Jaffna", "Kalutara",
@@ -83,10 +73,9 @@ const SchoolRegistration = () => {
     "Polonnaruwa", "Puttalam", "Ratnapura", "Trincomalee", "Vavuniya"
   ];
 
-  // --- Helper Functions ---
 
   const getText = (key) => {
-    return translations[language][key] || key; // Return key as fallback
+    return translations[language][key] || key; 
   };
 
   const handleLanguageChange = (e) => {
@@ -111,7 +100,6 @@ const SchoolRegistration = () => {
   };
 
   const isPasswordValid = () => {
-     // Use the state derived from validatePassword
     return Object.values(passwordStrength).every(Boolean);
   }
 
@@ -133,7 +121,6 @@ const SchoolRegistration = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  // --- Effects ---
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -147,7 +134,6 @@ const SchoolRegistration = () => {
     };
   }, []);
 
-  // --- Event Handlers ---
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -158,15 +144,13 @@ const SchoolRegistration = () => {
       [name]: newValue
     }));
 
-    // --- Inline Validation & Error Clearing ---
-    let specificError = ''; // Store error for the current field
+    let specificError = ''; 
 
     if (name === 'password') {
-      const isValid = validatePassword(newValue); // Also updates strength indicator state
-      if (!isValid && newValue) { // Show requirements error only if typed something
+      const isValid = validatePassword(newValue); 
+      if (!isValid && newValue) { 
          specificError = 'Password does not meet all requirements';
       }
-      // Clear confirm password error if passwords now match
       if (formData.confirmPassword && newValue === formData.confirmPassword) {
           setErrors(prev => ({ ...prev, confirmPassword: '' }));
       } else if (formData.confirmPassword && newValue !== formData.confirmPassword) {
@@ -177,7 +161,6 @@ const SchoolRegistration = () => {
       if (newValue !== formData.password) {
         specificError = 'Passwords do not match';
       } else {
-          // Clear potential previous mismatch error if they now match
           specificError = '';
       }
     }
@@ -192,31 +175,27 @@ const SchoolRegistration = () => {
       }
     }
     else if (name === 'agreeToTerms') {
-      if (!newValue) { // If unchecked
+      if (!newValue) { 
         specificError = 'You must agree to the terms';
       }
     }
     else {
-      // For other required fields, clear the error if the user types something
       if (newValue.trim()) {
           specificError = '';
       }
-      // Note: We don't add back the "required" error here, that's done in validateStep/validateForm
     }
 
-    // Update the errors state for the specific field
     setErrors(prev => ({
       ...prev,
       [name]: specificError
     }));
 
-    // Clear general submit error on any change
     setSubmitError('');
   };
 
   const validateStep = (step, updateErrorsState = true) => {
     let stepIsValid = true;
-    const newErrors = { ...errors }; // Start with existing errors only if not updating state
+    const newErrors = { ...errors }; 
 
     const requiredFieldsByStep = {
       1: ['schoolName', 'schoolEmail', 'password', 'confirmPassword'],
@@ -226,12 +205,11 @@ const SchoolRegistration = () => {
       5: ['agreeToTerms']
     };
 
-    // --- Field Requirement Validation ---
     if (requiredFieldsByStep[step]) {
       requiredFieldsByStep[step].forEach(field => {
         const value = formData[field];
         if ((typeof value === 'string' && !value.trim()) || (field === 'agreeToTerms' && !value)) {
-            if (!newErrors[field]) { // Don't overwrite more specific errors
+            if (!newErrors[field]) { 
                 newErrors[field] = field === 'agreeToTerms' ? 'You must agree to the terms' : 'This field is required';
             }
             stepIsValid = false;
@@ -239,12 +217,11 @@ const SchoolRegistration = () => {
       });
     }
 
-    // --- Step-Specific Format/Logic Validation ---
      if (step === 1) {
        if (formData.schoolEmail && !validateEmail(formData.schoolEmail)) {
          newErrors.schoolEmail = 'Please enter a valid email address';
          stepIsValid = false;
-       } else if (!formData.schoolEmail){ // Check requirement explicitly if empty
+       } else if (!formData.schoolEmail){ 
            newErrors.schoolEmail = 'This field is required';
            stepIsValid = false;
        }
@@ -284,20 +261,19 @@ const SchoolRegistration = () => {
      }
      else if (step === 5) {
        if (uploadedFiles.length === 0) {
-         if (!newErrors.documents) { // Only add if not already present
+         if (!newErrors.documents) { 
              newErrors.documents = 'Please upload at least one verification document';
          }
          stepIsValid = false;
        }
        if (!formData.agreeToTerms) {
-          if (!newErrors.agreeToTerms) { // Only add if not already present
+          if (!newErrors.agreeToTerms) { 
              newErrors.agreeToTerms = 'You must agree to the terms';
           }
          stepIsValid = false;
        }
      }
 
-    // Update the main errors state *only* if requested (e.g., on step change or submit)
     if (updateErrorsState) {
         setErrors(newErrors);
     }
@@ -306,9 +282,8 @@ const SchoolRegistration = () => {
 
   const validateForm = () => {
     let formIsValid = true;
-    // Validate all steps and update errors state
     for (let step = 1; step <= 5; step++) {
-      if (!validateStep(step, true)) { // Pass true to update errors state
+      if (!validateStep(step, true)) { 
         formIsValid = false;
       }
     }
@@ -316,20 +291,18 @@ const SchoolRegistration = () => {
   };
 
   const handleNextStep = () => {
-    // Validate *only* the current step before proceeding and update errors
     if (validateStep(currentStep, true)) {
       setCurrentStep(currentStep + 1);
       setSubmitError('');
       window.scrollTo(0, 0);
     } else {
-      // Scroll to the first error within the current step's section
       const currentStepSection = document.querySelector(`.scrf_form > .scrf_section:nth-of-type(${currentStep})`);
       if (currentStepSection) {
         const firstError = currentStepSection.querySelector('.scrf_error_message');
         if (firstError) {
           firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-      } else { // Fallback scroll
+      } else { 
          const firstGenError = document.querySelector('.scrf_error_message');
          if (firstGenError) {
            firstGenError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -348,7 +321,6 @@ const SchoolRegistration = () => {
     e.preventDefault();
     setSubmitError('');
 
-    // Validate the entire form and update errors state before submitting
     if (!validateForm()) {
        const firstError = document.querySelector('.scrf_error_message');
        if (firstError) {
@@ -360,14 +332,12 @@ const SchoolRegistration = () => {
     setIsSubmitting(true);
     const formDataToSubmit = new FormData();
 
-    // Append form data (Backend expects confirmPassword for validation)
     Object.keys(formData).forEach(key => {
-      if (key !== 'agreeToTerms') { // agreeToTerms is frontend only
+      if (key !== 'agreeToTerms') { 
         formDataToSubmit.append(key, formData[key]);
       }
     });
 
-    // Append files
     uploadedFiles.forEach(fileInfo => {
       formDataToSubmit.append('documents', fileInfo.file, fileInfo.name);
     });
@@ -378,22 +348,16 @@ const SchoolRegistration = () => {
       if (response.status === 201) {
         console.log('Registration successful:', response.data);
         setShowSuccessPopup(true);
-        // Optional: Reset form after successful submission
-        // setFormData({ initial state }); setUploadedFiles([]); setCurrentStep(1);
       } else {
         setSubmitError(`Unexpected success status: ${response.status}. Please contact support.`);
       }
 
     } catch (error) {
       console.error('Registration failed:', error);
-      let errorMessage = 'An unexpected error occurred. Please try again.'; // Default
+      let errorMessage = 'An unexpected error occurred. Please try again.'; 
       if (error.response) {
-        // Backend error
         errorMessage = error.response.data?.message || `Server error (${error.response.status}). Please try again.`;
-         // If backend provides structured field errors, you could potentially map them here
-         // e.g., if (error.response.data.errors) { setErrors(prev => ({...prev, ...mapBackendErrors(error.response.data.errors)})) }
       } else if (error.request) {
-        // Network error
         errorMessage = 'Network error. Could not reach the server. Please check your connection.';
       }
       setSubmitError(errorMessage);
@@ -406,7 +370,6 @@ const SchoolRegistration = () => {
     }
   };
 
-  // --- File Handling ---
 
   const handleFileUploadClick = () => {
     if (isSubmitting) return;
@@ -417,18 +380,18 @@ const SchoolRegistration = () => {
     if (!files || files.length === 0) return;
 
     let fileError = '';
-    const maxFileSize = 5 * 1024 * 1024; // 5MB
+    const maxFileSize = 5 * 1024 * 1024; 
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     let newFiles = [];
 
     for (const file of Array.from(files)) {
         if (!allowedTypes.includes(file.type)) {
             fileError = `Invalid file type: ${file.name}. Only PDF, JPG, JPEG, PNG allowed.`;
-            break; // Stop processing on first error
+            break; 
         }
         if (file.size > maxFileSize) {
             fileError = `File too large: ${file.name}. Maximum size is 5MB.`;
-            break; // Stop processing on first error
+            break; 
         }
         newFiles.push({
             id: `file-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
@@ -440,18 +403,16 @@ const SchoolRegistration = () => {
 
     if (fileError) {
         setErrors(prev => ({ ...prev, documents: fileError }));
-        // Do not add any files if one was invalid
     } else {
-        // Add valid files and clear document errors
         setUploadedFiles(prev => [...prev, ...newFiles]);
         setErrors(prev => ({ ...prev, documents: '' }));
-        setSubmitError(''); // Clear general submit error too
+        setSubmitError(''); 
     }
   };
 
   const handleFileChange = (e) => {
     processFiles(e.target.files);
-    e.target.value = null; // Allow re-uploading same file
+    e.target.value = null; 
   };
 
   const handleFileDragOver = (e) => {
@@ -474,19 +435,16 @@ const SchoolRegistration = () => {
      if (isSubmitting) return;
     setUploadedFiles(prev => {
       const updatedFiles = prev.filter(file => file.id !== fileId);
-      // Update error state only if on final step and no files left
       if (currentStep === 5 && updatedFiles.length === 0) {
         setErrors(prev => ({ ...prev, documents: 'Please upload at least one verification document' }));
       } else {
-         // Otherwise, clear the document error if it exists
          setErrors(prev => ({...prev, documents: ''}));
       }
-      setSubmitError(''); // Clear general submit error
+      setSubmitError(''); 
       return updatedFiles;
     });
   };
 
-  // --- Location Handling ---
 
   const handleGetLocation = () => {
     setIsLocating(true);
@@ -523,7 +481,6 @@ const SchoolRegistration = () => {
     }
   };
 
-  // --- Render Functions ---
 
   const renderProgressBar = () => {
     const stepLabels = {
@@ -553,7 +510,6 @@ const SchoolRegistration = () => {
     }
   };
 
-  // --- Individual Step Render Functions (JSX) ---
 
   const renderSchoolInfoStep = () => (
     <div className="scrf_section">
@@ -583,7 +539,6 @@ const SchoolRegistration = () => {
                  className={`scrf_input scrf_input_with_icon_field ${errors.password ? 'scrf_input_error' : ''}`}
                  placeholder={`${getText('password')} *`} />
         </div>
-        {/* Display error OR strength indicator */}
         {errors.password ? (
              <div className="scrf_error_message">{errors.password}</div>
         ) : (isPasswordFocused && formData.password) ? (
@@ -782,9 +737,7 @@ const SchoolRegistration = () => {
     </div>
   );
 
-  // --- Navigation Buttons (Corrected Logic) ---
   const renderNavButtons = () => {
-    // Check validity based *only* on current state, without causing re-renders by calling setErrors
     const checkStepValidityFromState = (step) => {
       let isValid = true;
       const requiredFieldsByStep = {
@@ -796,23 +749,19 @@ const SchoolRegistration = () => {
       };
       const fieldsToCheck = requiredFieldsByStep[step] || [];
 
-      // Check for existing error messages for this step's fields
       fieldsToCheck.forEach(field => {
           if (errors[field]) {
               isValid = false;
           }
-          // Also check if required fields are actually empty in formData (error might not be set yet if untouched)
           const value = formData[field];
           if (typeof value === 'string' && !value.trim()) {
               isValid = false;
           }
-          // Check boolean field
            if (field === 'agreeToTerms' && !value) {
               isValid = false;
            }
       });
 
-      // Specific checks for complex fields based on current state/errors
       if (step === 1) {
            if (!formData.schoolName || !formData.schoolEmail || !formData.password || !formData.confirmPassword ||
                errors.schoolEmail || errors.password || errors.confirmPassword || !isPasswordValid() || formData.password !== formData.confirmPassword ) {
@@ -855,7 +804,6 @@ const SchoolRegistration = () => {
   };
 
 
-  // --- Main Component Return ---
   return (
     <>
       <div className="scrf_container">

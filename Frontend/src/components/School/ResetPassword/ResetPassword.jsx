@@ -19,7 +19,7 @@ const ResetPassword = () => {
 
   const translations = {
     title: language === 'english' ? 'Reset Password' : 'මුරපදය යළි පිහිටුවන්න',
-    subtitle: language === 'english' 
+    subtitle: language === 'english'
       ? 'Please enter your new password'
       : 'කරුණාකර ඔබගේ නව මුරපදය ඇතුළත් කරන්න',
     passwordLabel: language === 'english' ? 'New Password' : 'නව මුරපදය',
@@ -28,7 +28,7 @@ const ResetPassword = () => {
     backToLogin: language === 'english' ? 'Back to Login' : 'පිවිසීමට ආපසු යන්න',
     selectLanguage: language === 'english' ? 'Select Language' : 'භාෂාව තෝරන්න',
     resetting: language === 'english' ? 'Resetting...' : 'යළි පිහිටුවෙමින්...',
-    invalidToken: language === 'english' 
+    invalidToken: language === 'english'
       ? 'Invalid or expired reset link. Please request a new password reset.'
       : 'වලංගු නොවන හෝ කල් ඉකුත් වූ යළි පිහිටුවීමේ සබැඳිය. කරුණාකර නව මුරපද යළි පිහිටුවීමක් ඉල්ලන්න.',
     passwordRequirements: language === 'english' ? 'Password Requirements:' : 'මුරපද අවශ්‍යතා:',
@@ -88,7 +88,7 @@ const ResetPassword = () => {
     setSuccess('');
 
     if (!formData.password || !formData.confirmPassword) {
-      setError(language === 'english' 
+      setError(language === 'english'
         ? 'Please fill in all fields'
         : 'කරුණාකර සියලුම ක්ෂේත්‍ර පුරවන්න');
       return;
@@ -119,8 +119,7 @@ const ResetPassword = () => {
       setSuccess(language === 'english'
         ? 'Password has been reset successfully'
         : 'මුරපදය සාර්ථකව යළි පිහිටුවන ලදී');
-      
-      // Redirect to login after 2 seconds
+
       setTimeout(() => {
         navigate('/school-login');
       }, 2000);
@@ -258,4 +257,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword; 
+export default ResetPassword;

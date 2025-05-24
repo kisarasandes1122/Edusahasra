@@ -9,24 +9,20 @@ const ViewDonations = () => {
   const navigate = useNavigate();
   const { translations } = useLanguage();
 
-  // State for different donation categories
   const [upcomingDonations, setUpcomingDonations] = useState([]);
   const [pendingConfirmations, setPendingConfirmations] = useState([]);
   const [donationRequestsSummary, setDonationRequestsSummary] = useState([]);
 
-  // Loading and error states
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [confirmingId, setConfirmingId] = useState(null);
 
-  // --- Fetch Data Function ---
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     console.log("Fetching donation data...");
 
     try {
-      // Fetch both school donations and the school's donation requests
       const [donationsResponse, requestsResponse] = await Promise.all([
         api.get('/api/donations/school-donations'),
         api.get('/api/requests/my-requests')
@@ -38,20 +34,15 @@ const ViewDonations = () => {
       const allSchoolDonations = donationsResponse.data || [];
       const schoolRequests = requestsResponse.data || [];
 
-      // --- Process Donations ---
       const upcoming = [];
       const pending = [];
 
       allSchoolDonations.forEach(donation => {
-        // If already confirmed by school, skip (it will be reflected in requests summary)
         if (donation.schoolConfirmation || donation.trackingStatus === 'Received by School') {
           return;
         }
 
-        // Consider donations 'Delivered' or 'In Transit' / 'Preparing' as needing action/viewing
         if (['Delivered', 'In Transit', 'Preparing', 'Pending Confirmation'].includes(donation.trackingStatus)) {
-          // If status is 'Delivered', it's pending confirmation
-          // If 'In Transit' or 'Preparing', it's upcoming
           if (donation.trackingStatus === 'Delivered' || donation.trackingStatus === 'Pending Confirmation') {
             pending.push(donation);
           } else if (['In Transit', 'Preparing'].includes(donation.trackingStatus)) {
@@ -63,8 +54,6 @@ const ViewDonations = () => {
       setUpcomingDonations(upcoming);
       setPendingConfirmations(pending);
 
-      // --- Process Requests for Summary ---
-      // Flatten the requested items from all requests for easier display
       const summaryItems = schoolRequests.flatMap(request =>
         request.requestedItems.map(item => ({
           id: `${request._id}-${item.categoryId}`,
@@ -77,7 +66,6 @@ const ViewDonations = () => {
         }))
       );
 
-      // Group by categoryId if multiple requests asked for the same item
       const groupedSummary = summaryItems.reduce((acc, item) => {
         if (!acc[item.categoryId]) {
           acc[item.categoryId] = { ...item, requestIds: [item.requestId] };
@@ -108,17 +96,14 @@ const ViewDonations = () => {
     }
   }, [translations.error_fetching_data]);
 
-  // --- Fetch data on component mount ---
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  // --- Handle Back Navigation ---
   const handleBack = () => {
     navigate('/Dashboard');
   };
 
-  // --- Handle Donation Confirmation ---
   const handleConfirmDonation = async (donationId) => {
     setConfirmingId(donationId);
     setError(null);
@@ -128,10 +113,8 @@ const ViewDonations = () => {
       const response = await api.put(`/api/donations/${donationId}/confirm-receipt`);
       console.log("Confirmation Response:", response.data);
 
-      // Show success message (optional)
       alert(translations.donation_confirmed_successfully || 'Donation confirmed successfully!');
 
-      // Re-fetch data to update all lists
       await fetchData();
 
     } catch (err) {
@@ -144,7 +127,6 @@ const ViewDonations = () => {
     }
   };
 
-  // Helper to format date
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     try {
@@ -155,13 +137,11 @@ const ViewDonations = () => {
     }
   };
 
-  // Helper to generate item summary string
   const getItemSummary = (items) => {
     if (!items || items.length === 0) return translations.no_items_specified || "No items specified";
     return items.map(item => `${item.quantityDonated} ${item.categoryNameEnglish}`).join(', ');
   };
 
-  // Helper function to get status class name
   const getStatusClass = (status) => {
     switch (status) {
       case 'In Transit': return 'status-transit';
@@ -172,7 +152,6 @@ const ViewDonations = () => {
     }
   };
 
-  // Helper function to get status icon
   const getStatusIcon = (status) => {
     switch (status) {
       case 'In Transit': return <FaTruck />;
@@ -183,11 +162,10 @@ const ViewDonations = () => {
     }
   };
 
-  // Calculate progress percentage for donation requests
   const calculateProgress = (received, requested) => {
     if (requested === 0) return 0;
     const percentage = (received / requested) * 100;
-    return Math.min(percentage, 100); // Cap at 100%
+    return Math.min(percentage, 100); 
   };
 
   return (
@@ -205,7 +183,6 @@ const ViewDonations = () => {
         </button>
       </div>
 
-      {/* Loading State */}
       {loading && (
         <div className="loading-message">
           <FaSpinner className="loading-spinner" />
@@ -213,17 +190,14 @@ const ViewDonations = () => {
         </div>
       )}
 
-      {/* Error State */}
       {error && !loading && (
         <div className="error-message">
           {error}
         </div>
       )}
 
-      {/* Content Sections - Render only when not loading and no critical error */}
       {!loading && (
         <>
-          {/* --- Upcoming Donations --- */}
           <div className="view-donations-section">
             <h3 className="view-donations-section-title">
               {translations.upcoming_donations || 'Upcoming Donations'}
@@ -257,7 +231,6 @@ const ViewDonations = () => {
             </div>
           </div>
 
-          {/* --- Confirm Donations --- */}
           {pendingConfirmations.length > 0 && (
             <div className="view-donations-section">
               <h3 className="view-donations-section-title">
@@ -296,7 +269,6 @@ const ViewDonations = () => {
             </div>
           )}
 
-          {/* --- All Donations Summary (Based on Requests) --- */}
           <div className="view-donations-section">
             <h3 className="view-donations-section-title">
               {translations.all_donations || 'All Donation Requests Summary'}
@@ -341,7 +313,6 @@ const ViewDonations = () => {
         </>
       )}
 
-      {/* Contact Section */}
       <div className="view-donations-contact">
         <p>
           <span>{translations.need_help_contact_us || 'Need help? Contact us:'}</span>

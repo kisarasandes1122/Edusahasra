@@ -9,7 +9,6 @@ const EditProfile = () => {
   const navigate = useNavigate();
   const { translations } = useLanguage() || { translations: {} };
 
-  // --- State ---
   const [profileData, setProfileData] = useState({
       schoolName: '', streetAddress: '', city: '', district: '', province: '',
       postalCode: '', description: '', principalName: '', principalEmail: '',
@@ -19,7 +18,6 @@ const EditProfile = () => {
   const [previewUrls, setPreviewUrls] = useState([]);
   const [imagesToDelete, setImagesToDelete] = useState([]);
 
-  // --- Password Change State ---
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -27,16 +25,13 @@ const EditProfile = () => {
   const [passwordError, setPasswordError] = useState(null);
   const [passwordSuccess, setPasswordSuccess] = useState(null);
 
-
-  // --- General Component State ---
-  const [activeSection, setActiveSection] = useState('info'); // 'info' or 'password'
+  const [activeSection, setActiveSection] = useState('info');
   const [locationState, setLocationState] = useState({ fetching: false, error: null });
   const [loading, setLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false); // For profile data save
-  const [generalError, setGeneralError] = useState(null); // Renamed from 'error'
+  const [isSaving, setIsSaving] = useState(false);
+  const [generalError, setGeneralError] = useState(null);
 
 
-  // --- Fetch Profile Data ---
   useEffect(() => {
     let isMounted = true;
     const fetchProfile = async () => {
@@ -79,10 +74,8 @@ const EditProfile = () => {
         isMounted = false;
         previewUrls.forEach(url => URL.revokeObjectURL(url));
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
-  // --- Handlers ---
   const handleBack = () => navigate('/Dashboard');
 
   const handleChange = (e) => {
@@ -91,9 +84,9 @@ const EditProfile = () => {
       ...prevState,
       [name]: value,
     }));
-    if (generalError) setGeneralError(null); // Clear general error on profile data change
+    if (generalError) setGeneralError(null);
     if (locationState.error && (name === 'latitude' || name === 'longitude')) {
-        setLocationState(prev => ({ ...prev, error: null })); // Clear location error if coords manually changed
+        setLocationState(prev => ({ ...prev, error: null }));
     }
   };
 
@@ -103,7 +96,6 @@ const EditProfile = () => {
         else if (name === 'newPassword') setNewPassword(value);
         else if (name === 'confirmNewPassword') setConfirmNewPassword(value);
 
-        // Clear password-specific messages on input
         setPasswordError(null);
         setPasswordSuccess(null);
     };
@@ -115,7 +107,7 @@ const EditProfile = () => {
       return;
     }
     setLocationState({ fetching: true, error: null });
-    setGeneralError(null); // Clear general error when fetching location
+    setGeneralError(null);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setProfileData((prev) => ({
@@ -124,7 +116,7 @@ const EditProfile = () => {
           longitude: position.coords.longitude,
         }));
         setLocationState({ fetching: false, error: null });
-         setGeneralError(null); // Clear any general error if location fetch succeeds
+         setGeneralError(null);
       },
       (err) => {
         setLocationState({ fetching: false, error: `${translations.location_error || 'Location Error'}: ${err.message}` });
@@ -134,17 +126,16 @@ const EditProfile = () => {
     );
   };
 
-  // --- Image Handling ---
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    const currentImageCount = profileData.images.length - imagesToDelete.length + schoolImagesToUpload.length; // Account for images marked for deletion
+    const currentImageCount = profileData.images.length - imagesToDelete.length + schoolImagesToUpload.length;
     const maxImages = 10;
     const allowedNewCount = maxImages - currentImageCount;
 
     if (files.length === 0) return;
     if (allowedNewCount <= 0) {
         alert(translations.image_limit_exceeded || `Maximum ${maxImages} images allowed.`);
-        e.target.value = null; // Clear the file input
+        e.target.value = null;
         return;
     }
     const filesToProcess = files.slice(0, allowedNewCount);
@@ -153,14 +144,13 @@ const EditProfile = () => {
             alert(translations.invalid_file_type_image || `File ${file.name} is not an image.`);
             return false;
         }
-        if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        if (file.size > 10 * 1024 * 1024) {
             alert(translations.file_too_large || `File ${file.name} exceeds the 10MB size limit.`);
             return false;
         } return true;
     });
 
      if (filesToProcess.length > validFiles.length) {
-         // Optional: more specific message if some files were invalid format or size
          const invalidCount = filesToProcess.length - validFiles.length;
          console.warn(`${invalidCount} files were filtered out due to type or size.`);
      }
@@ -168,7 +158,7 @@ const EditProfile = () => {
     setSchoolImagesToUpload((prevImages) => [...prevImages, ...validFiles]);
     const newUrls = validFiles.map(file => URL.createObjectURL(file));
     setPreviewUrls(prev => [...prev, ...newUrls]);
-    e.target.value = null; // Clear input for next selection
+    e.target.value = null;
   };
 
   const handleRemovePreviewImage = (indexToRemove) => {
@@ -178,12 +168,8 @@ const EditProfile = () => {
   };
 
   const handleDeleteExistingImage = (imageUrl) => {
-    // Confirm before deleting
     if (window.confirm(translations.confirm_delete_image || 'Are you sure you want to delete this image?')) {
-      // Add to list of images to delete on save
       setImagesToDelete(prev => [...prev, imageUrl]);
-
-      // Remove from UI immediately
       setProfileData(prev => ({
         ...prev,
         images: prev.images.filter(img => img !== imageUrl)
@@ -191,15 +177,13 @@ const EditProfile = () => {
     }
   };
 
-  // --- Save Changes (Profile Data) ---
   const handleSaveChanges = async () => {
     setIsSaving(true);
-    setGeneralError(null); // Clear general errors before saving
-    setPasswordError(null); // Also clear password errors if saving profile
+    setGeneralError(null);
+    setPasswordError(null);
 
     const formDataToSend = new FormData();
 
-    // 1. Append Text Fields from profileData state
     formDataToSend.append('schoolName', profileData.schoolName || '');
     formDataToSend.append('streetAddress', profileData.streetAddress || '');
     formDataToSend.append('city', profileData.city || '');
@@ -211,59 +195,48 @@ const EditProfile = () => {
     formDataToSend.append('principalEmail', profileData.principalEmail || '');
     formDataToSend.append('phoneNumber', profileData.phoneNumber || '');
 
-    // 2. Append Latitude and Longitude
-    // Send null/undefined if location was cleared or never set
     if (profileData.latitude !== null && profileData.latitude !== undefined) {
          const lat = parseFloat(profileData.latitude);
          if (!isNaN(lat)) formDataToSend.append('latitude', lat.toString());
-         else formDataToSend.append('latitude', ''); // Send empty string for invalid float
+         else formDataToSend.append('latitude', '');
     } else {
-         // Explicitly send null or empty string if location was removed
-         formDataToSend.append('latitude', ''); // Or null, depending on backend handling
+         formDataToSend.append('latitude', '');
     }
      if (profileData.longitude !== null && profileData.longitude !== undefined) {
          const lon = parseFloat(profileData.longitude);
          if (!isNaN(lon)) formDataToSend.append('longitude', lon.toString());
-          else formDataToSend.append('longitude', ''); // Send empty string for invalid float
+          else formDataToSend.append('longitude', '');
      } else {
-          // Explicitly send null or empty string if location was removed
-          formDataToSend.append('longitude', ''); // Or null
+          formDataToSend.append('longitude', '');
      }
 
-
-    // 3. Append *NEW* File Objects
     schoolImagesToUpload.forEach((file) => {
       if (file instanceof File) {
-        formDataToSend.append('profileImages', file); // 'profileImages' must match backend multer field name
+        formDataToSend.append('profileImages', file);
       }
     });
 
-    // 4. Append images to delete list
     if (imagesToDelete.length > 0) {
-      formDataToSend.append('imagesToDelete', JSON.stringify(imagesToDelete)); // Send as JSON string
+      formDataToSend.append('imagesToDelete', JSON.stringify(imagesToDelete));
     }
 
     try {
       const response = await api.put('/api/schools/profile', formDataToSend, {
-          // Axios automatically sets Content-Type to multipart/form-data for FormData
       });
 
-      // Update local state with the authoritative data from backend response
       setProfileData(response.data);
 
-      // Clear the upload queue and revoke preview URLs as they've been processed
       previewUrls.forEach(url => URL.revokeObjectURL(url));
       setSchoolImagesToUpload([]);
       setPreviewUrls([]);
-      setImagesToDelete([]); // Clear the deletion queue
+      setImagesToDelete([]);
 
       alert(translations.changes_saved_successfully || 'Changes saved successfully!');
 
     } catch (err) {
-      // Extract error message preference: backend response -> network error -> generic
       const backendMsg = err.response?.data?.message;
       const networkMsg = err.message;
-      setGeneralError( // Use general error state
+      setGeneralError(
         backendMsg || networkMsg ||
         (translations.failed_to_save_changes || 'Failed to save changes. Please try again.')
       );
@@ -272,15 +245,13 @@ const EditProfile = () => {
     }
   };
 
-  // --- Handle Password Change Submission ---
    const handleSubmitPasswordChange = async (e) => {
         e.preventDefault();
         setPasswordChanging(true);
         setPasswordError(null);
         setPasswordSuccess(null);
-        setGeneralError(null); // Clear general errors if changing password
+        setGeneralError(null);
 
-        // Frontend validation
         if (!currentPassword || !newPassword || !confirmNewPassword) {
             setPasswordError(translations.all_password_fields_required || 'All password fields are required.');
             setPasswordChanging(false);
@@ -291,7 +262,6 @@ const EditProfile = () => {
             setPasswordChanging(false);
             return;
         }
-         // Basic password strength validation (should match backend)
          if (newPassword.length < 8 || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword) || !/[!@#$%^&*(),.?":{}|<>]/.test(newPassword)) {
              setPasswordError(translations.password_strength_hint || 'Password must be at least 8 characters long and include uppercase, number, and special character.');
              setPasswordChanging(false);
@@ -303,11 +273,10 @@ const EditProfile = () => {
             const response = await api.put('/api/schools/profile/password', {
                 currentPassword,
                 newPassword,
-                confirmPassword: confirmNewPassword // Fixed variable name to match state
+                confirmPassword: confirmNewPassword
             });
 
             setPasswordSuccess(response.data.message || (translations.password_changed_successfully || 'Password changed successfully!'));
-            // Clear password fields on success
             setCurrentPassword('');
             setNewPassword('');
             setConfirmNewPassword('');
@@ -324,45 +293,33 @@ const EditProfile = () => {
         }
    };
 
-
-  // --- Helper function to construct image URL (using frontend api.js helper) ---
   const getFullImageUrl = (relativePath) => {
-      // Check if the path is already a full URL or includes /uploads
        if (!relativePath || typeof relativePath !== 'string') return '';
        if (relativePath.startsWith('http') || relativePath.startsWith('/uploads')) {
-           // If it's already a full URL or starts with /uploads, assume it's ready or relative to base
-           // For paths starting with /uploads, prepend base URL
            if (relativePath.startsWith('/uploads')) {
-               // Use the original base URL from the api config
                 return `${api.defaults.baseURL}${relativePath}`;
            }
-            return relativePath; // Assume it's a full external URL
+            return relativePath;
        }
-       // If it's just a relative path (like 'school-profile-images/filename.jpg'), prepend /uploads/
        const cleanPath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
        return `${api.defaults.baseURL}/uploads/${cleanPath}`;
    };
 
-
-  // --- Render ---
   if (loading) {
     return <div className="profile-container profile-loading">{translations.loading_profile || "Loading Profile..."}</div>;
   }
 
-  // Determine if any saving/changing process is ongoing
   const isAnyProcessOngoing = isSaving || passwordChanging || locationState.fetching;
 
 
   return (
     <div className="profile-container">
-      {/* Header */}
       <header className="profile-header">
          <div className="profile-title">
             <h1 className="profile-title-text">{translations.my_profile || "My Profile"}</h1>
          </div>
       </header>
 
-      {/* Back Button */}
       <div className="profile-back-btn-container">
          <button className="profile-back-btn" onClick={handleBack} disabled={isAnyProcessOngoing}>
             <FaArrowLeft className="back-icon" />
@@ -370,16 +327,13 @@ const EditProfile = () => {
          </button>
       </div>
 
-      {/* General Error Display (outside main content area) */}
       {generalError && (
          <div className="profile-error-section">
              <p className="error-message general-error">{generalError}</p>
          </div>
       )}
 
-      {/* --- Main Content Wrapper (Sidebar + Content) --- */}
       <div className="profile-main-content-wrapper">
-         {/* --- Sidebar Navigation --- */}
          <div className="profile-sidebar">
              <button
                  className={`profile-sidebar-link ${activeSection === 'info' ? 'active' : ''}`}
@@ -395,21 +349,18 @@ const EditProfile = () => {
              >
                  {translations.change_password || "Change Password"}
              </button>
-             {/* Add more sections here if needed */}
          </div>
 
-         {/* --- Main Content Area (Conditional Rendering) --- */}
          <div className="profile-content-area">
 
              {activeSection === 'info' && (
                  <>
-                     {/* School Info Section */}
-                     <div className="profile-form-section"> {/* Changed class name */}
+                     <div className="profile-form-section">
                          <h3 className="section-title">{translations.school_information || "School Information"}</h3>
                          <form className="profile-form" onSubmit={(e) => { e.preventDefault(); handleSaveChanges(); }}>
                             <div className="form-group">
                                 <label className="form-label" htmlFor="schoolName">{translations.school_name || "School Name"}</label>
-                                <input type="text" id="schoolName" name="schoolName" value={profileData.schoolName} onChange={handleChange} className="form-input" disabled={isAnyProcessOngoing}/> {/* Disabled using generic check */}
+                                <input type="text" id="schoolName" name="schoolName" value={profileData.schoolName} onChange={handleChange} className="form-input" disabled={isAnyProcessOngoing}/>
                             </div>
                             <div className="form-group">
                                 <label className="form-label" htmlFor="streetAddress">{translations.school_address || "School Address"}</label>
@@ -423,7 +374,6 @@ const EditProfile = () => {
                                 <div className="form-group form-group-row"><label className="form-label" htmlFor="province">Province</label><input type="text" id="province" name="province" value={profileData.province} onChange={handleChange} className="form-input" disabled={isAnyProcessOngoing}/></div>
                                 <div className="form-group form-group-row"><label className="form-label" htmlFor="postalCode">Postal Code</label><input type="text" id="postalCode" name="postalCode" value={profileData.postalCode} onChange={handleChange} className="form-input" disabled={isAnyProcessOngoing}/></div>
                             </div>
-                             {/* Location Input */}
                             <div className="form-group">
                                 <label className="form-label">{translations.school_location || "School Location"}</label>
                                 <div className="location-container">
@@ -443,44 +393,38 @@ const EditProfile = () => {
                                 </div>
                                 {locationState.error && <div className="location-error password-message error">{locationState.error}</div>}
                             </div>
-                            {/* Telephone */}
                              <div className="form-group">
                                 <label className="form-label" htmlFor="phoneNumber">{translations.school_telephone_number || "Telephone"}</label>
                                 <input type="text" id="phoneNumber" name="phoneNumber" value={profileData.phoneNumber} onChange={handleChange} className="form-input" disabled={isAnyProcessOngoing}/>
                             </div>
-                            {/* Description */}
                             <div className="form-group">
                                 <label className="form-label" htmlFor="description">{translations.description_about_the_school || "Description"}</label>
                                 <textarea id="description" name="description" value={profileData.description} onChange={handleChange} className="form-textarea" rows="4" disabled={isAnyProcessOngoing}></textarea>
                             </div>
 
-                             {/* Image Upload Section */}
-                             <div className="profile-form-section"> {/* Nested section styling might be needed or adjust CSS */}
+                             <div className="profile-form-section">
                                  <h3 className="section-title">{translations.school_pictures || "School Pictures"}</h3>
-                                 {/* Display Existing Images */}
                                  {profileData.images && profileData.images.length > 0 && (
                                     <div className="uploaded-images existing-images">
                                          <h4 className="uploaded-images-title">{translations.current_images || "Current Images:"}</h4>
                                          <div className="image-grid">
                                             {profileData.images.map((imageUrl, index) => (
                                                 <div key={`existing-${index}-${imageUrl}`} className="uploaded-image-item">
-                                                    {/* Use getFullImageUrl helper for existing images */}
                                                     <img src={getFullImageUrl(imageUrl)} alt={`School ${index+1}`} className="image-preview-thumb" onError={(e) => {e.target.style.display='none'; console.error("Image failed to load:", getFullImageUrl(imageUrl));}}/>
                                                     <button
                                                         type="button"
                                                         onClick={() => handleDeleteExistingImage(imageUrl)}
-                                                        className="remove-existing-image-btn" // Changed class name for clarity
+                                                        className="remove-existing-image-btn"
                                                         disabled={isAnyProcessOngoing}
                                                         aria-label={`Delete image ${index+1}`}
                                                     >
-                                                        <FaTimes /> {/* Changed to FaTimes for consistency with preview remove */}
+                                                        <FaTimes />
                                                     </button>
                                                 </div>
                                             ))}
                                          </div>
                                     </div>
                                  )}
-                                 {/* Display New Images Preview */}
                                 {schoolImagesToUpload.length > 0 && (
                                   <div className="uploaded-images preview-images">
                                     <h4 className="uploaded-images-title">{translations.new_images_preview || "New Images Preview:"}</h4>
@@ -496,8 +440,7 @@ const EditProfile = () => {
                                     </div>
                                   </div>
                                 )}
-                                 {/* File Input Trigger */}
-                                {(profileData.images.length - imagesToDelete.length + schoolImagesToUpload.length) < 10 && ( // Only show if max images not reached
+                                {(profileData.images.length - imagesToDelete.length + schoolImagesToUpload.length) < 10 && (
                                     <div className="image-upload-container">
                                       <label htmlFor="school-images-input" className={`image-upload-label ${isAnyProcessOngoing ? 'disabled' : ''}`}>
                                         <FaPlus className="upload-icon" />
@@ -506,28 +449,25 @@ const EditProfile = () => {
                                       <input type="file" id="school-images-input" accept="image/*" multiple onChange={handleImageUpload} className="image-upload-input" disabled={isAnyProcessOngoing}/>
                                     </div>
                                 )}
-                             </div> {/* Closing image section */}
+                             </div>
 
                          </form>
 
-                          {/* Save Profile Button Container - Keep separate from form */}
-                           <div className="button-container"> {/* Changed class name */}
-                             <button className="primary-button" onClick={handleSaveChanges} disabled={isAnyProcessOngoing}> {/* Updated class name, disabled using generic check */}
+                           <div className="button-container">
+                             <button className="primary-button" onClick={handleSaveChanges} disabled={isAnyProcessOngoing}>
                                {isSaving ? (translations.saving || 'Saving Profile...') : (translations.save_changes || "Save Changes")}
                                {isSaving && <FaSpinner className="fa-spin" />}
                              </button>
                            </div>
-                     </div> {/* Fix: Properly closing the school info section div */}
+                     </div>
                  </>
              )}
 
              {activeSection === 'password' && (
                  <>
-                     {/* Change Password Section */}
-                     <div className="profile-form-section"> {/* Use the same section styling */}
+                     <div className="profile-form-section">
                            <h3 className="section-title">{translations.change_password || "Change Password"}</h3>
-                            <form className="profile-form" onSubmit={handleSubmitPasswordChange}> {/* Separate form */}
-                                 {/* Current Password */}
+                            <form className="profile-form" onSubmit={handleSubmitPasswordChange}>
                                  <div className="form-group">
                                      <label className="form-label" htmlFor="currentPassword">{translations.current_password || "Current Password"}</label>
                                      <input
@@ -541,7 +481,6 @@ const EditProfile = () => {
                                          required
                                      />
                                  </div>
-                                  {/* New Password */}
                                  <div className="form-group">
                                      <label className="form-label" htmlFor="newPassword">{translations.new_password || "New Password"}</label>
                                      <input
@@ -555,7 +494,6 @@ const EditProfile = () => {
                                          required
                                      />
                                  </div>
-                                  {/* Confirm New Password */}
                                  <div className="form-group">
                                      <label className="form-label" htmlFor="confirmNewPassword">{translations.confirm_new_password || "Confirm New Password"}</label>
                                      <input
@@ -570,28 +508,25 @@ const EditProfile = () => {
                                      />
                                  </div>
 
-                                 {/* Password Change Messages */}
                                 {passwordError && <div className="password-message error">{passwordError}</div>}
                                 {passwordSuccess && <div className="password-message success">{passwordSuccess}</div>}
 
-                                 {/* Change Password Button Container (inside the form) */}
-                                 <div className="button-container"> {/* Use the same container style */}
-                                    <button type="submit" className="primary-button" disabled={isAnyProcessOngoing}> {/* Use the same button style, disabled using generic check */}
+                                 <div className="button-container">
+                                    <button type="submit" className="primary-button" disabled={isAnyProcessOngoing}>
                                          {passwordChanging ? (translations.changing || 'Changing...') : (translations.change_password || "Change Password")}
                                         {passwordChanging && <FaSpinner className="fa-spin" />}
                                     </button>
                                  </div>
                             </form>
-                       </div> {/* Properly closing password section */}
+                       </div>
                  </>
              )}
 
-         </div> {/* Closing profile-content-area */}
+         </div>
 
-      </div> {/* Closing profile-main-content-wrapper */}
+      </div>
 
 
-      {/* Contact Help (outside main content wrapper) */}
       <div className="profile-contact">
          <p>
             <span className="contact-text">{translations.need_help_contact_us || "Need help? Contact us:"}</span>

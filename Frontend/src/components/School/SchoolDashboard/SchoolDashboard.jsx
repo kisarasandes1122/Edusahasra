@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react'; // Import hooks
-import { useNavigate, Link } from 'react-router-dom'; // Import Link
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { FaSignOutAlt, FaEye, FaHandHoldingHeart, FaThumbsUp, FaUserCircle, FaSpinner } from 'react-icons/fa';
-import { BookOpen, PenSquare, Award } from 'lucide-react'; // Import lucide icons for variety
+import { BookOpen, PenSquare, Award } from 'lucide-react';
 import { useLanguage } from '../../LanguageSelector/LanguageContext';
 import api from '../../../api';
 import './SchoolDashboard.css';
@@ -10,18 +10,15 @@ const SchoolDashboard = () => {
   const { translations } = useLanguage();
   const navigate = useNavigate();
 
-  // --- State for Recent Donations ---
   const [recentDonations, setRecentDonations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- Logout Handler ---
   const handleLogout = () => {
     localStorage.removeItem('schoolInfo');
     navigate('/');
   };
 
-  // --- Helper Functions ---
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     try {
@@ -39,7 +36,6 @@ const SchoolDashboard = () => {
     return `${totalQuantity} ${translations.items || 'items'} (${distinctItems} ${translations.types || 'types'})`;
   };
 
-  // --- Fetch Recent Donations ---
   const fetchRecentDonations = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -52,7 +48,7 @@ const SchoolDashboard = () => {
       const sortedDonations = confirmedDonations.sort((a, b) => {
          const dateA = new Date(a.schoolConfirmationAt || a.createdAt);
          const dateB = new Date(b.schoolConfirmationAt || b.createdAt);
-         return dateB - dateA; // Newest first
+         return dateB - dateA;
        });
       const latestDonations = sortedDonations.slice(0, 5);
       setRecentDonations(latestDonations);
@@ -68,7 +64,6 @@ const SchoolDashboard = () => {
     }
   }, [translations.error_fetching_recent_donations, translations.no_items_specified, translations.items, translations.types]);
 
-  // --- Fetch data on mount ---
   useEffect(() => {
     fetchRecentDonations();
   }, [fetchRecentDonations]);
@@ -90,11 +85,10 @@ const SchoolDashboard = () => {
       </header>
 
       <div className="dashboard-welcome">
-        <p>{translations.welcome_message || 'Welcome to your school dashboard.'}</p> {/* Updated message */}
+        <p>{translations.welcome_message || 'Welcome to your school dashboard.'}</p>
       </div>
 
       <div className="dashboard-grid">
-        {/* Use Link component for internal navigation */}
         <Link to="/view-donations" className="dashboard-card action-card">
           <FaEye className="card-icon" />
           <div className="card-content">
@@ -110,30 +104,18 @@ const SchoolDashboard = () => {
         </Link>
 
         <Link to="/send-thanks" className="dashboard-card action-card">
-           <FaThumbsUp className="card-icon" /> {/* Using FaThumbsUp icon */}
+           <FaThumbsUp className="card-icon" />
            <div className="card-content">
-               <h3>{translations.send_thanks || 'Send Thanks'}</h3> {/* Use existing translation */}
+               <h3>{translations.send_thanks || 'Send Thanks'}</h3>
            </div>
         </Link>
 
-        {/* --- ADD NEW CARD FOR IMPACT STORIES --- */}
         <Link to="/write-impact-story" className="dashboard-card action-card">
-            <PenSquare className="card-icon" /> {/* Using PenSquare from lucide-react */}
+            <PenSquare className="card-icon" />
              <div className="card-content">
-                {/* Add translation key */}
                 <h3>{translations.write_impact_story || 'Write Impact Story'}</h3>
             </div>
         </Link>
-        {/* --- END NEW CARD --- */}
-
-         {/* Optional: Add card to view submitted stories */}
-        {/* <Link to="/my-impact-stories" className="dashboard-card action-card">
-            <Award className="card-icon" />
-            <div className="card-content">
-                <h3>{translations.my_impact_stories || 'My Impact Stories'}</h3>
-            </div>
-        </Link> */}
-
 
         <Link to="/edit-profile" className="dashboard-card action-card">
           <FaUserCircle className="card-icon" />
@@ -143,7 +125,6 @@ const SchoolDashboard = () => {
         </Link>
       </div>
 
-      {/* --- Recent Donations Section --- */}
       <div className="dashboard-section recent-donations">
         <h3 className="section-title">
           {translations.dash_recent_donations || 'Recent Donations Received'}
@@ -179,7 +160,6 @@ const SchoolDashboard = () => {
         )}
       </div>
 
-      {/* --- Contact Section --- */}
       <div className="dashboard-section contact">
         <p>
           {translations.need_help_contact_us || 'Need help? Contact us:'}

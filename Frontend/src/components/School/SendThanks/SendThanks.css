@@ -388,7 +388,6 @@
   margin-left: 4px;
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
   .send-thanks-header {
     flex-direction: column;

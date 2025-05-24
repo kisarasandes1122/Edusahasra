@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'; // Added useEffect potentially for checking existing login
+import React, { useState, useEffect } from 'react';
 import { MdEmail, MdLock, MdLanguage } from 'react-icons/md';
-import { useNavigate, Link } from 'react-router-dom'; // <-- Import useNavigate and Link
-import api from '../../../api'; // <-- Import your api instance (adjust path if needed)
+import { useNavigate, Link } from 'react-router-dom';
+import api from '../../../api';
 import './SchoolLogin.css';
 
 const SchoolLogin = () => {
@@ -14,19 +14,19 @@ const SchoolLogin = () => {
     const [errors, setErrors] = useState({
         email: '',
         password: '',
-        submit: '', // <-- Add state for submission errors
+        submit: '',
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [language, setLanguage] = useState('english'); // 'english' or 'sinhala'
+    const [language, setLanguage] = useState('english');
 
-    const navigate = useNavigate(); // <-- Initialize navigate
+    const navigate = useNavigate();
 
 
     useEffect(() => {
-       const schoolInfo = localStorage.getItem('schoolInfo'); // Assuming you store login info here
+       const schoolInfo = localStorage.getItem('schoolInfo');
        if (schoolInfo) {
-         navigate('/Dashboard'); // Redirect to dashboard if already logged in
+         navigate('/Dashboard');
        }
      }, [navigate]);
 
@@ -42,14 +42,12 @@ const SchoolLogin = () => {
             [name]: type === 'checkbox' ? checked : value,
         });
 
-        // Clear field-specific error when typing
         if (errors[name]) {
             setErrors((prevErrors) => ({
                 ...prevErrors,
                 [name]: '',
             }));
         }
-        // Clear general submission error on any change
         if (errors.submit) {
              setErrors((prevErrors) => ({
                 ...prevErrors,
@@ -60,15 +58,13 @@ const SchoolLogin = () => {
 
     const handleLanguageChange = (e) => {
         setLanguage(e.target.value);
-         // Clear errors on language change as messages change
         setErrors({ email: '', password: '', submit: '' });
     };
 
-    const handleSubmit = async (e) => { // <-- Make async
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrors((prevErrors) => ({ ...prevErrors, submit: '' })); // Clear previous submit error
+        setErrors((prevErrors) => ({ ...prevErrors, submit: '' }));
 
-        // Frontend Validation
         const newErrors = {};
         if (!formData.email) {
             newErrors.email = language === 'english' ? 'Email address is required' : 'විද්‍යුත් තැපෑල ලිපිනය අවශ්‍යයි';
@@ -79,39 +75,29 @@ const SchoolLogin = () => {
         if (!formData.password) {
             newErrors.password = language === 'english' ? 'Password is required' : 'මුරපදය අවශ්‍යයි';
         }
-        // Note: Backend enforces stricter password rules (length 8, complexity)
-        // You could add stricter frontend validation later if desired.
 
         if (Object.keys(newErrors).length > 0) {
             setErrors((prevErrors) => ({ ...prevErrors, ...newErrors }));
             return;
         }
 
-        // --- API Call ---
         setIsSubmitting(true);
         try {
             const payload = {
-                schoolEmail: formData.email, // <-- Map frontend 'email' to backend 'schoolEmail'
+                schoolEmail: formData.email,
                 password: formData.password,
             };
-            console.log('Sending login payload:', payload); // Debug log
+            console.log('Sending login payload:', payload);
 
             const response = await api.post('/api/schools/login', payload);
 
-            console.log('Login response:', response); // Debug log
+            console.log('Login response:', response);
 
             if (response.data && response.data.token) {
-                // Login Success
                 console.log('Login Successful:', response.data);
-
-                // Store user info and token (e.g., in localStorage)
-                // Storing the whole object might be useful, includes name, email, token etc.
                 localStorage.setItem('schoolInfo', JSON.stringify(response.data));
-
-                // Navigate to the school dashboard
-                navigate('/Dashboard'); // <-- Redirect on success
+                navigate('/Dashboard');
             } else {
-                 // Should not happen if backend is correct, but handle defensively
                  console.error('Login response missing token:', response.data);
                  setErrors((prevErrors) => ({
                     ...prevErrors,
@@ -124,27 +110,21 @@ const SchoolLogin = () => {
             let errorMessage = language === 'english' ? 'An unexpected error occurred. Please try again.' : 'අනපේක්ෂිත දෝෂයක් ඇතිවිය. කරුණාකර නැවත උත්සාහ කරන්න.';
 
             if (error.response) {
-                // Error from backend (e.g., 400, 401, 403, 404)
                 console.error('Backend error data:', error.response.data);
-                // Use the specific message from the backend
                 errorMessage = error.response.data?.message || `Login failed (Status: ${error.response.status})`;
 
-                // Translate common backend errors if needed (optional)
-                // Example: Check for specific messages if the backend isn't multi-lingual
                 if (error.response.data?.message === 'Invalid credentials') {
                     errorMessage = language === 'english' ? 'Invalid email or password.' : 'වැරදි විද්‍යුත් තැපෑල හෝ මුරපදය.';
                 } else if (error.response.data?.message === 'Your school registration is pending approval or has been rejected.') {
                     errorMessage = language === 'english' ? 'Account not approved or rejected. Please wait for verification or contact support.' : 'ගිණුම අනුමත කර නොමැත හෝ ප්‍රතික්ෂේප කර ඇත. කරුණාකර සත්‍යාපනය සඳහා රැඳී සිටින්න.';
                 }
-                // Add more specific error message translations as needed
             } else if (error.request) {
-                // Network error (no response received)
                 errorMessage = language === 'english' ? 'Network error. Unable to connect to server.' : 'ජාල දෝෂයකි. සේවාදායකයට සම්බන්ධ විය නොහැක.';
             }
 
             setErrors((prevErrors) => ({
                 ...prevErrors,
-                submit: errorMessage, // <-- Set the submission error message
+                submit: errorMessage,
             }));
         } finally {
             setIsSubmitting(false);
@@ -152,21 +132,21 @@ const SchoolLogin = () => {
     };
 
     const translations = {
-        title: language === 'english' ? 'School Portal Login' : 'පාසල් ද්වාරයට පිවිසීම', // Updated Title
+        title: language === 'english' ? 'School Portal Login' : 'පාසල් ද්වාරයට පිවිසීම',
         subtitle: language === 'english'
-            ? 'Login only available for approved school accounts.' // Simplified subtitle
+            ? 'Login only available for approved school accounts.'
             : 'පිවිසිය හැක්කේ අනුමත පාසල් ගිණුම් සඳහා පමණි.',
-        emailLabel: language === 'english' ? 'School Email Address' : 'පාසල් විද්‍යුත් තැපෑල ලිපිනය', // Clarified label
+        emailLabel: language === 'english' ? 'School Email Address' : 'පාසල් විද්‍යුත් තැපෑල ලිපිනය',
         passwordLabel: language === 'english' ? 'Password' : 'මුරපදය',
         rememberMe: language === 'english' ? 'Remember Me' : 'මතක තබා ගන්න',
         forgotPassword: language === 'english' ? 'Forgot Password?' : 'මුරපදය අමතක වුණාද?',
         signIn: language === 'english' ? 'Sign in' : 'පිවිසෙන්න',
         noAccount: language === 'english' ? 'Don\'t have an Account?' : 'ගිණුමක් නොමැතිද?',
-        signUp: language === 'english' ? 'Register Here' : 'මෙහි ලියාපදිංචි වන්න', // Changed Link Text
-        emailPlaceholder: language === 'english' ? 'Enter your school email' : 'ඔබගේ පාසල් විද්‍යුත් තැපෑල ඇතුළත් කරන්න', // Clarified placeholder
+        signUp: language === 'english' ? 'Register Here' : 'මෙහි ලියාපදිංචි වන්න',
+        emailPlaceholder: language === 'english' ? 'Enter your school email' : 'ඔබගේ පාසල් විද්‍යුත් තැපෑල ඇතුළත් කරන්න',
         passwordPlaceholder: language === 'english' ? 'Enter your password' : 'ඔබගේ මුරපදය ඇතුළත් කරන්න',
         selectLanguage: language === 'english' ? 'Select Language' : 'භාෂාව තෝරන්න',
-        signingIn: language === 'english' ? 'Signing in...' : 'පිවිසෙමින්...' // Added signing in text
+        signingIn: language === 'english' ? 'Signing in...' : 'පිවිසෙමින්...'
     };
 
     return (
@@ -185,49 +165,48 @@ const SchoolLogin = () => {
                 <h1 className="login-title">{translations.title}</h1>
                 <p className="login-subtitle">{translations.subtitle}</p>
 
-                <form className="login-form" onSubmit={handleSubmit} noValidate> {/* Added noValidate */}
+                <form className="login-form" onSubmit={handleSubmit} noValidate>
 
-                     {/* Display Submission Error */}
                     {errors.submit && (
                         <p className="error-message submit-error-message">{errors.submit}</p>
                     )}
 
                     <div className="form-group">
-                        <label className="form-label" htmlFor="email"> {/* Added htmlFor */}
+                        <label className="form-label" htmlFor="email">
                             <MdEmail className="form-icon" />
                             {translations.emailLabel}
                             <span className="required-mark">*</span>
                         </label>
                         <input
-                            type="text" // Changed to text from email to allow flexibility, validation handles format
-                            id="email" // Added id
+                            type="text"
+                            id="email"
                             name="email"
                             className={`form-input ${errors.email ? 'input-error' : ''}`}
                             value={formData.email}
                             onChange={handleChange}
                             placeholder={translations.emailPlaceholder}
-                            aria-required="true" // Accessibility
-                            aria-invalid={!!errors.email} // Accessibility
+                            aria-required="true"
+                            aria-invalid={!!errors.email}
                         />
                         {errors.email && <p className="error-message">{errors.email}</p>}
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label" htmlFor="password"> {/* Added htmlFor */}
+                        <label className="form-label" htmlFor="password">
                             <MdLock className="form-icon" />
                             {translations.passwordLabel}
                             <span className="required-mark">*</span>
                         </label>
                         <input
                             type="password"
-                            id="password" // Added id
+                            id="password"
                             name="password"
                             className={`form-input ${errors.password ? 'input-error' : ''}`}
                             value={formData.password}
                             onChange={handleChange}
                             placeholder={translations.passwordPlaceholder}
-                            aria-required="true" // Accessibility
-                            aria-invalid={!!errors.password} // Accessibility
+                            aria-required="true"
+                            aria-invalid={!!errors.password}
                         />
                         {errors.password && <p className="error-message">{errors.password}</p>}
                     </div>

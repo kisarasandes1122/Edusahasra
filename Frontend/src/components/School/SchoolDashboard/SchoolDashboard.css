@@ -1,4 +1,3 @@
-/* SchoolDashboard.css */
 .dashboard-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -18,7 +17,7 @@
 }
 
 
-.dashboard-title h1 { 
+.dashboard-title h1 {
   margin: 0;
   font-size: 22px;
   font-weight: 600;
@@ -37,7 +36,7 @@
   color: #043f2e;
   font-weight: 500;
   transition: all 0.2s ease;
-  font-size: 14px; /* Consistent font size */
+  font-size: 14px;
 }
 
 .dashboard-logout:hover {
@@ -58,7 +57,7 @@
   font-size: 15px;
 }
 
-.dashboard-welcome p { /* Target the paragraph */
+.dashboard-welcome p {
   margin: 0;
 }
 
@@ -80,37 +79,33 @@
   transition: all 0.3s ease;
   cursor: pointer;
   text-align: center;
-  text-decoration: none; /* Remove default link underline */
-  color: inherit; /* Ensure text color is inherited */
+  text-decoration: none;
+  color: inherit;
 }
 
 .action-card {
   background-color: #043f2e;
   color: white;
-  min-height: 150px; /* Minimum height for consistency */
+  min-height: 150px;
 }
 
 .action-card:hover {
   background-color: #0a5e45;
-  transform: translateY(-3px); /* Slightly more lift */
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12); /* Enhance shadow */
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
 }
 
 
-.card-content h3 { /* Target h3 inside card */
+.card-content h3 {
   margin: 0 0 8px 0;
-  font-size: 18px; /* Consistent font size */
-  font-weight: 600; /* Bold title */
+  font-size: 18px;
+  font-weight: 600;
 }
-
-/* Removed redundant title classes */
-/* .card-title-sinhala { ... } */
-/* .card-title-english { ... } */
 
 .card-icon {
-  font-size: 28px; /* Slightly larger icon */
+  font-size: 28px;
   opacity: 0.9;
-  margin-bottom: 16px; /* Space below icon */
+  margin-bottom: 16px;
 }
 
 .dashboard-section {
@@ -123,15 +118,11 @@
 .section-title {
   text-align: center;
   margin-top: 0;
-  margin-bottom: 20px; /* Increased bottom margin */
+  margin-bottom: 20px;
   font-size: 18px;
   color: #043f2e;
-  font-weight: 600; /* Make section titles bolder */
+  font-weight: 600;
 }
-
-/* Removed redundant title classes */
-/* .title-sinhala { ... } */
-/* .title-english { ... } */
 
 .donation-list {
   display: flex;
@@ -140,43 +131,34 @@
 }
 
 .donation-item {
-  display: flex; /* Use flexbox for alignment */
-  justify-content: space-between; /* Space out content */
-  align-items: center; /* Center items vertically */
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
-  background-color: white; /* Change background for better contrast */
-  padding: 14px 18px; /* Adjust padding */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  background-color: white;
+  padding: 14px 18px;
   border-radius: 6px;
   transition: background-color 0.2s ease;
-  border-left: 4px solid #78C51C; /* Add a visual indicator */
+  border-left: 4px solid #78C51C;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-/* Removed hover effect for now, can be added back if desired */
-/* .donation-item:hover { ... } */
-
-.donation-item span { /* General styling for spans inside */
+.donation-item span {
    font-size: 14px;
 }
 
 .donation-summary {
    color: #043f2e;
    font-weight: 500;
-   margin-right: 10px; /* Add space between summary and date */
+   margin-right: 10px;
 }
 
 .donation-date {
-   color: #718096; /* Grey color for date */
-   font-size: 13px; /* Slightly smaller date */
-   white-space: nowrap; /* Prevent date wrapping */
+   color: #718096;
+   font-size: 13px;
+   white-space: nowrap;
 }
 
-/* Remove old specific classes */
-/* .donation-sinhala { ... } */
-/* .donation-english { ... } */
-
-
-/* --- Loading and Error Styles --- */
 .loading-message, .error-message {
     text-align: center;
     padding: 20px;
@@ -186,24 +168,23 @@
 }
 
 .error-message {
-    color: #721c24; /* Darker red for errors */
+    color: #721c24;
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
-    margin: 0 auto 16px auto; /* Center horizontally within its container */
-    max-width: 90%; /* Limit width */
+    margin: 0 auto 16px auto;
+    max-width: 90%;
 }
 
-.loading-message .fa-spin { /* Style the spinner icon */
+.loading-message .fa-spin {
     margin-right: 8px;
     font-size: 16px;
     color: #043f2e;
 }
-/* --- End Loading/Error --- */
 
 .contact {
   text-align: center;
   color: #4a5568;
-  padding-top: 10px; /* Add padding */
+  padding-top: 10px;
   font-size: 14px;
 }
 
@@ -213,29 +194,28 @@
   margin-left: 4px;
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
   .dashboard-grid {
-    grid-template-columns: 1fr; /* Stack cards */
-    gap: 16px; /* Reduce gap */
-    padding: 0 16px; /* Reduce side padding */
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 16px;
   }
 
   .dashboard-header {
     flex-direction: column;
     text-align: center;
     gap: 12px;
-    padding: 16px; /* Adjust padding */
+    padding: 16px;
   }
 
   .dashboard-welcome,
   .dashboard-section {
-    margin: 16px; /* Consistent margin */
-    padding: 16px; /* Reduce padding */
+    margin: 16px;
+    padding: 16px;
   }
 
   .action-card {
-      min-height: 120px; /* Reduce min-height */
+      min-height: 120px;
   }
 
   .card-icon {
@@ -248,12 +228,12 @@
   }
 
   .donation-item {
-      flex-direction: column; /* Stack summary and date */
-      align-items: flex-start; /* Align items left */
-      gap: 5px; /* Space between stacked items */
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
   }
 
   .donation-date {
-       white-space: normal; /* Allow date wrapping */
+       white-space: normal;
   }
 }

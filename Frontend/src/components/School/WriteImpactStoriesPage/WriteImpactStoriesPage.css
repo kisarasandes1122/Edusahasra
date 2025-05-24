@@ -1,37 +1,33 @@
-/* frontend/src/components/School/WriteImpactStoriesPage/WriteImpactStoriesPage.css */
-
-/* Reuse variables from ImpactStoriesPage.css or define here if standalone */
-/* Assuming shared CSS variables or defining them again for clarity */
 :root {
-  --primary-green: #2A6F2B; /* EduSahasra Primary Green */
-  --accent-green: #78C51C; /* EduSahasra Accent Green */
-  --dark-text: #111827; /* Heading text */
-  --body-text: #4B5563; /* Body paragraph text */
-  --light-text: #6B7280; /* Subtitles, labels, metadata */
-  --border-color: #E5E7EB; /* Standard border */
-  --bg-light: #F9FAFB; /* Light background */
-  --bg-white: #ffffff; /* White background */
-  --red-error: #dc2626; /* Red for errors */
-   /* Box shadows */
+  --primary-green: #2A6F2B; 
+  --accent-green: #78C51C; 
+  --dark-text: #111827; 
+  --body-text: #4B5563; 
+  --light-text: #6B7280; 
+  --border-color: #E5E7EB; 
+  --bg-light: #F9FAFB; 
+  --bg-white: #ffffff; 
+  --red-error: #dc2626; 
+  
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  /* Border Radius */
+  
   --radius-sm: 6px;
   --radius-md: 8px;
-   /* Transition */
+  
   --transition: all 0.3s ease;
 }
 
 
 .write-impact-story-container {
-  max-width: 800px; /* Container narrower than public view */
-  margin: 20px auto; /* Added margin top/bottom */
+  max-width: 800px; 
+  margin: 20px auto; 
   padding: 30px 20px;
-  font-family: 'Inter', sans-serif; /* Consistent font */
+  font-family: 'Inter', sans-serif; 
   color: var(--body-text);
-  background-color: var(--bg-white); /* Ensure white background */
-  border-radius: var(--radius-md); /* Rounded corners */
-  box-shadow: var(--shadow-sm); /* Subtle shadow */
+  background-color: var(--bg-white); 
+  border-radius: var(--radius-md); 
+  box-shadow: var(--shadow-sm); 
 }
 
 .page-title {
@@ -72,11 +68,11 @@
   font-size: 15px;
   color: var(--body-text);
   transition: border-color 0.2s ease;
-  box-sizing: border-box; /* Include padding in width */
+  box-sizing: border-box; 
 }
 
 .impact-story-form input[type="file"] {
-     padding: 12px 0; /* Adjust padding */
+     padding: 12px 0; 
      font-size: 15px;
 }
 
@@ -86,11 +82,11 @@
 .impact-story-form textarea:focus {
   border-color: var(--primary-green);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(42, 111, 43, 0.1); /* Focus glow */
+  box-shadow: 0 0 0 3px rgba(42, 111, 43, 0.1); 
 }
 
 .impact-story-form textarea {
-  resize: vertical; /* Allow vertical resize */
+  resize: vertical; 
 }
 
 .submit-button {
@@ -98,7 +94,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: auto; /* Adjust button width */
+  width: auto; 
   padding: 12px 24px;
   background-color: var(--primary-green);
   color: white;
@@ -111,36 +107,34 @@
 }
 
 .submit-button:hover:not(:disabled) {
-  background-color: #205721; /* Darker green */
+  background-color: #205721; 
 }
 
 .submit-button:disabled {
-  background-color: var(--light-text); /* Grey color */
+  background-color: var(--light-text); 
   cursor: not-allowed;
 }
 
 
-/* Image Previews */
 .image-previews {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; /* Space between previews */
+    gap: 10px; 
     margin-top: 15px;
-    border: 1px dashed var(--border-color); /* Optional: Border around previews area */
+    border: 1px dashed var(--border-color); 
     padding: 10px;
     border-radius: var(--radius-sm);
     background-color: var(--bg-light);
 }
 
 .image-preview {
-    width: 80px; /* Fixed size for previews */
+    width: 80px; 
     height: 80px;
-    object-fit: cover; /* Crop image */
+    object-fit: cover; 
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
 }
 
-/* Alerts */
 .alert {
   padding: 15px;
   margin-bottom: 20px;
@@ -149,18 +143,17 @@
 }
 
 .alert.error {
-  background-color: #f8d7da; /* Light red */
-  color: #721c24; /* Dark red */
+  background-color: #f8d7da; 
+  color: #721c24; 
   border: 1px solid #f5c6cb;
 }
 
 .alert.success {
-  background-color: #d4edda; /* Light green */
-  color: #155724; /* Dark green */
+  background-color: #d4edda; 
+  color: #155724; 
   border: 1px solid #c3e6cb;
 }
 
-/* Empty state styling */
 .empty-state {
     text-align: center;
     padding: 40px 20px;
@@ -188,7 +181,6 @@
     margin: 0 0 20px 0;
 }
 
-/* Button styles (reused/consistent) */
 .btn {
   padding: 10px 20px;
   border-radius: var(--radius-md);
@@ -211,7 +203,6 @@
 }
 
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
   .write-impact-story-container {
     padding: 20px 15px;
@@ -268,8 +259,6 @@
      }
 }
 
-/* --- Added Back Button Styles from ViewDonations.css --- */
-
 
 .view-donations-back-btn {
 display: flex;
@@ -283,7 +272,7 @@ cursor: pointer;
 color: #043f2e;
 font-weight: 500;
 transition: all 0.2s ease;
-font-family: 'Inter', sans-serif; /* Use consistent font */
+font-family: 'Inter', sans-serif; 
 }
 
 .view-donations-back-btn:hover {
@@ -296,6 +285,6 @@ font-size: 14px;
 
 @media (max-width: 768px) {
   .view-donations-back-btn-container {
-      padding: 10px 15px 0 15px; /* Adjust padding for mobile */
+      padding: 10px 15px 0 15px; 
   }
 }

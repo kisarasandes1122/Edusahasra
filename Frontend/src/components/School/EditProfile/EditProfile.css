@@ -1,8 +1,3 @@
-/* ================================== */
-/* EditProfile.css - Updated Styles   */
-/* ================================== */
-
-/* Overall Container */
 .profile-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -11,11 +6,10 @@
   background-color: #f8faf9;
   min-height: 100vh;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  display: flex; /* Use flex for main layout control */
-  flex-direction: column; /* Stack header, back button, and main content area */
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header (remains similar) */
 .profile-header {
   display: flex;
   justify-content: center;
@@ -38,9 +32,8 @@
   color: #043f2e;
 }
 
-/* Back Button Area */
 .profile-back-btn-container {
-  padding: 16px 24px 0 24px; /* Adjusted padding for better spacing */
+  padding: 16px 24px 0 24px;
 }
 
 .profile-back-btn {
@@ -71,55 +64,52 @@
   font-size: 14px;
 }
 
-/* --- Main Content Wrapper (Sidebar + Content Area) --- */
 .profile-main-content-wrapper {
   display: flex;
-  flex-direction: row; /* Arrange sidebar and content side-by-side */
-  flex: 1; /* Allow this wrapper to grow and fill container space */
-  padding: 24px; /* Padding around the main content */
-  gap: 24px; /* Space between sidebar and content */
+  flex-direction: row;
+  flex: 1;
+  padding: 24px;
+  gap: 24px;
 }
 
-/* --- Sidebar Navigation --- */
 .profile-sidebar {
-  flex: 0 0 250px; /* Fixed width for sidebar */
-  background-color: white; /* White background for sidebar */
+  flex: 0 0 250px;
+  background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  padding: 20px 0; /* Vertical padding */
+  padding: 20px 0;
   display: flex;
-  flex-direction: column; /* Stack navigation items vertically */
-  align-self: flex-start; /* Prevent sidebar from stretching height */
-  /* min-height can be removed or adjusted if content pushes container */
+  flex-direction: column;
+  align-self: flex-start;
 }
 
 .profile-sidebar-link {
-  display: block; /* Make link fill width */
-  width: 100%; /* Ensure button takes full width */
-  text-align: left; /* Align text to the left */
-  padding: 12px 20px; /* Padding inside links */
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 20px;
   font-size: 16px;
-  color: #4a5568; /* Default text color */
+  color: #4a5568;
   text-decoration: none;
   transition: background-color 0.2s ease, color 0.2s ease;
-  border-left: 4px solid transparent; /* Border for active indicator */
-  background: none; /* Remove default button background */
-  border-top: none; /* Remove default button border */
-  border-right: none; /* Remove default button border */
-  border-bottom: none; /* Remove default button border */
-  cursor: pointer; /* Indicate clickable */
+  border-left: 4px solid transparent;
+  background: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  cursor: pointer;
 }
 
 .profile-sidebar-link:hover:not(.active):not(:disabled) {
-  background-color: #f1f8f4; /* Hover background */
-  color: #043f2e; /* Hover text color */
+  background-color: #f1f8f4;
+  color: #043f2e;
 }
 
 .profile-sidebar-link.active {
-  background-color: #e8f3ea; /* Active background */
-  color: #043f2e; /* Active text color */
-  font-weight: 600; /* Bold for active */
-  border-left-color: #78C51C; /* Accent color border for active */
+  background-color: #e8f3ea;
+  color: #043f2e;
+  font-weight: 600;
+  border-left-color: #78C51C;
 }
 
 .profile-sidebar-link:disabled {
@@ -127,38 +117,31 @@
     opacity: 0.7;
 }
 
-
-/* --- Main Content Area --- */
 .profile-content-area {
-  flex: 1; /* Allows content area to take remaining space */
-  background-color: white; /* White background for content area */
+  flex: 1;
+  background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  padding: 20px; /* Padding inside content area */
+  padding: 20px;
   display: flex;
-  flex-direction: column; /* Stack sections within content area */
-  gap: 24px; /* Space between sections */
+  flex-direction: column;
+  gap: 24px;
 }
 
-
-/* --- Section Styling within Content Area --- */
-/* This wraps the content of each tab */
 .profile-content-section {
-   border-radius: 8px; /* Keep border radius */
-   padding: 0; /* Remove padding as it's on content-area */
-   margin: 0; /* Remove margin */
-   display: flex; /* Use flex for internal layout */
-   flex-direction: column; /* Stack elements */
-   gap: 16px; /* Space within sections */
+   border-radius: 8px;
+   padding: 0;
+   margin: 0;
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
 }
 
-
-/* Section for general errors (Place outside main content area) */
 .profile-error-section {
-    background-color: #fed7d7; /* Light red background */
-    border: 1px solid #f56565; /* Red border */
-    color: #c53030; /* Darker red text */
-    margin: 16px 24px 0 24px; /* Add margins back when outside main content area */
+    background-color: #fed7d7;
+    border: 1px solid #f56565;
+    color: #c53030;
+    margin: 16px 24px 0 24px;
     padding: 10px;
     border-radius: 8px;
 }
@@ -167,23 +150,21 @@
     font-weight: 500;
 }
 
-
 .section-title {
   margin-top: 0;
-  margin-bottom: 0; /* Adjusted margin bottom */
-  font-size: 20px; /* Slightly larger title */
+  margin-bottom: 0;
+  font-size: 20px;
   font-weight: 600;
   color: #043f2e;
-  padding-bottom: 10px; /* Space below title */
-  border-bottom: 1px solid #e2e8f0; /* Separator line */
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-/* --- Form Elements (Used by both sections) --- */
 .profile-form {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Space between form groups */
-  padding-top: 16px; /* Space above the first form group after title/separator */
+  gap: 16px;
+  padding-top: 16px;
 }
 
 .form-row {
@@ -197,15 +178,13 @@
   flex-direction: column;
   gap: 8px;
 }
-/* Allow form groups in rows to take equal width */
 .form-group-row {
     flex: 1;
-    min-width: 0; /* Prevents overflow issues in flex items */
+    min-width: 0;
 }
 
-
 .form-label {
-  font-size: 15px; /* Slightly smaller label font */
+  font-size: 15px;
   font-weight: 500;
   color: #4a5568;
 }
@@ -213,10 +192,10 @@
 .form-input,
 .form-textarea {
   width: 100%;
-  padding: 10px; /* Slightly smaller padding */
-  border: 1px solid #cbd5e0; /* Neutral border color */
-  border-radius: 4px; /* Slightly smaller radius */
-  font-size: 15px; /* Consistent font size */
+  padding: 10px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  font-size: 15px;
   color: #2d3748;
   background-color: white;
   transition: border-color 0.2s ease;
@@ -227,7 +206,7 @@
 .form-textarea:focus {
   outline: none;
   border-color: #78C51C;
-  box-shadow: 0 0 0 2px rgba(120, 197, 28, 0.2); /* Smaller glow */
+  box-shadow: 0 0 0 2px rgba(120, 197, 28, 0.2);
 }
 
 .form-input:disabled,
@@ -237,25 +216,23 @@
     color: #a0aec0;
 }
 
-
 .form-textarea {
   resize: vertical;
   min-height: 100px;
 }
 
-/* Location styling */
 .location-container {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Smaller gap */
+  gap: 8px;
 }
 
 .location-display {
-  background-color: #f7fafc; /* Light background */
-  border: 1px solid #e2e8f0; /* Lighter border */
+  background-color: #f7fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 4px;
-  padding: 10px; /* Smaller padding */
-  min-height: 40px; /* Adjusted height */
+  padding: 10px;
+  min-height: 40px;
   display: flex;
   align-items: center;
   font-size: 14px;
@@ -264,7 +241,7 @@
 .location-coordinates {
   display: flex;
   flex-direction: row;
-  gap: 8px; /* Smaller gap */
+  gap: 8px;
   color: #2d3748;
   flex-wrap: wrap;
 }
@@ -279,14 +256,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px; /* Smaller gap */
+  gap: 6px;
   background-color: #78C51C;
   color: white;
   border: none;
-  border-radius: 4px; /* Smaller radius */
-  padding: 8px 12px; /* Smaller padding */
+  border-radius: 4px;
+  padding: 8px 12px;
   cursor: pointer;
-  font-size: 13px; /* Smaller font */
+  font-size: 13px;
   font-weight: 500;
   transition: background-color 0.2s ease;
   align-self: flex-start;
@@ -302,29 +279,27 @@
 }
 
 .location-icon {
-  font-size: 14px; /* Smaller icon */
+  font-size: 14px;
 }
 
 .location-error {
   color: #e53e3e;
-  font-size: 13px; /* Smaller font */
+  font-size: 13px;
   margin-top: 4px;
 }
 
-/* Image Upload Area (Nested section styling) */
 .image-upload-section {
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Space within this nested section */
-    padding-top: 16px; /* Space above title */
-    border-top: 1px solid #e2e8f0; /* Separator above image section */
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
 }
-
 
 .image-upload-container {
   display: flex;
   justify-content: center;
-  margin: 10px 0 0 0; /* Adjusted margin */
+  margin: 10px 0 0 0;
 }
 
 .image-upload-label {
@@ -333,12 +308,12 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100px; /* Smaller height */
+  height: 100px;
   border: 2px dashed #cbd5e0;
-  border-radius: 6px; /* Smaller radius */
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background-color: #f7fafc; /* Light background */
+  background-color: #f7fafc;
   color: #4a5568;
 }
 
@@ -358,8 +333,8 @@
 }
 
 .upload-icon {
-  font-size: 20px; /* Smaller icon */
-  margin-bottom: 6px; /* Smaller margin */
+  font-size: 20px;
+  margin-bottom: 6px;
 }
 
 .upload-text {
@@ -369,7 +344,7 @@
 }
 
 .upload-text-main {
-  font-size: 14px; /* Smaller font */
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -377,43 +352,40 @@
   display: none;
 }
 
-/* Styles for Both Existing and Preview Images */
 .uploaded-images {
-  margin-top: 0; /* Adjusted margin - use section gap */
+  margin-top: 0;
 }
 
 .uploaded-images-title {
-    font-size: 15px; /* Smaller font */
+    font-size: 15px;
     font-weight: 600;
     color: #043f2e;
-    margin-bottom: 10px; /* Smaller margin */
+    margin-bottom: 10px;
 }
 
 .image-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px; /* Smaller gap */
+  gap: 8px;
 }
 
 .uploaded-image-item {
   position: relative;
   overflow: hidden;
-  border-radius: 6px; /* Match thumbnail radius */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Smaller shadow */
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Thumbnail Image Styling */
 .image-preview-thumb {
   display: block;
-  width: 80px;   /* Adjusted size */
-  height: 80px;  /* Adjusted size */
+  width: 80px;
+  height: 80px;
   object-fit: cover;
   border-radius: 6px;
   border: 1px solid #e2e8f0;
   background-color: #f0f0f0;
 }
 
-/* Remove Button Styling ('X' on thumbnails) */
 .remove-preview-image-btn,
 .remove-existing-image-btn {
   position: absolute;
@@ -423,13 +395,13 @@
   color: white;
   border: 1px solid white;
   border-radius: 50%;
-  width: 20px; /* Smaller button */
-  height: 20px; /* Smaller button */
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 10px; /* Smaller font */
+  font-size: 10px;
   line-height: 1;
   padding: 0;
   transition: background-color 0.2s ease;
@@ -447,36 +419,34 @@
     box-shadow: none;
 }
 
-
-/* Button Container (within each section/form) */
 .button-container {
   display: flex;
   justify-content: center;
-  padding-top: 10px; /* Space above button */
+  padding-top: 10px;
 }
 
 .primary-button {
   background: linear-gradient(to right, #78C51C, #2A6F2B);
   border: none;
-  border-radius: 4px; /* Smaller radius */
-  padding: 12px 20px; /* Adjusted padding */
+  border-radius: 4px;
+  padding: 12px 20px;
   cursor: pointer;
-  width: auto; /* Button fits content */
-  max-width: 300px; /* Optional: Max width */
+  width: auto;
+  max-width: 300px;
   transition: all 0.2s ease;
   text-align: center;
-  color: white; /* Ensure text is white */
-  font-size: 15px; /* Adjusted font size */
+  color: white;
+  font-size: 15px;
   font-weight: 600;
-  display: inline-flex; /* Use inline-flex */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; /* Space for spinner */
+  gap: 8px;
 }
 
 .primary-button:hover:not(:disabled) {
   background: linear-gradient(to right, #69b119, #245f24);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Adjusted shadow */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .primary-button:disabled {
@@ -485,12 +455,11 @@
     box-shadow: none;
 }
 
-/* Message styles for password change form */
 .password-message {
     padding: 10px;
     border-radius: 4px;
-    margin-top: 10px; /* Smaller margin */
-    font-size: 13px; /* Smaller font */
+    margin-top: 10px;
+    font-size: 13px;
 }
 
 .password-message.success {
@@ -505,11 +474,9 @@
     border: 1px solid #f5c6cb;
 }
 
-
-/* Contact Section (Place outside main content wrapper) */
 .profile-contact {
   background-color: #f1f8f4;
-  margin: 24px 24px 24px 24px; /* Add margins */
+  margin: 24px 24px 24px 24px;
   padding: 16px;
   border-radius: 8px;
   text-align: center;
@@ -526,42 +493,41 @@
   margin-left: 5px;
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
   .profile-main-content-wrapper {
-      flex-direction: column; /* Stack sidebar and content vertically */
-      padding: 16px; /* Adjusted padding */
-      gap: 16px; /* Smaller gap */
+      flex-direction: column;
+      padding: 16px;
+      gap: 16px;
   }
 
   .profile-sidebar {
-      flex: none; /* Remove fixed width */
-      width: 100%; /* Full width */
-      flex-direction: row; /* Arrange links horizontally */
-      flex-wrap: wrap; /* Allow links to wrap */
-      padding: 10px; /* Adjusted padding */
-      gap: 5px; /* Smaller gap between horizontal links */
+      flex: none;
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 10px;
+      gap: 5px;
   }
    .profile-sidebar-link {
-       border-left: none; /* Remove vertical border */
-       border-bottom: 2px solid transparent; /* Add horizontal border */
-       padding: 8px 12px; /* Adjusted padding */
-       font-size: 14px; /* Smaller font */
-       text-align: center; /* Center text */
+       border-left: none;
+       border-bottom: 2px solid transparent;
+       padding: 8px 12px;
+       font-size: 14px;
+       text-align: center;
    }
    .profile-sidebar-link.active {
-       border-left-color: transparent; /* Remove left border */
-       border-bottom-color: #78C51C; /* Use bottom border */
+       border-left-color: transparent;
+       border-bottom-color: #78C51C;
    }
 
   .profile-content-area {
-    padding: 16px; /* Adjusted padding */
-    gap: 16px; /* Smaller gap between sections */
+    padding: 16px;
+    gap: 16px;
   }
 
   .profile-error-section,
   .profile-contact {
-      margin: 16px; /* Adjust margins */
+      margin: 16px;
   }
 
   .section-title {
@@ -570,32 +536,30 @@
 
   .form-row {
       flex-direction: column;
-      gap: 10px; /* Smaller gap */
+      gap: 10px;
   }
 
   .form-group {
-      gap: 6px; /* Smaller gap */
+      gap: 6px;
   }
-
 
   .form-input,
   .form-textarea {
-    padding: 8px; /* Smaller padding */
-    font-size: 13px; /* Smaller font */
+    padding: 8px;
+    font-size: 13px;
   }
 
   .form-label {
-    font-size: 13px; /* Smaller font */
+    font-size: 13px;
   }
 
   .get-location-btn {
-      padding: 6px 10px; /* Smaller padding */
-      font-size: 12px; /* Smaller font */
+      padding: 6px 10px;
+      font-size: 12px;
   }
    .location-display, .location-coordinates {
-      font-size: 13px; /* Smaller font */
+      font-size: 13px;
    }
-
 
   .upload-icon {
     font-size: 18px;
@@ -606,12 +570,12 @@
   }
 
   .image-upload-label {
-    height: 80px; /* Smaller height */
+    height: 80px;
     padding: 10px;
   }
 
   .image-grid {
-      gap: 6px; /* Smaller gap */
+      gap: 6px;
   }
 
   .image-preview-thumb {
@@ -626,12 +590,12 @@
       font-size: 9px;
   }
 
-  .button-container { /* Applied to the generic button container */
-      padding-top: 8px; /* Smaller padding */
+  .button-container {
+      padding-top: 8px;
   }
-   .primary-button { /* Applied to the generic button */
-       padding: 10px 16px; /* Smaller padding */
-       font-size: 14px; /* Smaller font */
+   .primary-button {
+       padding: 10px 16px;
+       font-size: 14px;
    }
 
    .password-message {

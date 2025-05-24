@@ -1,33 +1,29 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { FaArrowLeft, FaPlus, FaCheck, FaTimes, FaSpinner } from 'react-icons/fa'; // Added FaSpinner
+import { FaArrowLeft, FaPlus, FaCheck, FaTimes, FaSpinner } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../LanguageSelector/LanguageContext';
-import api from '../../../api'; // Adjust path as needed
+import api from '../../../api';
 import './SendThanks.css';
 
 const SendThanks = () => {
   const navigate = useNavigate();
   const { translations } = useLanguage();
 
-  // State
-  const [eligibleDonors, setEligibleDonors] = useState([]); // Stores { donationId, donorId, donorName, donatedItemsSummary, confirmationDate }
-  const [selectedDonorIndex, setSelectedDonorIndex] = useState(null); // Index in the eligibleDonors array
-  const [selectedMessageIndex, setSelectedMessageIndex] = useState(null); // Index for predefined messages
+  const [eligibleDonors, setEligibleDonors] = useState([]);
+  const [selectedDonorIndex, setSelectedDonorIndex] = useState(null);
+  const [selectedMessageIndex, setSelectedMessageIndex] = useState(null);
   const [customMessage, setCustomMessage] = useState('');
   const [isCustomMessage, setIsCustomMessage] = useState(false);
-  const [uploadedImageFiles, setUploadedImageFiles] = useState([]); // Holds File objects
-  const [imagePreviews, setImagePreviews] = useState([]); // Holds data URLs for preview
+  const [uploadedImageFiles, setUploadedImageFiles] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
 
-  // Loading/Error/Submitting State
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false); // Optional: for success message/redirect
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const fileInputRef = useRef(null);
 
-  // --- Predefined Messages (using translations) ---
-  // Memoize to prevent re-creation on every render unless translations change
   const thankYouMessages = React.useMemo(() => [
     { id: 1, message: translations.thank_you_message_1 },
     { id: 2, message: translations.thank_you_message_2 },
@@ -35,12 +31,11 @@ const SendThanks = () => {
     { id: 4, message: translations.thank_you_message_4 },
   ], [translations]);
 
-  // --- Fetch Eligible Donations ---
   const fetchEligibleDonors = useCallback(async () => {
     setLoading(true);
     setError(null);
-    setEligibleDonors([]); // Clear previous list
-    setSelectedDonorIndex(null); // Reset selection
+    setEligibleDonors([]);
+    setSelectedDonorIndex(null);
     console.log("Fetching eligible donations for thanks...");
 
     try {
@@ -48,8 +43,6 @@ const SendThanks = () => {
       console.log("Eligible donations response:", response.data);
       setEligibleDonors(response.data || []);
       if (response.data && response.data.length > 0) {
-        // Optionally pre-select the first donor
-        // setSelectedDonorIndex(0);
       }
     } catch (err) {
       console.error("Error fetching eligible donations:", err);
@@ -61,25 +54,22 @@ const SendThanks = () => {
       setLoading(false);
       console.log("Fetching eligible donations complete.");
     }
-  }, [translations.error_fetching_eligible_donors]); // Dependency on translation key
+  }, [translations.error_fetching_eligible_donors]);
 
-  // Fetch on component mount
   useEffect(() => {
     fetchEligibleDonors();
   }, [fetchEligibleDonors]);
 
-  // --- Image Handling ---
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
     processFiles(files);
-     // Reset file input value so the same file can be selected again if removed
      if (fileInputRef.current) {
         fileInputRef.current.value = "";
      }
   };
 
   const handleDragOver = (event) => {
-    event.preventDefault(); // Necessary to allow drop
+    event.preventDefault();
   };
 
   const handleDrop = (event) => {
@@ -91,7 +81,6 @@ const SendThanks = () => {
   const processFiles = (files) => {
     if (!files || files.length === 0) return;
 
-    // Limit number of files? (e.g., max 5 as per backend)
     const currentCount = uploadedImageFiles.length;
     const allowedNewCount = 5 - currentCount;
     const filesToAdd = files.slice(0, allowedNewCount);
@@ -105,12 +94,11 @@ const SendThanks = () => {
     const newImagePreviews = [...imagePreviews];
 
     filesToAdd.forEach(file => {
-      // Basic validation (optional, backend/multer does more)
       if (!file.type.startsWith('image/')) {
          alert(`${file.name} is not a valid image file.`);
          return;
       }
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      if (file.size > 5 * 1024 * 1024) {
          alert(`${file.name} exceeds the 5MB size limit.`);
          return;
       }
@@ -118,17 +106,14 @@ const SendThanks = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         newImagePreviews.push(reader.result);
-        // Update previews state only after reading is done
         setImagePreviews([...newImagePreviews]);
       };
       reader.onerror = () => {
          console.error("Error reading file:", file.name);
-         // Handle read error maybe?
       };
       reader.readAsDataURL(file);
     });
 
-    // Update file objects state
     setUploadedImageFiles(newImageFiles);
   };
 
@@ -138,37 +123,32 @@ const SendThanks = () => {
     setImagePreviews(prevPreviews => prevPreviews.filter((_, index) => index !== indexToRemove));
   };
 
-  // --- Form State Handling ---
   const handleDonorSelection = (index) => {
     setSelectedDonorIndex(index);
-    // Reset message/images when donor changes? Optional.
-    // resetMessageAndImages();
   };
 
   const handleMessageSelection = (index) => {
     setSelectedMessageIndex(index);
     setIsCustomMessage(false);
-    setCustomMessage(''); // Clear custom message when predefined is selected
+    setCustomMessage('');
   };
 
   const toggleCustomMessage = () => {
-    setIsCustomMessage(true); // Always set true when this option is clicked
-    setSelectedMessageIndex(null); // Deselect predefined messages
+    setIsCustomMessage(true);
+    setSelectedMessageIndex(null);
   };
 
   const resetForm = () => {
-    // Don't reset selectedDonorIndex here, it should persist until successful send or manual change
     setSelectedMessageIndex(null);
     setCustomMessage('');
     setIsCustomMessage(false);
     setUploadedImageFiles([]);
     setImagePreviews([]);
     setSubmitting(false);
-    setSubmitSuccess(false); // Reset success flag
-    setError(null); // Clear errors related to submission
+    setSubmitSuccess(false);
+    setError(null);
   };
 
-  // --- Submit Handler ---
   const handleSendThanks = async () => {
     if (selectedDonorIndex === null) {
       alert(translations.please_select_donor || 'Please select a donor to thank.');
@@ -193,33 +173,29 @@ const SendThanks = () => {
       ? customMessage.trim()
       : thankYouMessages[selectedMessageIndex].message;
 
-    // --- Create FormData ---
     const formData = new FormData();
-    formData.append('donationId', selectedDonationData.donationId); // Backend expects donationId
+    formData.append('donationId', selectedDonationData.donationId);
     formData.append('message', messageToSend);
 
-    // Append images - key must match backend ('images')
     uploadedImageFiles.forEach(file => {
       formData.append('images', file);
     });
 
     console.log('Sending thank you data (FormData):');
     for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value); // Log FormData content (files will show as [object File])
+        console.log(`${key}:`, value);
     }
 
 
     try {
-      // Make POST request using api instance (handles auth token and FormData content type)
       const response = await api.post('/api/thankyous', formData);
 
       console.log('Thank you sent successfully:', response.data);
       setSubmitSuccess(true);
       alert(translations.thank_you_sent_successfully || 'Thank you message sent successfully!');
 
-      // --- Refresh and Reset ---
-      resetForm(); // Clear form fields
-      fetchEligibleDonors(); // Refresh the list of eligible donors
+      resetForm();
+      fetchEligibleDonors();
 
     } catch (err) {
       console.error('Error sending thank you:', err);
@@ -228,19 +204,16 @@ const SendThanks = () => {
           errorMsg = `${errorMsg} ${err.response.data.message}`;
       }
       setError(errorMsg);
-      alert(errorMsg); // Show error to user
-      setSubmitting(false); // Ensure submitting is reset on error
+      alert(errorMsg);
+      setSubmitting(false);
     }
-    // No finally block needed for submitting as it's set in success/error paths
   };
 
 
-  // --- Navigation ---
   const handleBack = () => {
-    navigate('/Dashboard'); // Ensure this path is correct
+    navigate('/Dashboard');
   };
 
-   // --- Helper to format date ---
    const formatDate = (dateString) => {
      if (!dateString) return 'N/A';
      try {
@@ -252,7 +225,6 @@ const SendThanks = () => {
    };
 
 
-  // --- Render Logic ---
   return (
     <div className="send-thanks-container">
       <header className="send-thanks-header">
@@ -267,45 +239,39 @@ const SendThanks = () => {
           <span>{translations.back || 'Back'}</span>
         </button>
 
-        {/* Instructions */}
         <div className="instruction-box">
           <p>{translations.send_thanks_instruction || 'Select a donor, choose a message, add photos, and send your thanks!'}</p>
         </div>
 
-        {/* Loading State */}
         {loading && (
             <div className="loading-message">
                 <FaSpinner className="fa-spin" /> {translations.loading_eligible_donors || 'Loading eligible donors...'}
             </div>
         )}
 
-        {/* Error State (for fetching) */}
         {!loading && error && (
             <div className="error-message">{error}</div>
         )}
 
-        {/* Main Form Area (Show only if not loading and no fetch error) */}
         {!loading && !error && (
             <>
                 {eligibleDonors.length > 0 ? (
                   <div className="thankyou-form-container">
-                    {/* Donor Selection */}
                     <div className="donor-selection-section">
                       <h3 className="selection-heading-english">{translations.sendthanks_select_donor_to_thank || '1. Select Donor to Thank'}</h3>
                       <div className="donors-list">
                         {eligibleDonors.map((donorData, index) => (
                           <div
-                            key={donorData.donationId} // Use unique donationId
+                            key={donorData.donationId}
                             className={`donor-item ${selectedDonorIndex === index ? 'selected' : ''}`}
                             onClick={() => handleDonorSelection(index)}
-                            role="radio" // Semantics
+                            role="radio"
                             aria-checked={selectedDonorIndex === index}
-                            tabIndex={0} // Make it focusable
-                            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleDonorSelection(index)} // Keyboard navigable
+                            tabIndex={0}
+                            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleDonorSelection(index)}
                           >
                             <div className="donor-info">
                               <h4 className="donor-name">{donorData.donorName}</h4>
-                              {/* Use the summary provided by backend */}
                               <p className="donor-donated">{translations.donated || 'Donated'}: {donorData.donatedItemsSummary}</p>
                               <p className="donor-date">{translations.date || 'Date'}: {formatDate(donorData.confirmationDate)}</p>
                             </div>
@@ -317,11 +283,9 @@ const SendThanks = () => {
                       </div>
                     </div>
 
-                    {/* Message Selection */}
                     <div className="message-selection-section">
                        <h3 className="message-heading-english">{translations.sendthanks_say_thank_you || '2. Choose or Write Message'}</h3>
                       <div className="message-options">
-                        {/* Predefined Messages */}
                         {thankYouMessages.map((msg, index) => (
                           <div
                             key={msg.id}
@@ -338,7 +302,6 @@ const SendThanks = () => {
                             </div>
                           </div>
                         ))}
-                        {/* Custom Message Option */}
                         <div
                           className={`message-option custom-message-toggle ${isCustomMessage ? 'selected' : ''}`}
                           onClick={toggleCustomMessage}
@@ -354,7 +317,6 @@ const SendThanks = () => {
                         </div>
                       </div>
 
-                      {/* Custom Message Textarea */}
                       {isCustomMessage && (
                         <div className="custom-message-container">
                           <label htmlFor="customMessage" className="input-label">{translations.sendthanks_your_message || 'Your Message'}:</label>
@@ -365,22 +327,21 @@ const SendThanks = () => {
                             onChange={(e) => setCustomMessage(e.target.value)}
                             placeholder={translations.type_your_message_here || 'Type your message here...'}
                             rows={4}
-                            maxLength={1000} // Match backend limit
+                            maxLength={1000}
                           />
                         </div>
                       )}
                     </div>
 
-                    {/* Photo Upload */}
                     <div className="photo-upload-section">
                       <h3 className="selection-heading-english">{translations.sendthanks_add_photos_optional || '3. Add Photos (Optional)'}</h3>
                       <input
                         type="file"
-                        accept="image/jpeg, image/png, image/gif" // Be specific
+                        accept="image/jpeg, image/png, image/gif"
                         onChange={handleImageUpload}
                         ref={fileInputRef}
                         style={{ display: 'none' }}
-                        multiple // Allow multiple file selection
+                        multiple
                       />
                       <div
                         className="photo-upload-button"
@@ -394,11 +355,9 @@ const SendThanks = () => {
                       >
                         <FaPlus className="plus-icon" />
                         <span className="button-text">{translations.add_photos_optional || 'Add Photos (Optional)'}</span>
-                         {/* Add hint about limits */}
                          <span style={{fontSize: '12px', color: '#718096', marginLeft: '10px'}}> (Max 5 images, 5MB each)</span>
                       </div>
 
-                      {/* Image Previews */}
                       {imagePreviews.length > 0 && (
                         <div className="images-preview-grid">
                           {imagePreviews.map((preview, index) => (
@@ -420,7 +379,6 @@ const SendThanks = () => {
                       )}
                     </div>
 
-                    {/* Submit Button */}
                     <button
                       className="send-thanks-button"
                       onClick={handleSendThanks}
@@ -433,19 +391,16 @@ const SendThanks = () => {
                       )}
                     </button>
 
-                    {/* Display submission error */}
                     {error && submitting === false && (
                          <div className="error-message" style={{marginTop: '15px', textAlign: 'center'}}>{error}</div>
                     )}
 
                   </div>
                 ) : (
-                    // No eligible donors state
                   <div className="no-donors-message" style={{ textAlign: 'center', padding: '30px', backgroundColor: '#f1f8f4', borderRadius: '8px' }}>
                     <h3>{translations.all_donors_thanked || 'All donors have been thanked!'}</h3>
                     <p>{translations.no_more_donors || 'There are no more donors to thank at this time.'}</p>
                     <button onClick={handleBack} className="back-button" style={{marginTop: '15px', display: 'inline-flex'}}>
-                       {/* Use back button style or create a new one */}
                        {translations.return_to_dashboard || 'Return to Dashboard'}
                     </button>
                   </div>
@@ -453,7 +408,6 @@ const SendThanks = () => {
             </>
         )}
 
-        {/* Contact Section */}
         <div className="support-contact">
           <p>
             <span>{translations.need_help_contact_us || 'Need help? Contact us:'} </span>

@@ -1,4 +1,3 @@
-// frontend/src/components/School/WriteImpactStoriesPage/WriteImpactStoriesPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaSpinner } from 'react-icons/fa';
@@ -25,17 +24,16 @@ const WriteImpactStoriesPage = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
-  // Define fetchEligibleDonations at component level so it can be called from anywhere
   const fetchEligibleDonations = async () => {
     setLoadingDonations(true);
     try {
       const response = await api.get('/api/impact-stories/eligible-donations');
-      console.log("Eligible Donations Response:", response.data); // Debug log
+      console.log("Eligible Donations Response:", response.data); 
       setEligibleDonations(response.data);
       if (response.data.length > 0) {
-        setSelectedDonationId(response.data[0].donationId); // Auto-select first eligible donation
+        setSelectedDonationId(response.data[0].donationId); 
       } else {
-        setSelectedDonationId(''); // Ensure no donation is selected if list is empty
+        setSelectedDonationId(''); 
       }
     } catch (err) {
       console.error('Error fetching eligible donations:', err);
@@ -49,45 +47,37 @@ const WriteImpactStoriesPage = () => {
     }
   };
 
-  // Call fetchEligibleDonations when component mounts
   useEffect(() => {
     fetchEligibleDonations();
-  }, []);  // Empty dependency array since function is now in component scope
+  }, []);  
 
-  // --- Handle Image Selection ---
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
 
-    // Revoke existing previews before creating new ones if replacing
-    imagePreviews.forEach(url => URL.revokeObjectURL(url)); // Clean up old previews
+    imagePreviews.forEach(url => URL.revokeObjectURL(url)); 
 
-    // Combine existing images (if any, although this current logic replaces) with new files for limit check
-    const totalImages = files.length; // Simple replacement logic
+    const totalImages = files.length; 
 
-    // Limit to 10 images total
-    if (totalImages > 10) { // Check limit on the new selection
+    if (totalImages > 10) { 
       alert(translations.image_limit_exceeded || 'You can only upload a maximum of 10 images.');
-      e.target.value = null; // Clear the file input
-      setImages([]); // Clear selected images
-      setImagePreviews([]); // Clear previews
+      e.target.value = null; 
+      setImages([]); 
+      setImagePreviews([]); 
       return;
     }
 
     setImages(files);
 
-    // Create new previews
     const previews = files.map(file => URL.createObjectURL(file));
     setImagePreviews(previews);
   };
 
-  // --- Handle Form Submission ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     setError(null);
     setSuccess(null);
 
-    // Frontend Validation - Added checks for title, story text, and images
     if (!selectedDonationId) {
       setError(translations.select_donation_required || 'Please select a donation.');
       setSubmitting(false);
@@ -117,19 +107,17 @@ const WriteImpactStoriesPage = () => {
     if (quoteAuthor.trim()) formData.append('quoteAuthor', quoteAuthor.trim());
 
     images.forEach(image => {
-      formData.append('images', image); // 'images' must match the field name in multer config
+      formData.append('images', image); 
     });
 
     try {
       const response = await api.post('/api/impact-stories', formData, {
         headers: {
-          // 'Content-Type': 'multipart/form-data', // Axios sets this automatically with FormData
         },
       });
 
       setSuccess(response.data.message || translations.story_submit_success || 'Impact story submitted successfully!');
-      // Clear form
-      setSelectedDonationId(eligibleDonations.length > 0 ? eligibleDonations[0].donationId : ''); // Reset to first eligible or empty
+      setSelectedDonationId(eligibleDonations.length > 0 ? eligibleDonations[0].donationId : ''); 
       setTitle('');
       setStoryText('');
       setQuote('');
@@ -137,9 +125,7 @@ const WriteImpactStoriesPage = () => {
       setImages([]);
       setImagePreviews([]);
       
-      // Re-fetch eligible donations after successful submission
-      // This will remove the just-storied donation from the dropdown
-      fetchEligibleDonations(); // Now this function is accessible here
+      fetchEligibleDonations(); 
 
     } catch (err) {
       console.error('Error submitting impact story:', err);
@@ -153,29 +139,23 @@ const WriteImpactStoriesPage = () => {
     }
   };
 
-  // --- Cleanup Object URLs on component unmount ---
   useEffect(() => {
-    // Cleanup when the component unmounts
     return () => {
       imagePreviews.forEach(url => URL.revokeObjectURL(url));
     };
-  }, [imagePreviews]); // Re-run effect if imagePreviews changes
+  }, [imagePreviews]); 
 
-  // --- Handle Back Navigation ---
   const handleBack = () => {
-    navigate('/Dashboard'); // Navigate back to the school dashboard
+    navigate('/Dashboard'); 
   };
 
-  // --- Define formatDate function ---
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     try {
       const date = new Date(dateString);
-      // Check if the date is valid
       if (isNaN(date.getTime())) {
         return 'Invalid Date';
       }
-      // Use toLocaleDateString for a user-friendly format
       return date.toLocaleDateString(undefined, {
         year: 'numeric',
         month: 'short',
@@ -188,7 +168,6 @@ const WriteImpactStoriesPage = () => {
   };
 
   return (
-    // Added back button container outside the main form container
     <>
       <div className="view-donations-back-btn-container">
         <button className="view-donations-back-btn" onClick={handleBack}>
@@ -217,7 +196,6 @@ const WriteImpactStoriesPage = () => {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="impact-story-form">
-            {/* Select Donation */}
             <div className="form-group">
               <label htmlFor="donation">{translations.select_donation || 'Select Donation'}</label>
               <select
@@ -235,7 +213,6 @@ const WriteImpactStoriesPage = () => {
               </select>
             </div>
 
-            {/* Title */}
             <div className="form-group">
               <label htmlFor="title">{translations.story_title || 'Story Title'}</label>
               <input
@@ -250,7 +227,6 @@ const WriteImpactStoriesPage = () => {
               />
             </div>
 
-            {/* Story Text */}
             <div className="form-group">
               <label htmlFor="storyText">{translations.main_story || 'Main Story'}</label>
               <textarea
@@ -265,7 +241,6 @@ const WriteImpactStoriesPage = () => {
               ></textarea>
             </div>
 
-            {/* Quote (Optional) */}
             <div className="form-group">
               <label htmlFor="quote">{translations.optional_quote || 'Quote (Optional)'}</label>
               <textarea
@@ -279,7 +254,6 @@ const WriteImpactStoriesPage = () => {
               ></textarea>
             </div>
 
-            {/* Quote Author (Optional) */}
             {quote.trim() && (
               <div className="form-group">
                 <label htmlFor="quoteAuthor">{translations.quote_author || 'Quote Author'}</label>
@@ -295,19 +269,17 @@ const WriteImpactStoriesPage = () => {
               </div>
             )}
 
-            {/* Images */}
             <div className="form-group">
               <label htmlFor="images">{translations.upload_photos || 'Upload Photos (Max 10)'}</label>
               <input
                 type="file"
                 id="images"
-                accept="image/*" // Accept any image type
-                multiple // Allow multiple file selection
+                accept="image/*" 
+                multiple 
                 onChange={handleImageChange}
                 disabled={submitting}
-                required // Make images required
+                required 
               />
-              {/* Image Previews */}
               {imagePreviews.length > 0 && (
                 <div className="image-previews">
                   {imagePreviews.map((previewUrl, index) => (
@@ -317,7 +289,6 @@ const WriteImpactStoriesPage = () => {
               )}
             </div>
 
-            {/* Submit Button */}
             <button type="submit" className="btn primary submit-button" disabled={submitting}>
               {submitting ? (translations.submitting || 'Submitting...') : (translations.submit_story || 'Submit Story')}
               {submitting && <FaSpinner className="fa-spin" />}

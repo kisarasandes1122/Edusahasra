@@ -1,4 +1,3 @@
-// RequestDonations.jsx
 import React, { useState } from 'react';
 import { FaArrowLeft, FaPlus, FaMinus, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +11,6 @@ const RequestDonations = () => {
 
     const MINIMUM_THRESHOLD = 25;
 
-    // ... (availableCategories state remains the same)
     const availableCategories = [
          { id: 1,  nameSinhala: 'සටහන් පොත්',           nameEnglish: 'Notebooks' },
          { id: 2,  nameSinhala: 'පෑන්/පැන්සල්',         nameEnglish: 'Pens/Pencils' },
@@ -53,10 +51,7 @@ const RequestDonations = () => {
     const [nextId, setNextId] = useState(3);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    // No need for successMessage state if using alert
-    // const [successMessage, setSuccessMessage] = useState(null);
 
-    // ... (keep existing handlers: handleBack, getCategoryById, incrementQuantity, etc.)
      const handleBack = () => {
         navigate('/Dashboard');
       };
@@ -141,7 +136,6 @@ const RequestDonations = () => {
 
     const handleSubmit = async () => {
         setError(null);
-        // setSuccessMessage(null); // Not needed anymore
         setIsLoading(true);
 
         const requestedItemsPayload = selectedSupplies.map(item => {
@@ -170,9 +164,7 @@ const RequestDonations = () => {
             });
 
             if (response.status === 201) {
-                // --- Show alert instead of setting message ---
-                window.alert(translations.request_success_alert || 'Donation request created successfully!'); // Use translation if available
-                // --- Navigate after alert is dismissed ---
+                window.alert(translations.request_success_alert || 'Donation request created successfully!');
                 navigate('/Dashboard');
             } else {
                 setError(`Unexpected response status: ${response.status}`);
@@ -189,13 +181,11 @@ const RequestDonations = () => {
 
     return (
         <div className="donations-container">
-            {/* Header */}
             <div className="donations-header">
                 <h1>{translations.request_donations}</h1>
             </div>
 
             <div className="donations-content">
-                {/* Back Button */}
                 <div className="back-button-container">
                     <button className="back-button" onClick={handleBack}>
                         <FaArrowLeft className="back-icon" />
@@ -203,9 +193,7 @@ const RequestDonations = () => {
                     </button>
                 </div>
 
-                {/* Form */}
                 <div className="donations-form-container">
-                    {/* Form Header */}
                     <div className="form-header">
                        <h2 className="form-title">
                            {translations.request_supplies}
@@ -218,11 +206,8 @@ const RequestDonations = () => {
                        </p>
                     </div>
 
-                    {/* Display Error Message */}
                     {error && <div style={{ color: 'red', marginBottom: '15px', textAlign: 'center' }}>Error: {error}</div>}
-                    {/* Success message state removed */}
 
-                    {/* Supplies List */}
                     <div className="supplies-list">
                         {selectedSupplies.map(supply => {
                              const category = getCategoryById(supply.categoryId);
@@ -235,7 +220,7 @@ const RequestDonations = () => {
                                       className="category-dropdown"
                                       value={supply.categoryId}
                                       onChange={(e) => handleCategoryChange(supply.id, e.target.value)}
-                                      disabled={isLoading} // Disable during loading
+                                      disabled={isLoading}
                                     >
                                       {availableCategoriesForItem.map(category => (
                                         <option key={category.id} value={category.id}>
@@ -248,19 +233,19 @@ const RequestDonations = () => {
                                     <button
                                       className="quantity-button decrease"
                                       onClick={() => decrementQuantity(supply.id)}
-                                      disabled={supply.quantity <= MINIMUM_THRESHOLD || isLoading} // Disable during loading
+                                      disabled={supply.quantity <= MINIMUM_THRESHOLD || isLoading}
                                     >
                                       <FaMinus />
                                     </button>
                                     <input
-                                      type="text" // Keep as text to allow easier editing, validation handles non-numeric
-                                      inputMode="numeric" // Hint for mobile keyboards
-                                      pattern="[0-9]*"    // Pattern for basic validation hint
+                                      type="text"
+                                      inputMode="numeric"
+                                      pattern="[0-9]*"
                                       className="quantity-input"
                                       value={supply.quantity}
                                       onChange={(e) => handleQuantityChange(supply.id, e.target.value)}
                                       min={MINIMUM_THRESHOLD}
-                                      disabled={isLoading} // Disable during loading
+                                      disabled={isLoading}
                                       style={{
                                         width: '50px',
                                         textAlign: 'center',
@@ -272,14 +257,14 @@ const RequestDonations = () => {
                                     <button
                                       className="quantity-button increase"
                                       onClick={() => incrementQuantity(supply.id)}
-                                      disabled={isLoading} // Disable during loading
+                                      disabled={isLoading}
                                     >
                                       <FaPlus />
                                     </button>
                                     <button
                                       className="remove-item-button"
                                       onClick={() => handleRemoveItem(supply.id)}
-                                      disabled={selectedSupplies.length <= 1 || isLoading} // Disable during loading
+                                      disabled={selectedSupplies.length <= 1 || isLoading}
                                       title={selectedSupplies.length <= 1 ? "At least one item is required" : ""}
                                     >
                                       <FaTimes />
@@ -289,7 +274,6 @@ const RequestDonations = () => {
                               );
                         })}
 
-                        {/* Add Item Button */}
                         <button
                             className="add-item-button"
                             onClick={handleAddItem}
@@ -304,7 +288,6 @@ const RequestDonations = () => {
                         </button>
                     </div>
 
-                    {/* Submit Button */}
                     <button
                         className="submit-button"
                         onClick={handleSubmit}
@@ -314,7 +297,6 @@ const RequestDonations = () => {
                     </button>
                 </div>
 
-                {/* Contact Info */}
                 <div className="scl-contact-info">
                      <p>
                          <span>{translations.need_help_contact_us}</span>
