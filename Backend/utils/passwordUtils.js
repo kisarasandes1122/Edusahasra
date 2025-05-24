@@ -1,6 +1,5 @@
-// backend/utils/passwordUtils.js
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto'); // Import crypto module
+const crypto = require('crypto'); 
 const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/config');
 
 const generateToken = (id) => {
@@ -9,30 +8,24 @@ const generateToken = (id) => {
   });
 };
 
-// Generate a random reset token and its hash
 const generateResetToken = () => {
-  const resetToken = crypto.randomBytes(20).toString('hex'); // Generate a random token
-  const resetPasswordToken = crypto // Hash the token for storage
+  const resetToken = crypto.randomBytes(20).toString('hex'); 
+  const resetPasswordToken = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
 
-  // Set expiry time (e.g., 1 hour from now)
-  const resetPasswordExpire = Date.now() + 60 * 60 * 1000; // 1 hour
+  const resetPasswordExpire = Date.now() + 60 * 60 * 1000; 
 
   return {
-    resetToken,           // The raw token to send to the user
-    resetPasswordToken,   // The hashed token to store in DB
-    resetPasswordExpire,  // The expiry date
+    resetToken,           
+    resetPasswordToken,  
+    resetPasswordExpire,  
   };
 };
 
 
-// Password validation
 const validatePassword = (password) => {
-  // Note: This function exists but is not currently used in the controllers for password validation.
-  // We will add validation logic directly in the controller for simplicity here, but this utility
-  // could be used to centralize it. For this specific task, we'll rely on the controller.
   console.warn("passwordUtils.validatePassword is not actively used for validation in controllers in this commit.");
 
   const hasMinLength = password.length >= 8;
@@ -58,6 +51,6 @@ const validatePassword = (password) => {
 
 module.exports = {
   generateToken,
-  generateResetToken, // Export the new function
+  generateResetToken, 
   validatePassword
 };

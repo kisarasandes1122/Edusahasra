@@ -1,4 +1,3 @@
-// backend/models/impactStoryModel.js
 const mongoose = require('mongoose');
 
 const impactStoryImageSchema = new mongoose.Schema({
@@ -6,11 +5,11 @@ const impactStoryImageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  filePath: { // Path relative to the uploads directory
+  filePath: { 
     type: String,
     required: true,
   },
-  fileType: { // Mime type
+  fileType: {
     type: String,
     required: true,
   }
@@ -25,14 +24,12 @@ const impactStorySchema = new mongoose.Schema(
       ref: 'School',
       index: true,
     },
-    // Link to the specific donation this story is about
-    // Assuming one story is tied to one confirmed donation for simplicity.
-    // Could be an array if a story covers multiple donations.
+   
     donation: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'Donation',
-      unique: true, // Ensure one story per donation for now
+      unique: true, 
       index: true,
     },
     title: {
@@ -57,7 +54,7 @@ const impactStorySchema = new mongoose.Schema(
       trim: true,
       maxlength: [100, 'Quote author cannot exceed 100 characters'],
     },
-    images: [impactStoryImageSchema], // Array of uploaded images
+    images: [impactStoryImageSchema],
 
     status: {
       type: String,
@@ -65,7 +62,7 @@ const impactStorySchema = new mongoose.Schema(
       default: 'Pending Approval',
       required: true,
     },
-    submittedAt: { // Can use createdAt from timestamps, but explicit might be clearer
+    submittedAt: { 
       type: Date,
       default: Date.now,
     },
@@ -78,19 +75,17 @@ const impactStorySchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
-    adminRemarks: { // Admin notes for rejection or approval specifics
+    adminRemarks: {
       type: String,
       trim: true,
     },
   },
   {
-    timestamps: true, // Adds createdAt, updatedAt
+    timestamps: true,
   }
 );
 
-// Index to quickly find stories by status for admin/public views
 impactStorySchema.index({ status: 1, submittedAt: -1 });
-// Index for school to view their own stories
 impactStorySchema.index({ school: 1, submittedAt: -1 });
 
 

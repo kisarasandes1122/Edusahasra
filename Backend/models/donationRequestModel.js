@@ -80,7 +80,7 @@ donationRequestSchema.methods.updateRequestStatus = function() {
     let isPartiallyFulfilled = false;
 
     this.requestedItems.forEach(item => {
-        totalRequested += item.quantity; // Use quantity (requested)
+        totalRequested += item.quantity; 
         totalReceived += item.quantityReceived;
         if (item.quantityReceived > 0 && item.quantityReceived < item.quantity) {
             isPartiallyFulfilled = true;
@@ -94,7 +94,7 @@ donationRequestSchema.methods.updateRequestStatus = function() {
     } else if (totalReceived > 0) {
         this.status = 'Partially Fulfilled';
     } else {
-        this.status = 'Pending'; // Default case
+        this.status = 'Pending'; 
     }
 };
 

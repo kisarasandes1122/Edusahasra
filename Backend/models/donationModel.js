@@ -53,26 +53,26 @@ const donationSchema = new mongoose.Schema(
     deliveryMethod: {
       type: String,
       required: true,
-      enum: ['Self-Delivery', 'Courier'], // Match frontend terms maybe? Adjust if needed
+      enum: ['Self-Delivery', 'Courier'], 
     },
-    donorAddress: { // Used if Courier is selected, donor can provide specific pickup address
+    donorAddress: { 
       type: String,
       trim: true,
-       // Required only if deliveryMethod is 'Courier' - validation handled in controller
+    
     },
-    shippingCostEstimate: { // Optional: Store estimate if provided by partner
+    shippingCostEstimate: { 
       type: Number,
     },
     trackingStatus: {
       type: String,
       required: true,
       enum: [
-        'Pending Confirmation', // Initial state after donor submits
-        'Preparing',            // Donor/Courier is preparing shipment
-        'In Transit',           // Package is on its way
-        'Delivered',            // Package arrived at school (or donor confirmed drop-off)
-        'Received by School',   // School explicitly confirmed receipt - FINAL state
-        'Cancelled',            // Donation cancelled
+        'Pending Confirmation', 
+        'Preparing',            
+        'In Transit',           
+        'Delivered',           
+        'Received by School',   
+        'Cancelled',            
       ],
       default: 'Preparing',
     },
@@ -80,35 +80,34 @@ const donationSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    donorRemarks: { // Optional notes from donor
+    donorRemarks: { 
       type: String,
       trim: true,
       maxlength: 500,
     },
-    schoolConfirmation: { // Flag set by school
+    schoolConfirmation: { 
       type: Boolean,
       default: false,
     },
     schoolConfirmationAt: {
       type: Date,
     },
-    adminTrackingId: { // For courier service tracking ID entered by admin
+    adminTrackingId: { 
       type: String,
       trim: true,
     },
-    adminRemarks: { // Admin notes specific to this delivery
+    adminRemarks: { 
         type: String,
         trim: true,
     },
   },
   {
-    timestamps: true, // Adds createdAt, updatedAt
+    timestamps: true,
   }
 );
 
-// Index to quickly find donations by status for specific actors
 donationSchema.index({ donor: 1, trackingStatus: 1 });
 donationSchema.index({ school: 1, trackingStatus: 1 });
-donationSchema.index({ trackingStatus: 1 }); // General status queries
+donationSchema.index({ trackingStatus: 1 }); 
 
 module.exports = mongoose.model('Donation', donationSchema);

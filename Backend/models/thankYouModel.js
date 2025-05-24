@@ -5,11 +5,11 @@ const thankYouImageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  filePath: { // Path relative to the uploads directory
+  filePath: { 
     type: String,
     required: true,
   },
-  fileType: { // Mime type
+  fileType: { 
     type: String,
     required: true,
   }
@@ -30,11 +30,11 @@ const thankYouSchema = new mongoose.Schema(
       ref: 'School',
       index: true,
     },
-    donation: { // Link to the specific donation being thanked for
+    donation: { 
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'Donation',
-      unique: true, // Typically, one thank you per donation
+      unique: true, 
       index: true,
     },
     message: {
@@ -43,14 +43,14 @@ const thankYouSchema = new mongoose.Schema(
       trim: true,
       maxlength: [1000, 'Message cannot exceed 1000 characters'],
     },
-    images: [thankYouImageSchema], // Array of uploaded images
-    sentAt: { // Keep explicit sentAt, though timestamps:true adds createdAt
+    images: [thankYouImageSchema], 
+    sentAt: { 
       type: Date,
       default: Date.now,
     },
   },
   {
-    timestamps: true, // Adds createdAt, updatedAt
+    timestamps: true, 
   }
 );
 

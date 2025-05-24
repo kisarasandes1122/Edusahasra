@@ -3,13 +3,12 @@
 const asyncHandler = require('express-async-handler');
 const Donation = require('../models/donationModel');
 const ThankYou = require('../models/thankYouModel');
-const Donor = require('../models/donorModel'); // Needed to populate donor info
+const Donor = require('../models/donorModel');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// --- Multer Configuration for Thank You Images ---
 const thankYouImageStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadDir = path.join(__dirname, '..', 'uploads', 'thankyou-images');
@@ -23,7 +22,7 @@ const thankYouImageStorage = multer.diskStorage({
 });
 
 const thankYouFileFilter = (req, file, cb) => {
-  const filetypes = /jpeg|jpg|png|gif/; // Allow common image types
+  const filetypes = /jpeg|jpg|png|gif/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
 
@@ -38,7 +37,7 @@ const uploadThankYouImages = multer({
   storage: thankYouImageStorage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit per image
   fileFilter: thankYouFileFilter,
-}).array('images', 5); // 'images' should match the field name in the form data
+}).array('images', 5);
 
 // @desc    Get confirmed donations eligible for a thank you message
 // @route   GET /api/thankyous/eligible-donations
@@ -46,53 +45,37 @@ const uploadThankYouImages = multer({
 const getEligibleDonationsForThanks = asyncHandler(async (req, res) => {
   const schoolId = req.school._id;
 
-  // 1. Find confirmed donations for this school
-  // Use .populate('donor') without specific fields first to ensure the donor object (or null) is there
   const confirmedDonations = await Donation.find({
     school: schoolId,
     schoolConfirmation: true,
     trackingStatus: 'Received by School',
   })
-    .populate('donor') // Populate the whole donor object (or null)
+    .populate('donor')
     .select('donor itemsDonated schoolConfirmationAt createdAt')
-    .lean(); // Use lean for performance if not modifying
+    .lean();
 
-  // 2. Find donations that already have a ThankYou sent
   const thankedDonationIds = (await ThankYou.find({ school: schoolId }).select('donation -_id')).map(t => t.donation.toString());
   const thankedSet = new Set(thankedDonationIds);
 
-  // 3. Filter out donations that have already been thanked AND filter out donations where the donor no longer exists
   const eligibleDonations = confirmedDonations.filter(
     donation => {
-        // Check if donation has already been thanked
         const alreadyThanked = thankedSet.has(donation._id.toString());
-        // Check if the donor is null (meaning the donor was deleted)
-        const donorExists = donation.donor !== null; // Check if populated donor is not null
-
-        // Only include donations that haven't been thanked AND whose donor still exists
+        const donorExists = donation.donor !== null;
         return !alreadyThanked && donorExists;
     }
   );
 
-
-  // 4. Format the response for the frontend dropdown
   const formattedEligibleList = eligibleDonations.map(donation => ({
     donationId: donation._id,
-    // Safely access donor properties - they are guaranteed to exist here due to the filter above
     donorId: donation.donor._id,
     donorName: donation.donor.fullName,
-    // Create a summary of donated items
     donatedItemsSummary: donation.itemsDonated
       .map(item => `${item.quantityDonated} ${item.categoryNameEnglish}`)
       .join(', '),
-    confirmationDate: donation.schoolConfirmationAt || donation.createdAt, // Use confirmation date or creation date as fallback
+    confirmationDate: donation.schoolConfirmationAt || donation.createdAt,
   }));
 
-  // --- REMOVE THE TYPO'D LINE ---
-  // res.json(formattedEligableList); // <-- DELETE THIS LINE
-
-  // --- KEEP ONLY THE CORRECT LINE ---
-  res.json(formattedEligibleList); // <-- KEEP THIS LINE
+  res.json(formattedEligibleList);
 });
 
 
@@ -100,21 +83,18 @@ const getEligibleDonationsForThanks = asyncHandler(async (req, res) => {
 // @route   POST /api/thankyous
 // @access  Private (School)
 const sendThankYou = asyncHandler(async (req, res) => {
-  // Use multer middleware first
   uploadThankYouImages(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
       res.status(400);
       throw new Error(`Image Upload Error: ${err.message}`);
     } else if (err) {
       res.status(400);
-      throw new Error(err.message); // Error from fileFilter
+      throw new Error(err.message);
     }
 
-    // --- After potential file upload ---
     const { donationId, message } = req.body;
     const schoolId = req.school._id;
 
-    // --- Validation ---
     if (!mongoose.Types.ObjectId.isValid(donationId)) {
       res.status(400);
       throw new Error('Invalid Donation ID format.');
@@ -126,22 +106,18 @@ const sendThankYou = asyncHandler(async (req, res) => {
 
     const donation = await Donation.findById(donationId);
 
-    // Check if donation exists and belongs to the school
     if (!donation || donation.school.toString() !== schoolId.toString()) {
       res.status(404);
       throw new Error('Donation not found or does not belong to this school.');
     }
 
-    // Check if donation is actually confirmed
     if (!donation.schoolConfirmation || donation.trackingStatus !== 'Received by School') {
       res.status(400);
       throw new Error('Cannot send thanks for a donation that has not been confirmed as received.');
     }
 
-    // Check if a thank you already exists for this donation
     const existingThankYou = await ThankYou.findOne({ donation: donationId });
     if (existingThankYou) {
-        // Clean up uploaded files if thank you already exists
         if (req.files && req.files.length > 0) {
             req.files.forEach(file => fs.unlink(file.path, err => err && console.error("Error deleting uploaded file:", err)));
         }
@@ -149,15 +125,12 @@ const sendThankYou = asyncHandler(async (req, res) => {
       throw new Error('A thank you message has already been sent for this donation.');
     }
 
-    // --- Prepare Image Data ---
     const imagesData = req.files ? req.files.map(file => ({
       fileName: file.originalname,
-      // Store path relative to the 'uploads' directory for easier serving
-      filePath: path.relative(path.join(__dirname, '..', 'uploads'), file.path).replace(/\\/g, '/'), // Make path relative and use forward slashes
+      filePath: path.relative(path.join(__dirname, '..', 'uploads'), file.path).replace(/\\/g, '/'),
       fileType: file.mimetype,
     })) : [];
 
-    // --- Create Thank You ---
     try {
       const thankYou = await ThankYou.create({
         donor: donation.donor,
@@ -169,23 +142,22 @@ const sendThankYou = asyncHandler(async (req, res) => {
 
       res.status(201).json({
         message: 'Thank you message sent successfully!',
-        thankYou: { // Send back some details of the created thank you
+        thankYou: {
           _id: thankYou._id,
           donor: thankYou.donor,
           school: thankYou.school,
           donation: thankYou.donation,
           message: thankYou.message,
-          images: thankYou.images.map(img => ({ fileName: img.fileName, filePath: img.filePath })), // Only return relevant info
+          images: thankYou.images.map(img => ({ fileName: img.fileName, filePath: img.filePath })),
           sentAt: thankYou.sentAt
         },
       });
 
     } catch (dbError) {
-       // If DB save fails, attempt to delete uploaded files
        if (req.files && req.files.length > 0) {
            req.files.forEach(file => fs.unlink(file.path, err => err && console.error("Error deleting uploaded file after DB error:", err)));
        }
-       res.status(500); // Internal server error for DB issues
+       res.status(500);
        throw new Error(`Failed to save thank you message: ${dbError.message}`);
     }
   });
@@ -199,19 +171,16 @@ const getMyThankYous = asyncHandler(async (req, res) => {
   const donorId = req.donor._id;
 
   const thankYous = await ThankYou.find({ donor: donorId })
-    .populate('school', 'schoolName city') // Populate school name and city
-    .populate({ // Populate donation details selectively
+    .populate('school', 'schoolName city')
+    .populate({
         path: 'donation',
-        select: 'itemsDonated createdAt' // Get items and donation date
+        select: 'itemsDonated createdAt'
     })
-    .sort({ sentAt: -1 }); // Show newest first
+    .sort({ sentAt: -1 });
 
-  // Optionally format the response further if needed
    const formattedThankYous = thankYous.map(ty => {
        const images = ty.images.map(img => ({
            fileName: img.fileName,
-           // Construct full URL or keep relative path based on frontend needs
-           // Assuming '/uploads' is the static route base
            url: `/uploads/${img.filePath}`
        }));
        const donationSummary = ty.donation?.itemsDonated
@@ -248,14 +217,13 @@ const getThankYouById = asyncHandler(async (req, res) => {
     const thankYou = await ThankYou.findById(thankYouId)
         .populate('donor', 'fullName')
         .populate('school', 'schoolName schoolEmail city')
-        .populate('donation', 'itemsDonated createdAt'); // Populate related donation info
+        .populate('donation', 'itemsDonated createdAt');
 
     if (!thankYou) {
         res.status(404);
         throw new Error('Thank You message not found.');
     }
 
-    // --- Authorization Check ---
     const isRecipientDonor = req.donor && thankYou.donor._id.toString() === req.donor._id.toString();
     const isSendingSchool = req.school && thankYou.school._id.toString() === req.school._id.toString();
     const isAdmin = req.admin;
@@ -265,13 +233,11 @@ const getThankYouById = asyncHandler(async (req, res) => {
         throw new Error('Not authorized to view this thank you message.');
     }
 
-    // Format images with full URLs for easier frontend consumption
     const formattedImages = thankYou.images.map(img => ({
            fileName: img.fileName,
-           url: `/uploads/${img.filePath}` // Assuming '/uploads' is the static route base
+           url: `/uploads/${img.filePath}`
        }));
 
-    // Format the response
     const responseData = {
          _id: thankYou._id,
          donorName: thankYou.donor?.fullName,
@@ -281,7 +247,7 @@ const getThankYouById = asyncHandler(async (req, res) => {
          message: thankYou.message,
          images: formattedImages,
          sentAt: thankYou.sentAt,
-         donation: { // Include some context about the donation
+         donation: {
             id: thankYou.donation?._id,
             date: thankYou.donation?.createdAt,
             summary: thankYou.donation?.itemsDonated

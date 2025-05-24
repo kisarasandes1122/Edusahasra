@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 const validator = require('validator');
 
 const schoolSchema = new mongoose.Schema({
-  // --- School Information ---
   schoolName: {
     type: String,
     required: [true, 'Please provide a school name'],
@@ -21,12 +20,11 @@ const schoolSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a password'],
     minlength: [8, 'Password must be at least 8 characters'],
-    select: false // Keep password hidden by default
+    select: false 
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 
-  // --- School Address ---
   streetAddress: {
     type: String,
     required: [true, 'Please provide a street address'],
@@ -57,7 +55,6 @@ const schoolSchema = new mongoose.Schema({
     trim: true
   },
 
-  // --- Location Data (Geospatial) ---
   location: {
     type: {
       type: String,
@@ -65,12 +62,11 @@ const schoolSchema = new mongoose.Schema({
       default: 'Point'
     },
     coordinates: {
-      type: [Number], // [longitude, latitude]
+      type: [Number], 
       index: '2dsphere'
     }
   },
 
-  // --- Principal Information ---
   principalName: {
     type: String,
     required: [true, 'Please provide the principal\'s name'],
@@ -89,14 +85,12 @@ const schoolSchema = new mongoose.Schema({
     trim: true,
     validate: {
       validator: function(v) {
-        // Basic validation for Sri Lankan numbers (+94xxxxxxxxx or 0xxxxxxxxx)
         return /^(?:\+94|0)[0-9]{9}$/.test(v);
       },
       message: props => `${props.value} is not a valid phone number format!`
     }
   },
 
-  // --- Profile Description & Images (Added for Edit Profile) ---
   description: {
     type: String,
     trim: true,
@@ -107,7 +101,6 @@ const schoolSchema = new mongoose.Schema({
     trim: true
   }],
 
-  // --- Verification Documents (From Registration) ---
   documents: [
     {
       fileName: String,
@@ -120,7 +113,6 @@ const schoolSchema = new mongoose.Schema({
     }
   ],
 
-  // --- Approval Status & Metadata ---
   isApproved: {
     type: Boolean,
     default: false
@@ -147,9 +139,7 @@ const schoolSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// --- Middleware ---
 
-// Encrypt password using bcrypt before saving (only if modified)
 schoolSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
@@ -159,9 +149,7 @@ schoolSchema.pre('save', async function(next) {
   next();
 });
 
-// --- Methods ---
 
-// Instance method to match entered password with hashed password in DB
 schoolSchema.methods.matchPassword = async function(enteredPassword) {
   if (!this.password) {
     throw new Error('Password comparison error. Please try again.');

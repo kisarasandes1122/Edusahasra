@@ -1,27 +1,21 @@
-// backend/controllers/donorController.js
 const asyncHandler = require('express-async-handler');
 const Donor = require('../models/donorModel');
 const Donation = require('../models/donationModel');
 const { generateToken, generateResetToken } = require('../utils/passwordUtils');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-// No longer need EMAIL_HOST, EMAIL_PORT here if using service: 'gmail'
 const { EMAIL_USER, EMAIL_PASS, NODE_ENV } = require('../config/config'); 
 const validator = require('validator');
 
-
-// --- Email Transporter Setup ---
 let transporter;
 
 try {
-    transporter = nodemailer.createTransport({
-        service: 'gmail', // Specify the service name
+    transporter = nodemailer.createTransporter({
+        service: 'gmail',
         auth: {
-            user: EMAIL_USER, // Your Gmail address
-            pass: EMAIL_PASS, // Your App Password
+            user: EMAIL_USER,
+            pass: EMAIL_PASS,
         },
-        // The 'secure' and 'tls' options are typically handled automatically by the 'service' option
-        // You can remove them when using service: 'gmail'
     });
 
     if (NODE_ENV !== 'production') {
@@ -38,8 +32,6 @@ try {
     console.error("Failed to create email transporter:", error);
 }
 
-
-// --- Helper function to send email ---
 const sendEmail = async (options) => {
     if (!transporter) {
         console.error("Email transporter is not configured or failed to initialize.");
@@ -67,11 +59,9 @@ const sendEmail = async (options) => {
 
     } catch (error) {
         console.error('Error sending email:', error);
-        // Do NOT throw a specific error message about credentials back to the client for security
-        throw new Error(`Failed to send email.`); // Generic error
+        throw new Error(`Failed to send email.`);
     }
 };
-
 
 // @desc    Register a new donor
 // @route   POST /api/donors/register
@@ -109,7 +99,6 @@ const registerDonor = asyncHandler(async (req, res) => {
          throw new Error('Invalid phone number format.');
      }
 
-
   const donorExists = await Donor.findOne({ email });
 
   if (donorExists) {
@@ -140,7 +129,6 @@ const registerDonor = asyncHandler(async (req, res) => {
   });
 
   if (donor) {
-    // Send welcome email
     try {
       const welcomeMessage = `Dear ${fullName},
 
@@ -165,7 +153,6 @@ The EduSahasra Team`;
       });
     } catch (emailError) {
       console.error('Failed to send welcome email:', emailError);
-      // Don't throw error here, as registration was successful
     }
 
     res.status(201).json({
@@ -307,7 +294,6 @@ const updateDonorProfile = asyncHandler(async (req, res) => {
 
    const donationsCount = await Donation.countDocuments({ donor: req.donor._id });
 
-
   res.json({
     _id: updatedDonor._id,
     fullName: updatedDonor.fullName,
@@ -322,7 +308,6 @@ const updateDonorProfile = asyncHandler(async (req, res) => {
     memberSince: updatedDonor.createdAt ? new Date(updatedDonor.createdAt).getFullYear().toString() : null
   });
 });
-
 
 // @desc    Update donor password (while logged in)
 // @route   PUT /api/donors/profile/password
@@ -365,7 +350,6 @@ const updateDonorPassword = asyncHandler(async (req, res) => {
     res.json({ message: 'Password updated successfully.' });
 });
 
-
 // @desc    Request password reset token (Forgot Password)
 // @route   POST /api/donors/forgot-password
 // @access  Public
@@ -384,23 +368,20 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
     const donor = await Donor.findOne({ email });
 
-    // Respond with the same message whether the user exists or not for security reasons.
     const genericSuccessMessage = 'If a donor with that email exists, a password reset link has been sent.';
-    res.status(200).json({ message: genericSuccessMessage }); // Send the response immediately
+    res.status(200).json({ message: genericSuccessMessage });
 
-    // If donor exists, proceed to send email (this happens AFTER the response is sent)
     if (donor) {
        try {
           const { resetToken, resetPasswordToken, resetPasswordExpire } = generateResetToken();
           donor.resetPasswordToken = resetPasswordToken;
           donor.resetPasswordExpire = resetPasswordExpire;
-          // Save token details without blocking the response
+
           donor.save({ validateBeforeSave: false })
                .then(() => {
                    console.log(`Reset token saved for ${donor.email}`);
-                   // Attempt to send email after saving the token
                    const backendHost = req.get('host');
-                   const frontendPort = (NODE_ENV === 'production' || NODE_ENV === 'staging') ? 80 : 5173; // Assuming frontend on 5173 in dev
+                   const frontendPort = (NODE_ENV === 'production' || NODE_ENV === 'staging') ? 80 : 5173;
                    const frontendHost = backendHost.includes(':')
                        ? backendHost.split(':')[0] + (frontendPort ? ':' + frontendPort : '')
                        : backendHost;
@@ -416,28 +397,17 @@ const forgotPassword = asyncHandler(async (req, res) => {
                    .then(() => console.log(`Password reset email successfully sent to ${donor.email}`))
                    .catch((emailError) => {
                        console.error(`Failed to send password reset email to ${donor.email}:`, emailError);
-                       // Optional: Clear token if email sending fails - decision depends on security policy
-                       // Clearing prevents token replay if email fails, but makes debugging harder
-                       // donor.resetPasswordToken = undefined;
-                       // donor.resetPasswordExpire = undefined;
-                       // donor.save({ validateBeforeSave: false }).catch(saveErr => console.error("Error clearing token on email failure:", saveErr));
                    });
                })
                .catch((saveErr) => {
                    console.error(`Error saving reset token for ${donor.email}:`, saveErr);
-                   // The generic success message has already been sent.
                });
 
        } catch (error) {
-            // This catch block would only catch errors during token generation/initial save attempt.
-            // Log it.
            console.error(`An error occurred during the password reset process for ${email}:`, error);
-           // The generic success message has already been sent.
        }
     }
-    // Function exits here after sending the initial 200 response.
 });
-
 
 // @desc    Reset password using token
 // @route   PUT /api/donors/reset-password/:token
@@ -488,7 +458,6 @@ const resetPassword = asyncHandler(async (req, res) => {
 
     res.status(200).json({ message: 'Password has been successfully reset. You can now login.' });
 });
-
 
 module.exports = {
   registerDonor,

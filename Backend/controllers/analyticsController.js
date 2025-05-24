@@ -138,7 +138,7 @@ const getAnalyticsData = asyncHandler(async (req, res) => {
             case 'impact': {
                 const studentsBenefited = await Donation.aggregate([
                     { $match: { schoolConfirmation: true, trackingStatus: 'Received by School', ...buildDateFilter('schoolConfirmationAt', startDate, endDate) } },
-                    { $group: { _id: { $dateToString: { format: "%Y-%m", date: "$schoolConfirmationAt" } }, count: { $sum: 1 } } }, // Assuming 1 donation helps X students or count is #donations.
+                    { $group: { _id: { $dateToString: { format: "%Y-%m", date: "$schoolConfirmationAt" } }, count: { $sum: 1 } } },
                     { $sort: { _id: 1 } }, { $project: { _id: 0, month: "$_id", count: 1 } }
                 ]);
                 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -258,9 +258,9 @@ const exportAnalyticsReport = asyncHandler(async (req, res) => {
             case 'users':
                 const donors = await Donor.find(buildDateFilter('createdAt', startDate, endDate)).select('_id fullName email phoneNumber createdAt').sort({ createdAt: -1 }).lean();
                 const schools = await School.find({ ...buildDateFilter('registeredAt', startDate, endDate), isApproved: true }).select('_id schoolName schoolEmail city district province registeredAt').sort({ registeredAt: -1 }).lean();
-                reportData = { donors, schools }; // Special handling for 'users' report
+                reportData = { donors, schools };
                 filename = `user_summary_report_${safeTimeRange}`;
-                header = { // Headers specific to 'users' report
+                header = {
                     donors: [ { id: '_id', title: 'Donor ID' }, { id: 'fullName', title: 'Full Name' }, { id: 'email', title: 'Email' }, { id: 'phoneNumber', title: 'Phone' }, { id: 'createdAt', title: 'Registered' } ],
                     schools: [ { id: '_id', title: 'School ID' }, { id: 'schoolName', title: 'School Name' }, { id: 'schoolEmail', title: 'Email' }, { id: 'city', title: 'City' }, { id: 'district', title: 'District' }, { id: 'province', title: 'Province' }, { id: 'registeredAt', title: 'Registered' } ]
                 };
@@ -360,7 +360,7 @@ const exportAnalyticsReport = asyncHandler(async (req, res) => {
         const tempFilePath = path.join(__dirname, `temp_export_${Date.now()}.csv`);
         const outputStream = fs.createWriteStream(tempFilePath);
 
-        const writeTextLine = async (text, stream) => { // Helper for CSV text lines
+        const writeTextLine = async (text, stream) => {
             const textWriter = createObjectCsvWriter({ path: stream, header: [], alwaysQuote: true, append: true });
             await textWriter.writeRecords([[text]]);
         };
@@ -426,7 +426,7 @@ const exportAnalyticsReport = asyncHandler(async (req, res) => {
                 small: { fontSize: 8 }
             },
             defaultStyle: { font: 'Roboto', fontSize: 9 },
-            pageMargins: [30, 40, 30, 40], // Left, Top, Right, Bottom
+            pageMargins: [30, 40, 30, 40],
         };
         
         if (reportType === 'donation') {
@@ -444,7 +444,7 @@ const exportAnalyticsReport = asyncHandler(async (req, res) => {
                 docDefinition.content.push({
                     table: {
                         headerRows: 1, 
-                        widths: [50, '*', '*', 70, 70], // ID, Name*, Email*, Phone, Registered
+                        widths: [50, '*', '*', 70, 70],
                         body: [
                             header.donors.map(h => ({ text: h.title, style: 'tableHeader', alignment: 'center' })),
                             ...reportData.donors.map(row => header.donors.map(h => {
@@ -466,7 +466,7 @@ const exportAnalyticsReport = asyncHandler(async (req, res) => {
                 docDefinition.content.push({
                     table: {
                         headerRows: 1, 
-                        widths: [50, '*', '*', 60, 65, 65, 70], // ID, Name*, Email*, City, District, Province, Registered
+                        widths: [50, '*', '*', 60, 65, 65, 70],
                         body: [
                             header.schools.map(h => ({ text: h.title, style: 'tableHeader', alignment: 'center' })),
                             ...reportData.schools.map(row => header.schools.map(h => {
@@ -485,23 +485,16 @@ const exportAnalyticsReport = asyncHandler(async (req, res) => {
             }
         } else if (Array.isArray(reportData) && reportData.length > 0) {
             const columnWidthConfig = {
-                // IDs
                 '_id': 45, 'donationDetails._id': 45,
-                // Dates & Times (e.g., "MMM DD, YYYY, HH:MM AM/PM")
                 'createdAt': 75, 'schoolConfirmationAt': 75, 'submittedAt': 75, 'approvedAt': 75, 'registeredAt': 75,
-                // Names & Titles (flexible)
                 'donorDetails.fullName': '*', 'schoolDetails.schoolName': '*', 'donationDetails.donorDetails.fullName': '*',
                 'title': '*', 'principalName': '*', 'schoolName': '*', 
-                // Emails (flexible, can be long)
                 'donorDetails.email': 90, 'schoolEmail': '*', 'principalEmail': '*',
-                // Location
                 'schoolDetails.district': 65, 'schoolDetails.province': 65,
                 'city': 60, 'district': 65, 'province': 65, 'postalCode': 50,
-                // Summaries / Long Text
-                'itemsDonatedSummary': reportType === 'donation' ? '*' : 100, // Flexible for donation report in landscape
+                'itemsDonatedSummary': reportType === 'donation' ? '*' : 100,
                 'requestedItemsSummary': 100, 'storyTextSnippet': 80, 'notes': '*',
                 'quote': '*', 'adminRemarks': '*', 'donorRemarks': '*', 'streetAddress': '*',
-                // Status & Short Info
                 'deliveryMethod': 'auto', 'trackingStatus': 'auto', 'status': 55,
                 'schoolConfirmation': 45, 'phoneNumber': 70, 'quoteAuthor': 'auto', 'adminTrackingId': 'auto',
             };
