@@ -1,23 +1,20 @@
-/* frontend/src/components/Admin/AdminImpactStories/AdminImpactStories.css */
 
-/* Admin Specific Colors - Match AdminNavigation/AdminDashboard */
+/* Admin Color Palette */
 :root {
-    --admin-primary-dark: #043f2e; /* Main Admin Heading */
-    --admin-secondary: #0a5e45;    /* Admin Accent */
-    --admin-light-bg: #f1f8f4;     /* Admin Light Background */
-    --admin-dark-text: #343a40;    /* Admin Main Text */
-    --admin-body-text: #495057;    /* Admin Body Text */
-    --admin-light-text: #6c757d;   /* Admin Grey Text / Borders */
-    --admin-border-color: #e9ecef; /* Admin Border */
-    --admin-bg-white: #ffffff;     /* Admin Card Background */
-    --admin-bg-light-grey: #f8f9fa;/* Admin Light Table Header / Section Background */
+    --admin-primary-dark: #043f2e;
+    --admin-secondary: #0a5e45;
+    --admin-light-bg: #f1f8f4;
+    --admin-dark-text: #343a40;
+    --admin-body-text: #495057;
+    --admin-light-text: #6c757d;
+    --admin-border-color: #e9ecef;
+    --admin-bg-white: #ffffff;
+    --admin-bg-light-grey: #f8f9fa;
 
-    /* Status Colors (Consistent across Admin) */
-    --status-pending: #ffc107;     /* Warning yellow */
-    --status-approved: #28a745;    /* Success green */
-    --status-rejected: #dc3545;    /* Danger red */
-    /* Assuming other statuses like 'In Transit', 'Delivered' aren't used directly on stories */
-
+    /* Status Colors */
+    --status-pending: #ffc107;
+    --status-approved: #28a745;
+    --status-rejected: #dc3545;
 
     --radius-sm: 6px;
     --radius-md: 8px;
@@ -25,51 +22,41 @@
 
 .admin-impact-stories-container {
   padding: 20px;
-  /* Use a light background for the main content area, matching App.jsx main style */
-  /* background-color: var(--admin-bg-light-grey); */
-   /* Remove specific background here if parent handles it */
-   /* Instead, style the card INSIDE the container */
-   /* Removed background-color and box-shadow */
   max-width: 1200px;
-  margin: 20px auto; /* Center the container */
+  margin: 20px auto;
   font-family: 'Inter', sans-serif;
   color: var(--admin-body-text);
 }
 
-/* Style the inner card/content area */
 .admin-impact-stories-content-card {
     background-color: var(--admin-bg-white);
     border-radius: var(--radius-md);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     padding: 20px;
 }
-
 
 .admin-page-title {
   font-size: 24px;
   font-weight: 700;
   color: var(--admin-primary-dark);
-  margin: 0 0 20px 0; /* Adjust margin */
+  margin: 0 0 20px 0;
   text-align: center;
 }
 
 .filter-controls {
     margin-bottom: 20px;
-    text-align: center; /* Center filters or align left */
-    display: flex; /* Use flex for better layout */
-    gap: 16px; /* Space between filter items */
-    justify-content: center; /* Center the flex items */
-    flex-wrap: wrap; /* Allow wrapping on small screens */
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .filter-controls label {
-    /* Remove margin-right if using flex gap */
     font-weight: 600;
     color: var(--admin-dark-text);
-    font-size: 15px; /* Consistent font size */
-     /* Align label with input/select */
-     display: flex;
-     align-items: center;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
 }
 
 .filter-controls select {
@@ -78,26 +65,25 @@
     border-radius: var(--radius-sm);
     font-size: 15px;
     color: var(--admin-body-text);
-    background-color: var(--admin-bg-white); /* Explicit background */
-     /* Match height of other form controls if applicable */
-     height: 38px;
-     cursor: pointer;
+    background-color: var(--admin-bg-white);
+    height: 38px;
+    cursor: pointer;
 }
 
-/* Table styles consistent with DonationManagement */
-.admin-impact-stories-table-container { /* Wrapper for responsiveness */
-    border: 1px solid var(--admin-border-color); /* Border around the table */
-    border-radius: var(--radius-md); /* Rounded corners */
-    overflow: hidden; /* Hide overflow from rounded corners */
-    overflow-x: auto; /* Enable horizontal scroll */
+/* Table Styling */
+.admin-impact-stories-table-container {
+    border: 1px solid var(--admin-border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    overflow-x: auto;
     margin-top: 20px;
-    margin-bottom: 20px; /* Add space below table */
+    margin-bottom: 20px;
 }
 
 .admin-impact-stories-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 700px; /* Minimum width to prevent stacking on larger mobiles */
+  min-width: 700px;
 }
 
 .admin-impact-stories-table thead {
@@ -106,34 +92,34 @@
 
 .admin-impact-stories-table th,
 .admin-impact-stories-table td {
-  padding: 12px 16px; /* Consistent padding */
+  padding: 12px 16px;
   text-align: left;
   font-size: 14px;
   color: var(--admin-body-text);
-  border-bottom: 1px solid var(--admin-border-color); /* Row separator */
+  border-bottom: 1px solid var(--admin-border-color);
 }
 
 .admin-impact-stories-table th {
   font-weight: 600;
   color: var(--admin-dark-text);
-  text-transform: uppercase; /* Uppercase headers */
+  text-transform: uppercase;
   letter-spacing: 0.05em;
-  white-space: nowrap; /* Prevent wrapping */
+  white-space: nowrap;
 }
 
 .admin-impact-stories-table tbody tr:last-child td {
-    border-bottom: none; /* No border on last row */
+    border-bottom: none;
 }
 
 .admin-impact-stories-table tbody tr:hover {
-  background-color: #fcfcfd; /* Subtle hover effect */
+  background-color: #fcfcfd;
 }
 
-/* Status Badge Styling (Consistent across Admin) */
+/* Status Badges */
 .admin-impact-stories-table td .status-badge {
-    display: inline-block; /* Needs to be inline-block for padding */
+    display: inline-block;
     padding: 4px 8px;
-    border-radius: 12px; /* Pill shape */
+    border-radius: 12px;
     font-size: 12px;
     font-weight: 500;
     white-space: nowrap;
@@ -141,7 +127,7 @@
 
 .admin-impact-stories-table td .status-badge.status-pending-approval {
     background-color: var(--status-pending);
-    color: #212529; /* Dark text for yellow */
+    color: #212529;
 }
 
 .admin-impact-stories-table td .status-badge.status-approved {
@@ -154,14 +140,12 @@
     color: white;
 }
 
-/* Action Button Cell */
 .admin-impact-stories-table td:last-child {
-    text-align: right; /* Align actions to the right */
-    white-space: nowrap; /* Prevent button wrapping */
+    text-align: right;
+    white-space: nowrap;
 }
 
-
-/* Button styles (consistent with DonationManagement) */
+/* Button Styles */
 .btn {
   padding: 8px 12px;
   border-radius: var(--radius-sm);
@@ -170,9 +154,9 @@
   cursor: pointer;
   border: none;
   transition: background-color 0.2s ease;
-   display: inline-flex; /* For icon alignment */
-   align-items: center;
-   gap: 5px; /* Space for icon */
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .btn-small {
@@ -181,12 +165,12 @@
 }
 
 .btn-secondary {
-    background-color: var(--admin-light-text); /* Greyish */
+    background-color: var(--admin-light-text);
     color: white;
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background-color: #5a6268; /* Darker grey */
+    background-color: #5a6268;
 }
 
 .btn:disabled {
@@ -194,20 +178,20 @@
     cursor: not-allowed;
 }
 
-/* Empty state styling */
+/* Empty State */
 .empty-state {
     text-align: center;
     padding: 40px 20px;
-    background-color: var(--admin-light-bg); /* Admin light background */
+    background-color: var(--admin-light-bg);
     border-radius: var(--radius-md);
-    margin-top: 20px; /* Space after filters */
+    margin-top: 20px;
     color: var(--admin-body-text);
 }
 
 .empty-icon {
     font-size: 40px;
     margin-bottom: 15px;
-    color: var(--admin-secondary); /* Use an admin accent color */
+    color: var(--admin-secondary);
 }
 
 .empty-state h3 {
@@ -223,27 +207,25 @@
     margin: 0;
 }
 
-/* Responsive Table (Copy from SchoolVerification or DonationManagement) */
-/* Already added table-responsive wrapper in JSX */
-
+/* Mobile Responsive */
 @media (max-width: 768px) {
-     .admin-impact-stories-container {
-         padding: 15px;
-     }
-     /* Remove specific card padding here if using .admin-impact-stories-content-card */
+    .admin-impact-stories-container {
+        padding: 15px;
+    }
 
-     .admin-page-title {
-         font-size: 20px;
-     }
+    .admin-page-title {
+        font-size: 20px;
+    }
 
     .filter-controls {
-        flex-direction: column; /* Stack filters */
-        align-items: stretch; /* Stretch filters */
-        gap: 12px; /* Reduce gap */
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
     }
-     .filter-controls label { /* Make labels stack above selects */
-         justify-content: flex-start;
-     }
+
+    .filter-controls label {
+        justify-content: flex-start;
+    }
 
     .admin-impact-stories-table,
     .admin-impact-stories-table thead,
@@ -251,7 +233,7 @@
     .admin-impact-stories-table th,
     .admin-impact-stories-table td,
     .admin-impact-stories-table tr {
-        display: block; /* Stack table elements */
+        display: block;
     }
 
     .admin-impact-stories-table thead tr {
@@ -263,44 +245,40 @@
     .admin-impact-stories-table tr {
         border: 1px solid var(--admin-border-color);
         margin-bottom: 15px;
-        border-radius: var(--radius-sm); /* Add rounded corners to stacked rows */
-        overflow: hidden; /* Ensure content respects border-radius */
+        border-radius: var(--radius-sm);
+        overflow: hidden;
     }
 
     .admin-impact-stories-table td {
-        border: none; /* Remove individual cell borders */
-        border-bottom: 1px solid var(--admin-border-color); /* Add row segment border */
+        border: none;
+        border-bottom: 1px solid var(--admin-border-color);
         position: relative;
-        padding-left: 50%; /* Space for the data-label */
+        padding-left: 50%;
         text-align: right;
     }
 
     .admin-impact-stories-table td:last-child {
-        border-bottom: none; /* No border for the last cell in the stacked row */
-         text-align: right; /* Ensure action button aligns right */
+        border-bottom: none;
+        text-align: right;
     }
-
 
     .admin-impact-stories-table td:before {
         position: absolute;
-        top: 12px; /* Vertical alignment */
-        left: 16px; /* Horizontal position */
-        width: 45%; /* Width for the label */
+        top: 12px;
+        left: 16px;
+        width: 45%;
         padding-right: 10px;
         white-space: nowrap;
         font-weight: 600;
         color: var(--admin-dark-text);
-        content: attr(data-label); /* Use data-label attribute from HTML */
-         /* Adjust top/left based on padding if needed */
-         /* For 12px padding, top: 12px, left: 16px seems okay */
+        content: attr(data-label);
     }
 
-    /* Adjust action button alignment in stacked mode */
     .admin-impact-stories-table td:last-child .btn {
-        margin: 0; /* Remove default button margins if any */
+        margin: 0;
     }
 
-    .empty-state { /* Adjust margin/padding */
+    .empty-state {
         padding: 30px 15px;
         margin-top: 15px;
     }

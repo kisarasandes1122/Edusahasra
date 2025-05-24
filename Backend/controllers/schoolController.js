@@ -11,7 +11,6 @@ const validator = require('validator'); // Import validator
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
-// --- Email Transporter Setup ---
 let transporter;
 
 try {
@@ -379,14 +378,10 @@ const getSchoolProfile = asyncHandler(async (req, res) => {
 // @route   PUT /api/schools/profile
 // @access  Private (School)
 const updateSchoolProfile = asyncHandler(async (req, res) => {
-  // Multer middleware (uploadProfileImages) runs before this controller function
-  // It handles parsing multipart/form-data and populating req.body and req.files.
-
   const school = await School.findById(req.school._id);
   if (!school) {
     // This should not happen if protectSchool ran, but good practice
     res.status(404);
-    // Clean up files if school somehow not found post-auth
     if (req.files && req.files.length > 0) { req.files.forEach(file => fs.unlink(file.path, unlinkErr => unlinkErr && console.error("Error cleaning up file for non-existent school:", unlinkErr))); }
     throw new Error('School associated with your token could not be found.');
   }
@@ -850,9 +845,9 @@ module.exports = {
   getSchoolProfile,
   updateSchoolProfile,
   checkApprovalStatus,
-  uploadProfileImages, // Export Multer middleware
-  updateSchoolPassword, // Export the new password update function
-  sendEmail, // Export the sendEmail function
+  uploadProfileImages,
+  updateSchoolPassword, 
+  sendEmail, 
   forgotPassword,
   resetPassword
 };

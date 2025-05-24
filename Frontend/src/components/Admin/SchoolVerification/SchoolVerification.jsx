@@ -1,9 +1,8 @@
-// frontend/src/components/Admin/SchoolVerification/SchoolVerification.jsx
 import React, { useState, useMemo, useEffect } from 'react';
 import { FiSearch, FiChevronDown, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import './SchoolVerification.css';
 import SchoolVerificationReview from './SchoolVerificationReview';
-import api from '../../../api'; // Import your API instance
+import api from '../../../api';
 
 const sriLankanDistricts = [
   "All Districts", "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo",
@@ -14,43 +13,32 @@ const sriLankanDistricts = [
 ];
 
 const SchoolVerification = () => {
-  const [activeTab, setActiveTab] = useState('pending'); // 'pending', 'approved', 'rejected'
+  const [activeTab, setActiveTab] = useState('pending');
   const [searchQuery, setSearchQuery] = useState('');
-  const [reviewingSchool, setReviewingSchool] = useState(null); // Holds the school data for the review modal
+  const [reviewingSchool, setReviewingSchool] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(sriLankanDistricts[0]);
-  const [selectedSortOrder, setSelectedSortOrder] = useState('desc'); // 'desc' for newest, 'asc' for oldest
+  const [selectedSortOrder, setSelectedSortOrder] = useState('desc');
 
-  const [allSchools, setAllSchools] = useState([]); // State to hold all fetched schools before client-side filtering
+  const [allSchools, setAllSchools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // --- Pagination State (Client-Side) ---
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Number of items to display per page
+  const [itemsPerPage] = useState(10);
 
-  // --- Fetch Schools from Backend ---
   const fetchSchools = async () => {
     setLoading(true);
     setError(null);
     try {
       const params = {
-        status: activeTab === 'all' ? undefined : activeTab, // Send status filter
+        status: activeTab === 'all' ? undefined : activeTab,
         search: searchQuery || undefined,
         district: selectedLocation === 'All Districts' ? undefined : selectedLocation,
         sortBy: selectedSortOrder === 'desc' ? 'dateDesc' : 'dateAsc',
-        // For client-side pagination, we fetch all matching records:
-        // page: currentPage, // Disable server-side pagination for now
-        // limit: itemsPerPage, // Disable server-side pagination for now
       };
 
       const { data } = await api.get('/api/admin/schools', { params });
-
-      // Assuming backend returns { schools: [...], totalCount: N }
       setAllSchools(data.schools);
-      // Total count is handled by the filtered list length for client-side pagination display
-      // totalRequests will be calculated from filteredSchools.length
-      // totalPages will be calculated from filteredSchools.length / itemsPerPage
-
     } catch (err) {
       console.error("Error fetching schools:", err);
       setError('Failed to fetch schools. Please try again.');
@@ -59,23 +47,17 @@ const SchoolVerification = () => {
     }
   };
 
-  // Fetch data when component mounts or filters/tab change
   useEffect(() => {
-    // Reset page to 1 whenever filters or tab change
     setCurrentPage(1);
     fetchSchools();
-  }, [activeTab, searchQuery, selectedLocation, selectedSortOrder]); // Depend on filter states
+  }, [activeTab, searchQuery, selectedLocation, selectedSortOrder]);
 
-  // --- Filtering and Sorting (Client-Side) ---
-  // Apply additional client-side filtering to ensure only schools matching the active tab are shown
   const filteredAndSortedSchools = useMemo(() => {
-    // Make sure we're only showing schools that match the active tab status
     const filteredByStatus = allSchools.filter(school => {
       if (activeTab === 'all') return true;
       return school.status === activeTab;
     });
 
-    // Apply client-side pagination to the filtered schools
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentSchools = filteredByStatus.slice(indexOfFirstItem, indexOfLastItem);
@@ -83,12 +65,10 @@ const SchoolVerification = () => {
     return currentSchools;
   }, [allSchools, activeTab, currentPage, itemsPerPage]);
 
-  // Calculate total counts for tabs from the full dataset
   const pendingCount = useMemo(() => allSchools.filter(s => s.status === 'pending').length, [allSchools]);
   const approvedCount = useMemo(() => allSchools.filter(s => s.status === 'approved').length, [allSchools]);
   const rejectedCount = useMemo(() => allSchools.filter(s => s.status === 'rejected').length, [allSchools]);
   
-  // Calculate totals based on the filtered-by-status schools for pagination
   const statusFilteredSchools = useMemo(() => {
     if (activeTab === 'all') return allSchools;
     return allSchools.filter(school => school.status === activeTab);
@@ -98,18 +78,14 @@ const SchoolVerification = () => {
   const totalPages = Math.ceil(totalRequests / itemsPerPage);
 
   const handleReview = (school) => {
-     // Pass the selected school object to the review modal state
     setReviewingSchool(school);
   };
   const handleCloseReview = () => setReviewingSchool(null);
 
-  // handleApprove/handleReject are now called from the Review modal
-  // and should trigger a refetch of the main list
   const handleStatusUpdateSuccess = () => {
-      handleCloseReview(); // Close the modal first
-      fetchSchools(); // Refetch the list to show updated status
+      handleCloseReview();
+      fetchSchools();
   };
-
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
@@ -127,7 +103,6 @@ const SchoolVerification = () => {
        }
    };
 
-
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -142,7 +117,6 @@ const SchoolVerification = () => {
   const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
       const handleClickOutside = (event) => {
           if (isLocationDropdownOpen && !event.target.closest('.sv-dropdown-location')) {
@@ -158,13 +132,10 @@ const SchoolVerification = () => {
       };
   }, [isLocationDropdownOpen, isSortDropdownOpen]);
 
-
   return (
     <div className="sv-container">
-      {/* Header is usually part of a layout, keeping it here for self-containment */}
       <div className="sv-header">
         <h1>School Verification</h1>
-        {/* Placeholder for logged-in admin user info */}
         <div className="sv-header-user-info">Admin User</div>
       </div>
 
@@ -173,7 +144,6 @@ const SchoolVerification = () => {
           <div className="sv-page-header">
             <div className="sv-page-title-row">
               <h2 className="sv-page-title">School Verification Requests</h2>
-              {/* <button className="sv-export-button"><FiDownload /> Export</button> {/* Export button not implemented */}
             </div>
             <p className="sv-page-subtitle">Manage and review school verification applications</p>
           </div>
@@ -213,7 +183,6 @@ const SchoolVerification = () => {
                 )}
               </div>
 
-               {/* Date Input - Not currently integrated with backend filtering */}
               <div className="sv-date-input" style={{ display: 'none' }}>
                 <input type="date" className="sv-date-picker" />
               </div>
@@ -280,7 +249,7 @@ const SchoolVerification = () => {
                       <tr>
                         <th>SCHOOL NAME</th>
                         <th>LOCATION</th>
-                        <th>SUBMISSION DATE</th> {/* Assuming registeredAt */}
+                        <th>SUBMISSION DATE</th>
                         <th>STATUS</th>
                         <th>ACTIONS</th>
                       </tr>
@@ -292,8 +261,8 @@ const SchoolVerification = () => {
                             <td>
                               <div className="sv-school-name">{school.schoolName}</div>
                             </td>
-                            <td className="sv-school-location">{`${school.city}, ${school.province}`}</td> {/* Display city, province */}
-                            <td className="sv-submission-date">{formatDate(school.registeredAt)}</td> {/* Use registeredAt */}
+                            <td className="sv-school-location">{`${school.city}, ${school.province}`}</td>
+                            <td className="sv-submission-date">{formatDate(school.registeredAt)}</td>
                             <td>
                               <span className={`sv-status sv-status-${school.status}`}>
                                 {school.status.charAt(0).toUpperCase() + school.status.slice(1)}
@@ -334,7 +303,6 @@ const SchoolVerification = () => {
                   >
                      <FiChevronLeft size={16} />
                   </button>
-                   {/* Render page numbers - simplified for example */}
                    {[...Array(totalPages).keys()].map(page => (
                        <button
                            key={page + 1}
@@ -359,9 +327,8 @@ const SchoolVerification = () => {
 
       {reviewingSchool && (
         <SchoolVerificationReview
-          school={reviewingSchool} // Pass the initial school data from the list
+          school={reviewingSchool}
           onClose={handleCloseReview}
-          // Pass callback to trigger refetch after update
           onStatusUpdateSuccess={handleStatusUpdateSuccess}
         />
       )}

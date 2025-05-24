@@ -14,7 +14,6 @@ import {
 import './HowItWorksPage.css';
 
 const HowItWorksPage = () => {
-  // Define the process steps specifically for Donors
   const donorProcessSteps = [
     {
       id: 1,
@@ -57,7 +56,6 @@ const HowItWorksPage = () => {
 
   return (
     <div className="hiw-container">
-      {/* Hero Section */}
       <section className="hiw-hero">
         <div className="hiw-hero-content">
           <h1 className="hiw-title">Make a Difference in 5 Simple Steps</h1>
@@ -80,7 +78,6 @@ const HowItWorksPage = () => {
         </div>
       </section>
 
-      {/* Process Steps Section */}
       <section className="hiw-process-section">
         <h2 className="hiw-section-title">Your Donation Journey</h2>
         
@@ -100,7 +97,6 @@ const HowItWorksPage = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
       <section className="hiw-testimonials-section">
         <h2 className="hiw-section-title">What Our Donors Say</h2>
         <div className="hiw-testimonials-container">
@@ -115,7 +111,6 @@ const HowItWorksPage = () => {
         </div>
       </section>
 
-      {/* FAQ Section */}
       <section className="hiw-faq-section">
         <h2 className="hiw-section-title">Common Questions</h2>
         <div className="hiw-faq-container">
@@ -140,7 +135,6 @@ const HowItWorksPage = () => {
         </div>
       </section>
 
-      {/* Call to Action Section */}
       <section className="hiw-cta-section">
         <div className="hiw-cta-content">
           <div className="hiw-cta-icon"><Heart size={48} /></div>

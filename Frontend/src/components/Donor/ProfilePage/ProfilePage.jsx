@@ -1,7 +1,5 @@
-// frontend/src/components/Donor/ProfilePage/ProfilePage.jsx
-
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../../../api';
 import './ProfilePage.css';
 
@@ -30,12 +28,11 @@ const ProfilePage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Fetch profile data on component mount
   useEffect(() => {
     const fetchUserProfile = async () => {
       setIsLoading(true);
       setErrorMessage('');
-      setSuccessMessage(''); // Clear messages on new fetch
+      setSuccessMessage('');
       try {
         const response = await api.get('/api/donors/profile');
         const data = response.data;
@@ -46,8 +43,8 @@ const ProfilePage = () => {
           email: data.email || '',
           phoneNumber: data.phoneNumber || '',
           address: data.address || '',
-          latitude: data.latitude ?? null, // Use ?? for null/undefined
-          longitude: data.longitude ?? null, // Use ?? for null/undefined
+          latitude: data.latitude ?? null,
+          longitude: data.longitude ?? null,
           notificationPreferences: {
             email: data.notificationPreferences?.email ?? true,
             donationUpdates: data.notificationPreferences?.donationUpdates ?? true,
@@ -61,12 +58,9 @@ const ProfilePage = () => {
       } catch (error) {
         console.error("Error fetching profile:", error);
         setIsLoading(false);
-        // Handle 401 specifically
         if (error.response && error.response.status === 401) {
-            // api.js interceptor should ideally handle token cleanup/redirect
-            // But triggering the redirect here ensures it happens if interceptor is missed
             navigate('/donor-login');
-             setErrorMessage('Session expired. Please log in again.'); // Less jarring message before redirect
+             setErrorMessage('Session expired. Please log in again.');
         } else {
              setErrorMessage(error.response?.data?.message || 'Failed to load profile. Please try again.');
         }
@@ -76,14 +70,13 @@ const ProfilePage = () => {
     fetchUserProfile();
   }, [navigate]);
 
-  // Clear messages after a delay
    useEffect(() => {
      if (successMessage || errorMessage) {
        const timer = setTimeout(() => {
          setSuccessMessage('');
          setErrorMessage('');
-       }, 5000); // Clear after 5 seconds
-       return () => clearTimeout(timer); // Cleanup timer
+       }, 5000);
+       return () => clearTimeout(timer);
      }
    }, [successMessage, errorMessage]);
 
@@ -91,10 +84,9 @@ const ProfilePage = () => {
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
 
-     // Handle number inputs specifically
      let parsedValue = value;
      if (type === 'number') {
-         parsedValue = value === '' ? null : parseFloat(value); // Store null for empty, parse others
+         parsedValue = value === '' ? null : parseFloat(value);
      }
 
 
@@ -115,7 +107,6 @@ const ProfilePage = () => {
     });
   };
 
-   // Handle getting current location
    const handleGetCurrentLocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -146,17 +137,16 @@ const ProfilePage = () => {
                              break;
                     }
                     setErrorMessage(locationError);
-                    setSuccessMessage(''); // Clear success message
+                    setSuccessMessage('');
                 }
             );
         } else {
             setErrorMessage("Geolocation is not supported by this browser.");
-            setSuccessMessage(''); // Clear success message
+            setSuccessMessage('');
         }
    };
 
 
-  // Handle form submission for Personal Information & Notification Settings
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
@@ -176,11 +166,9 @@ const ProfilePage = () => {
 
       const response = await api.put('/api/donors/profile', updateData);
 
-      // Update profile state to reflect changes and the latest donation count/member since
       setProfile(prevProfile => ({
            ...prevProfile,
-           ...response.data, // Merge updated data (includes count and memberSince from backend response)
-           // Ensure donationsCount and memberSince are updated from the response
+           ...response.data,
            donationsCount: response.data.donationsCount ?? prevProfile.donationsCount,
            memberSince: response.data.memberSince ?? prevProfile.memberSince
       }));
@@ -196,14 +184,12 @@ const ProfilePage = () => {
     }
   };
 
-  // Handle form submission for Password Change
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setIsSaving(true);
     setSuccessMessage('');
     setErrorMessage('');
 
-    // Basic validation
     if (formData.newPassword !== formData.confirmPassword) {
       setErrorMessage("New password and confirm password do not match.");
       setIsSaving(false);
@@ -216,7 +202,6 @@ const ProfilePage = () => {
          return;
      }
 
-     // Client-side password complexity validation
      const password = formData.newPassword;
      if (password.length < 8) { setErrorMessage('Password must be at least 8 characters long.'); setIsSaving(false); return; }
      if (!/[A-Z]/.test(password)) { setErrorMessage('Password must contain at least one uppercase letter.'); setIsSaving(false); return; }
@@ -233,7 +218,6 @@ const ProfilePage = () => {
 
        setSuccessMessage('Password updated successfully!');
 
-       // Clear password fields on success
        setFormData({
          ...formData,
          currentPassword: '',
@@ -271,12 +255,10 @@ const ProfilePage = () => {
               <h2 className="usr-profile-name">{profile.fullName || 'Donor'}</h2>
               <div className="usr-profile-stats">
                 <div className="usr-profile-stat">
-                  {/* Use the donation count from profile state */}
                   <span className="usr-profile-stat-value">{profile.donationsCount !== undefined ? profile.donationsCount : 'N/A'}</span>
                   <span className="usr-profile-stat-label">Donations</span>
                 </div>
                 <div className="usr-profile-stat">
-                   {/* Use member since from profile state */}
                   <span className="usr-profile-stat-value">{profile.memberSince || 'N/A'}</span>
                   <span className="usr-profile-stat-label">Member since</span>
                 </div>
@@ -370,7 +352,6 @@ const ProfilePage = () => {
                   />
                 </div>
 
-                {/* Location inputs */}
                  <div className="usr-profile-form-group">
                     <label htmlFor="latitude">Latitude</label>
                     <input
@@ -395,13 +376,11 @@ const ProfilePage = () => {
                        placeholder="e.g., 79.8612"
                      />
                  </div>
-                 {/* Get Current Location Button */}
-                 <div className="usr-profile-form-group"> {/* Wrap button in a group for spacing/alignment */}
+                 <div className="usr-profile-form-group">
                       <button type="button" className="usr-profile-btn-secondary" onClick={handleGetCurrentLocation} disabled={isSaving}>
                          Get Current Location
                       </button>
                  </div>
-                {/* End Location inputs */}
 
 
                 <div className="usr-profile-form-actions">
@@ -525,7 +504,6 @@ const ProfilePage = () => {
           </div>
         </div>
       ) : (
-        // Error state if profile failed to load and it wasn't a 401 redirect
         !isLoading && errorMessage && (
              <div className="usr-profile-error-state">
               <p>{errorMessage}</p>

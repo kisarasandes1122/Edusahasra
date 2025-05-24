@@ -1,5 +1,3 @@
-/* SchoolVerification.css updated to match Donation Management style */
-
 .sv-container {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: #f9fafb;
@@ -8,7 +6,6 @@
     padding-top: 20px;
 }
 
-/* Header styling */
 .sv-header {
     display: flex;
     justify-content: space-between;
@@ -31,13 +28,11 @@
     color: #4a5568;
 }
 
-/* Content area */
 .sv-content {
     padding: 20px;
     box-sizing: border-box;
 }
 
-/* The main content card */
 .sv-content-card {
     background-color: #ffffff;
     border-radius: 8px;
@@ -45,7 +40,6 @@
     padding: 20px;
 }
 
-/* Page Header */
 .sv-page-header {
     margin-bottom: 20px;
 }
@@ -87,7 +81,6 @@
     margin: 0;
 }
 
-/* Filters */
 .sv-filters {
     display: flex;
     gap: 16px;
@@ -269,7 +262,6 @@
     border-bottom-color: #3b82f6;
 }
 
-/* Table styles updated to match donation management */
 .sv-table-container {
     border: none;
     border-radius: 0;
@@ -464,7 +456,6 @@
    margin: 0;
 }
 
-/* Responsive adjustments */
 @media (max-width: 1348px) {
     .sv-header, .sv-content {
         padding-left: 16px;

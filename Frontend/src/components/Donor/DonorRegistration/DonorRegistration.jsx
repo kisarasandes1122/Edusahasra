@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaUser, FaLock, FaPhone, FaMapMarkerAlt, FaLocationArrow } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
-import api from '../../../api'; // Correct import for our custom API instance
+import api from '../../../api';
 import './DonorRegistration.css';
 
 const DonorRegistration = () => {
@@ -126,7 +126,6 @@ const DonorRegistration = () => {
           longitude
         }));
         
-        // Try to get address from coordinates using reverse geocoding
         try {
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
@@ -197,7 +196,6 @@ const DonorRegistration = () => {
       return;
     }
   
-    // Check for required location data
     if (!formData.latitude || !formData.longitude) {
       setErrors(prev => ({
         ...prev,
@@ -212,7 +210,6 @@ const DonorRegistration = () => {
       const response = await api.post('/api/donors/register', formData);
       
       if (response.data) {
-        // Store the token and user data in localStorage
         localStorage.setItem('donorInfo', JSON.stringify(response.data));
         
         setRegistrationStatus({
@@ -220,7 +217,6 @@ const DonorRegistration = () => {
           message: 'Registration successful!'
         });
         
-        // Show alert and navigate on OK
         alert('Registration successful! Click OK to proceed to login.');
         window.location.href = '/donor-login';
       }

@@ -719,9 +719,9 @@ module.exports = {
   approveSchool,
   rejectSchool,
   getAdminProfile,
-  updateAdminProfile, // Export the new profile update (optional for this task, but good to have)
-  updateAdminPassword, // Export the new password update function
+  updateAdminProfile, 
+  updateAdminPassword, 
   getAdmins,
   deleteAdmin,
-  sendEmail // Export the sendEmail function
+  sendEmail 
 };

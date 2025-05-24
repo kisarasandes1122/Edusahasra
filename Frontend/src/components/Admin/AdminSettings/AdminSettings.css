@@ -1,7 +1,3 @@
-/* AdminSettings.css */
-
-/* Rename all existing classes by prepending 'adm-settings__' */
-
 .adm-settings__container {
   max-width: 100%;
   padding: 20px;
@@ -38,7 +34,7 @@
   margin: 0;
 }
 
-.adm-settings__tab { /* Renamed from .settings-tabs li */
+.adm-settings__tab {
   padding: 15px 20px;
   font-size: 15px;
   color: #555;
@@ -49,32 +45,32 @@
   transition: all 0.3s ease;
 }
 
-.adm-settings__tabs li i { /* Keep original for nested icon */
+.adm-settings__tabs li i {
   margin-right: 10px;
   font-size: 16px;
   width: 20px;
   text-align: center;
 }
 
-.adm-settings__tab:hover { /* Renamed from .settings-tabs li:hover */
+.adm-settings__tab:hover {
   background-color: #eef2f7;
   color: #4caf50;
 }
 
-.adm-settings__tab--active { /* Renamed from .settings-tabs li.active */
+.adm-settings__tab--active {
   background-color: #e8f5e9;
   color: #2e7d32;
   border-left: 3px solid #4caf50;
   font-weight: 500;
 }
 
-.adm-settings__tab--logout { /* Renamed from .settings-tabs li.logout-option */
+.adm-settings__tab--logout {
   border-top: 1px solid #e0e0e0;
   margin-top: 20px;
   color: #f44336;
 }
 
-.adm-settings__tab--logout:hover { /* Renamed from .settings-tabs li.logout-option:hover */
+.adm-settings__tab--logout:hover {
   background-color: #ffebee;
 }
 
@@ -95,21 +91,21 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.adm-settings__form-section { /* Renamed */
+.adm-settings__form-section {
   margin-bottom: 30px;
 }
 
-.adm-settings__form-section h3 { /* Renamed */
+.adm-settings__form-section h3 {
   font-size: 16px;
   margin-bottom: 15px;
   color: #555;
 }
 
-.adm-settings__form-group { /* Renamed */
+.adm-settings__form-group {
   margin-bottom: 20px;
 }
 
-.adm-settings__form-group label { /* Renamed */
+.adm-settings__form-group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
@@ -117,7 +113,7 @@
 }
 
 .adm-settings__form-group input,
-.adm-settings__form-group select { /* Renamed */
+.adm-settings__form-group select {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #ddd;
@@ -127,24 +123,24 @@
 }
 
 .adm-settings__form-group input:focus,
-.adm-settings__form-group select:focus { /* Renamed */
+.adm-settings__form-group select:focus {
   border-color: #4caf50;
   outline: none;
   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
-.adm-settings__checkbox-group { /* Renamed */
+.adm-settings__checkbox-group {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
 }
 
-.adm-settings__checkbox-group input[type="checkbox"] { /* Renamed */
+.adm-settings__checkbox-group input[type="checkbox"] {
   margin-right: 10px;
   width: auto;
 }
 
-.adm-settings__save-btn { /* Renamed from .save-button */
+.adm-settings__save-btn {
   background-color: #4caf50;
   color: white;
   border: none;
@@ -157,124 +153,107 @@
   margin-top: 15px;
 }
 
-.adm-settings__save-btn:hover { /* Renamed */
+.adm-settings__save-btn:hover {
   background-color: #3d8b40;
 }
 
-/* Removed Two-factor authentication section styles */
-/* .two-factor-info, .qr-placeholder */
-
-
-/* User Management Styles - Renamed classes */
 .adm-settings__user-controls {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.adm-settings__add-user-btn { /* Renamed */
+.adm-settings__add-user-btn {
   background-color: #4caf50;
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s; /* Added transition */
+  transition: background-color 0.3s;
 }
 
- .adm-settings__add-user-btn:disabled { /* Style for disabled state */
-      background-color: #cccccc;
-      cursor: not-allowed;
- }
+.adm-settings__add-user-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
 
-.adm-settings__add-user-btn:hover:not(:disabled) { /* Added hover */
+.adm-settings__add-user-btn:hover:not(:disabled) {
   background-color: #3d8b40;
 }
 
-
-.adm-settings__user-search { /* Renamed */
+.adm-settings__user-search {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
   width: 250px;
-  transition: border-color 0.3s; /* Added transition */
+  transition: border-color 0.3s;
 }
 
-.adm-settings__user-search:focus { /* Added focus */
-   border-color: #4caf50;
-   outline: none;
-   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+.adm-settings__user-search:focus {
+  border-color: #4caf50;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
-
-.adm-settings__users-table { /* Renamed */
+.adm-settings__users-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
 }
 
 .adm-settings__users-table th,
-.adm-settings__users-table td { /* Renamed */
+.adm-settings__users-table td {
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #e0e0e0;
 }
 
-.adm-settings__users-table th { /* Renamed */
+.adm-settings__users-table th {
   background-color: #f5f5f5;
   font-weight: 500;
   color: #333;
 }
 
-.adm-settings__users-table tr:hover { /* Renamed */
+.adm-settings__users-table tr:hover {
   background-color: #f9f9f9;
 }
 
-/* Removed status styles */
-/* .status, .status.active, .status.inactive */
-
 .adm-settings__edit-btn,
-.adm-settings__delete-btn { /* Renamed edit, removed delete/activate, added new delete */
+.adm-settings__delete-btn {
   padding: 6px 12px;
   border: none;
   border-radius: 4px;
   margin-right: 5px;
   cursor: pointer;
   font-size: 12px;
-  transition: background-color 0.3s; /* Added transition */
+  transition: background-color 0.3s;
 }
 
-.adm-settings__edit-btn { /* Renamed */
+.adm-settings__edit-btn {
   background-color: #e3f2fd;
   color: #1976d2;
 }
 
-.adm-settings__edit-btn:hover { /* Added hover */
+.adm-settings__edit-btn:hover {
   background-color: #c6e5ff;
 }
 
-
-.adm-settings__delete-btn { /* New delete button style */
-    background-color: #ffebee;
-    color: #c62828;
+.adm-settings__delete-btn {
+  background-color: #ffebee;
+  color: #c62828;
 }
 
-.adm-settings__delete-btn:hover:not(:disabled) { /* Added hover, exclude disabled */
-    background-color: #ffccbc;
+.adm-settings__delete-btn:hover:not(:disabled) {
+  background-color: #ffccbc;
 }
 
- .adm-settings__delete-btn:disabled { /* Style for disabled state */
-      background-color: #f5f5f5;
-      color: #999;
-      cursor: not-allowed;
- }
+.adm-settings__delete-btn:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
 
-
-/* Removed activate button style */
-/* .activate-button */
-
-
-/* Responsive styles - Renamed classes */
 @media screen and (max-width: 992px) {
   .adm-settings__layout {
     flex-direction: column;
@@ -291,41 +270,39 @@
     overflow-x: auto;
   }
 
-  .adm-settings__tab { /* Renamed */
+  .adm-settings__tab {
     padding: 10px 15px;
     border-left: none;
     border-bottom: 3px solid transparent;
   }
 
-  .adm-settings__tab--active { /* Renamed */
+  .adm-settings__tab--active {
     border-left: none;
     border-bottom: 3px solid #4caf50;
   }
 
-  .adm-settings__tab--logout { /* Renamed */
+  .adm-settings__tab--logout {
     border-top: none;
     margin-top: 0;
   }
 }
 
 @media screen and (max-width: 768px) {
-  .adm-settings__users-table { /* Renamed */
+  .adm-settings__users-table {
     display: block;
     overflow-x: auto;
   }
 
-  .adm-settings__user-controls { /* Renamed */
+  .adm-settings__user-controls {
     flex-direction: column;
     gap: 10px;
   }
 
-  .adm-settings__user-search { /* Renamed */
+  .adm-settings__user-search {
     width: 100%;
   }
 }
 
-
-/* Modal Styles for Add New Admin - Renamed classes */
 .adm-settings__modal-overlay {
   position: fixed;
   top: 0;
@@ -336,7 +313,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure it's above other content */
+  z-index: 1000;
 }
 
 .adm-settings__modal-content {
@@ -345,9 +322,9 @@
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   width: 90%;
-  max-width: 500px; /* Control max width */
-  max-height: 90vh; /* Limit height */
-  overflow-y: auto; /* Add scrolling if content is too tall */
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .adm-settings__modal-content h3 {
@@ -359,31 +336,30 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.adm-settings__add-admin-form .adm-settings__form-group { /* Target form group within modal */
-  margin-bottom: 15px; /* Slightly less space in modal */
+.adm-settings__add-admin-form .adm-settings__form-group {
+  margin-bottom: 15px;
 }
 
 .adm-settings__modal-actions {
   margin-top: 25px;
-  text-align: right; /* Align buttons to the right */
+  text-align: right;
 }
 
-.adm-settings__modal-actions .adm-settings__save-btn { /* Target save button within modal */
-  margin-top: 0; /* Remove margin-top */
-  margin-left: 10px; /* Add space between buttons */
+.adm-settings__modal-actions .adm-settings__save-btn {
+  margin-top: 0;
+  margin-left: 10px;
 }
 
-.adm-settings__modal-actions .adm-settings__save-btn:disabled { /* Style for disabled state */
-   background-color: #cccccc;
-   cursor: not-allowed;
+.adm-settings__modal-actions .adm-settings__save-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
-.adm-settings__modal-actions .adm-settings__save-btn:hover:not(:disabled) { /* Added hover */
-background-color: #3d8b40;
+.adm-settings__modal-actions .adm-settings__save-btn:hover:not(:disabled) {
+  background-color: #3d8b40;
 }
 
-
-.adm-settings__cancel-btn { /* Renamed cancel button style */
+.adm-settings__cancel-btn {
   background-color: #ccc;
   color: #333;
   border: none;
@@ -396,17 +372,17 @@ background-color: #3d8b40;
   margin-top: 0;
 }
 
-.adm-settings__cancel-btn:hover:not(:disabled) { /* Renamed, exclude disabled */
+.adm-settings__cancel-btn:hover:not(:disabled) {
   background-color: #bbb;
 }
-.adm-settings__cancel-btn:disabled { /* Style for disabled state */
-   background-color: #f5f5f5;
-   color: #999;
-   cursor: not-allowed;
+
+.adm-settings__cancel-btn:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
 }
 
-
-.adm-settings__error-message { /* Renamed */
+.adm-settings__error-message {
   color: #f44336;
   font-size: 14px;
   margin-bottom: 15px;
@@ -416,24 +392,24 @@ background-color: #3d8b40;
   border-radius: 4px;
 }
 
-.adm-settings__success-message { /* Renamed */
-   color: #2e7d32;
-   font-size: 14px;
-   margin-bottom: 15px;
-   padding: 10px;
-   background-color: #e8f5e9;
-   border: 1px solid #2e7d32;
-   border-radius: 4px;
+.adm-settings__success-message {
+  color: #2e7d32;
+  font-size: 14px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #e8f5e9;
+  border: 1px solid #2e7d32;
+  border-radius: 4px;
 }
 
-/* Add responsiveness for modal if needed */
 @media screen and (max-width: 550px) {
   .adm-settings__modal-content {
-      padding: 20px;
+    padding: 20px;
   }
-   .adm-settings__modal-actions button {
-       width: 100%;
-       margin-top: 10px;
-       margin-left: 0;
-   }
+  
+  .adm-settings__modal-actions button {
+    width: 100%;
+    margin-top: 10px;
+    margin-left: 0;
+  }
 }

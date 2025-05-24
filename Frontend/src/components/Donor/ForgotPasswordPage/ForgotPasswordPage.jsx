@@ -1,8 +1,7 @@
-// frontend/src/components/Donor/ForgotPasswordPage/ForgotPasswordPage.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
 import api from '../../../api';
-import './ForgotPasswordPage.css'; // Create this CSS file
+import './ForgotPasswordPage.css';
 
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState('');
@@ -16,7 +15,6 @@ const ForgotPasswordPage = () => {
         setError('');
         setIsLoading(true);
 
-        // Basic email format validation
          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
              setError("Please enter a valid email address.");
              setIsLoading(false);
@@ -24,19 +22,15 @@ const ForgotPasswordPage = () => {
          }
 
         try {
-            // Note: Backend is designed *not* to throw an error if email not found,
-            // to prevent revealing user existence. It will always return 200 with a message.
             const response = await api.post('/api/donors/forgot-password', { email });
             setMessage(response.data.message);
-            setEmail(''); // Clear email field on success
+            setEmail('');
         } catch (err) {
             console.error('Forgot password error:', err.response?.data || err.message);
-            // Display specific error message from backend if available
             setError(err.response?.data?.message || 'Failed to request password reset. Please try again.');
         } finally {
             setIsLoading(false);
-             // Clear messages after a delay
-             setTimeout(() => { setMessage(''); setError(''); }, 10000); // Clear after 10s
+             setTimeout(() => { setMessage(''); setError(''); }, 10000);
         }
     };
 
@@ -46,8 +40,8 @@ const ForgotPasswordPage = () => {
                  <h2>Forgot Password</h2>
                  <p>Enter your email address and we'll send you a link to reset your password.</p>
 
-                 {message && <div className="success-message">{message}</div>} {/* Add success styling */}
-                 {error && <div className="error-message">{error}</div>} {/* Add error styling */}
+                 {message && <div className="success-message">{message}</div>}
+                 {error && <div className="error-message">{error}</div>}
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -59,7 +53,7 @@ const ForgotPasswordPage = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                             disabled={isLoading}
-                            autoComplete="email" // Suggest email address
+                            autoComplete="email"
                         />
                     </div>
                     <button type="submit" disabled={isLoading}>
@@ -67,7 +61,7 @@ const ForgotPasswordPage = () => {
                     </button>
                 </form>
                  <div className="back-to-login">
-                     <p><Link to="/donor-login">Back to Login</Link></p> {/* Use React Router Link */}
+                     <p><Link to="/donor-login">Back to Login</Link></p>
                  </div>
             </div>
         </div>

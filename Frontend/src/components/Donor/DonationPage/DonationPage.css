@@ -1,271 +1,264 @@
-/* DonationPage.css */
 .donate__container {
-    max-width: 960px;
-    margin: 40px auto;
-    font-family: 'Inter', sans-serif;
-    color: #333;
-    padding-bottom: 70px;
-  }
-  
-  .donate__title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    text-align: left;
-  }
-  
-  .donate__card {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 24px;
-    padding: 24px;
-  }
-  
-  .donate__cardHeader {
-    margin-bottom: 16px;
-  }
-  
-  .donate__cardTitle {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
-  }
-  
-  /* Item rows */
-  .donate__itemRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid #eaeaea;
-  }
-  
-  .donate__itemRow:last-child {
-    border-bottom: none;
-  }
-  
-  .donate__itemInfo {
-    flex: 1;
-  }
-  
-  .donate__itemName {
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-  
-  .donate__itemIcon {
-    margin-right: 8px;
-    color: #12263A;
-  }
-  
-  .donate__itemStats {
-    color: #666;
-    font-size: 14px;
-  }
-  
-  .donate__itemAction {
-    min-width: 160px;
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  /* Quantity Stepper */
-  .donate__quantityStepper {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    overflow: hidden;
-    width: 100%;
-  }
-  
-  .donate__stepperBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f5f5f5;
-    border: none;
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .donate__stepperBtn:hover:not(:disabled) {
-    background-color: #e0e0e0;
-  }
-  
-  .donate__stepperBtn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  .donate__stepperInput {
-    flex: 1;
-    height: 36px;
-    text-align: center;
-    border: none;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    font-size: 14px;
-    padding: 0 5px;
-  }
-  
-  .donate__stepperInput::-webkit-outer-spin-button,
-  .donate__stepperInput::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  
-  .donate__fulfilledBtn {
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-size: 14px;
-    color: #666;
-    cursor: not-allowed;
-    width: 100%;
-  }
-  
-  /* Delivery options */
-  .donate__deliveryOptions {
-    margin-bottom: 20px;
-    margin-top: 25px;
+  max-width: 960px;
+  margin: 40px auto;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  padding-bottom: 70px;
+}
 
-  }
-  
-  .donate__deliveryOption {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-  
-  .donate__deliveryRadio {
-    margin-right: 12px;
-    accent-color: #12263A;
-    width: 18px;
-    height: 18px;
-  }
-  
-  .donate__deliveryLabel {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-  }
-  
-  .donate__deliveryIcon {
-    margin-right: 8px;
-    color: #12263A;
-  }
-  
-  /* Location section */
-  .donate__locationSection {
-    margin-bottom: 20px;
-  }
-  
-  .donate__locationLabel {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-  }
-  
-  .donate__locationInput {
-    position: relative;
-  }
-  
-  .donate__locationIcon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-  }
-  
-  .donate__addressInput {
-    width: 100%;
-    padding: 12px 12px 12px 40px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.2s;
-  }
-  
-  .donate__addressInput:focus {
-    outline: none;
-    border-color: #12263A;
-  }
-  
-  /* Shipping cost */
-  .donate__shippingCost {
-    background-color: #C7F169;
-    padding: 12px 16px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-  }
-  
-  .donate__shippingCost p {
-    margin: 0;
-    color: #12263A;
-  }
-  
-  /* Summary table */
-  .donate__summaryTable {
-    margin-bottom: 24px;
-  }
-  
-  .donate__summaryRow {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-  }
-  
-  .donate__summaryDivider {
-    height: 1px;
-    background-color: #eaeaea;
-    margin: 8px 0;
-  }
-  
-  .donate__summaryTotal {
-    font-weight: 600;
-  }
-  
-  .donate__summaryDelivery {
-    color: #5a6a7a;
-    margin-top: 8px;
-  }
-  
-  .donate__disclaimer {
-    background-color: #f9f9f9;
-    padding: 16px;
-    border-radius: 4px;
-    margin-bottom: 24px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #555;
-  }
-  
-  .donate__submitBtn {
-    background-color: #78C51C;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 14px 24px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.2s;
-  }
-  
-  .donate__submitBtn:hover:not(:disabled) {
-    background-color: #2A6F2B;
-  }
-  
-  .donate__submitBtn:disabled {
-    background-color: #EEF2E3;
-    cursor: not-allowed;
-  }
+.donate__title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.donate__card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+.donate__cardHeader {
+  margin-bottom: 16px;
+}
+
+.donate__cardTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.donate__itemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.donate__itemRow:last-child {
+  border-bottom: none;
+}
+
+.donate__itemInfo {
+  flex: 1;
+}
+
+.donate__itemName {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.donate__itemIcon {
+  margin-right: 8px;
+  color: #12263A;
+}
+
+.donate__itemStats {
+  color: #666;
+  font-size: 14px;
+}
+
+.donate__itemAction {
+  min-width: 160px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.donate__quantityStepper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.donate__stepperBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border: none;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.donate__stepperBtn:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.donate__stepperBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.donate__stepperInput {
+  flex: 1;
+  height: 36px;
+  text-align: center;
+  border: none;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  font-size: 14px;
+  padding: 0 5px;
+}
+
+.donate__stepperInput::-webkit-outer-spin-button,
+.donate__stepperInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.donate__fulfilledBtn {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #666;
+  cursor: not-allowed;
+  width: 100%;
+}
+
+.donate__deliveryOptions {
+  margin-bottom: 20px;
+  margin-top: 25px;
+
+}
+
+.donate__deliveryOption {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.donate__deliveryRadio {
+  margin-right: 12px;
+  accent-color: #12263A;
+  width: 18px;
+  height: 18px;
+}
+
+.donate__deliveryLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.donate__deliveryIcon {
+  margin-right: 8px;
+  color: #12263A;
+}
+
+.donate__locationSection {
+  margin-bottom: 20px;
+}
+
+.donate__locationLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.donate__locationInput {
+  position: relative;
+}
+
+.donate__locationIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.donate__addressInput {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.donate__addressInput:focus {
+  outline: none;
+  border-color: #12263A;
+}
+
+.donate__shippingCost {
+  background-color: #C7F169;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.donate__shippingCost p {
+  margin: 0;
+  color: #12263A;
+}
+
+.donate__summaryTable {
+  margin-bottom: 24px;
+}
+
+.donate__summaryRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.donate__summaryDivider {
+  height: 1px;
+  background-color: #eaeaea;
+  margin: 8px 0;
+}
+
+.donate__summaryTotal {
+  font-weight: 600;
+}
+
+.donate__summaryDelivery {
+  color: #5a6a7a;
+  margin-top: 8px;
+}
+
+.donate__disclaimer {
+  background-color: #f9f9f9;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.donate__submitBtn {
+  background-color: #78C51C;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.donate__submitBtn:hover:not(:disabled) {
+  background-color: #2A6F2B;
+}
+
+.donate__submitBtn:disabled {
+  background-color: #EEF2E3;
+  cursor: not-allowed;
+}

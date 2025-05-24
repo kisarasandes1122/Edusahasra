@@ -1,5 +1,3 @@
-// --- START OF FILE MessagesPage.jsx ---
-
 import React, { useState, useEffect } from 'react';
 import './MessagesPage.css';
 import api from '../../../api';
@@ -21,22 +19,19 @@ const MessagesPage = () => {
       try {
         const response = await api.get('/api/thankyous/my-thanks');
 
-        console.log("Raw Thank You Data from Backend:", response.data); // Keep this log for verification
+        console.log("Raw Thank You Data from Backend:", response.data);
 
 
         const formattedMessages = response.data.map(ty => ({
           id: ty._id,
-          // FIX: Access schoolName and schoolCity directly from the thank you object (ty)
-          schoolName: ty.schoolName || 'Unknown School', // Access directly
-          schoolCity: ty.schoolCity || '', // Access directly
+          schoolName: ty.schoolName || 'Unknown School',
+          schoolCity: ty.schoolCity || '',
           date: ty.sentAt,
           message: ty.message,
-          // Images are expected to have a 'url' property from the backend formatting
           images: ty.images.map(img => ({
-             url: img.url, // Use the relative URL provided by backend (e.g., /uploads/...)
+             url: img.url,
              fileName: img.fileName
           })) || [],
-          // Assuming donationSummary is also a direct property from backend formatting
           donationSummary: ty.donationSummary
         }));
 
@@ -126,7 +121,6 @@ const MessagesPage = () => {
                 >
                   <div className="conversation-info">
                     <div className="conversation-header">
-                      {/* Display schoolName from the formatted message */}
                       <h3>{message.schoolName}</h3>
                       <span className="conversation-time">
                         {new Date(message.date).toLocaleDateString('en-LK', { month: 'short', day: 'numeric' })}
@@ -153,12 +147,9 @@ const MessagesPage = () => {
             <>
               <div className="message-header">
                 <div className="message-header-info">
-                  {/* Display schoolName from the active message */}
                   <h2>{activeMessage.schoolName}</h2>
-                  {/* Display schoolCity from the active message */}
                   {activeMessage.schoolCity && <span className="message-date" style={{marginBottom: '4px'}}>📍 {activeMessage.schoolCity}</span>}
                   <span className="message-date">Sent: {formatDate(activeMessage.date)}</span>
-                  {/* Check if donationSummary exists before rendering */}
                    {activeMessage.donationSummary && <span className="message-date" style={{marginTop: '4px', fontSize: '12px'}}>Regarding: {activeMessage.donationSummary}</span>}
                 </div>
               </div>

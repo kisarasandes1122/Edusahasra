@@ -56,7 +56,7 @@ const createDonationRequest = asyncHandler(async (req, res) => {
     const { categoryId, categoryNameEnglish, categoryNameSinhala, quantity } = item;
 
     // Check for required fields
-    if (categoryId === undefined || !categoryNameEnglish || !categoryNameSinhala || quantity === undefined) {
+    if (categoryId === undefined || categoryId === null || !categoryNameEnglish || !categoryNameSinhala || quantity === undefined || quantity === null) { // Added null checks
       res.status(400);
       throw new Error(`Invalid item data provided. Each item requires categoryId, categoryNameEnglish, categoryNameSinhala, and quantity.`);
     }
@@ -139,18 +139,14 @@ const getDonationRequestById = asyncHandler(async (req, res) => {
       throw new Error('Invalid Donation Request ID format.');
     }
 
-    // ***** CHANGE HERE: Populate more fields from the school, including location *****
+    // Populate more fields from the school, including location
     const request = await DonationRequest.findById(requestId)
-        .populate('school', 'schoolName schoolEmail city district province description images location streetAddress postalCode'); // <-- Added location, streetAddress, postalCode
+        .populate('school', 'schoolName schoolEmail city district province description images location streetAddress postalCode');
 
     if (!request) {
         res.status(404);
         throw new Error('Donation request not found.');
     }
-
-    // Optional: Add authorization check here if needed in the future
-    // (e.g., if only specific users should view specific requests)
-    // For now, it's public as per the routes file.
 
     res.json(request);
 });
@@ -214,35 +210,26 @@ const getPublicDonationRequests = asyncHandler(async (req, res) => {
   const skip = (page - 1) * limit;
 
   const locationQuery = req.query.location ? req.query.location.toLowerCase() : '';
-  const categoriesQuery = req.query.categories ? req.query.categories.split(',') : []; // Expect comma-separated string like "books,stationery"
+  // --- MODIFIED: Accept categoryIds instead of category names ---
+  const categoryIdsQuery = req.query.categoryIds ? req.query.categoryIds.split(',').map(id => parseInt(id)).filter(id => !isNaN(id)) : [];
   const sortBy = req.query.sortBy || 'highest'; // 'highest' or 'lowest' progress
 
   // --- Build Filter Criteria ---
-  const filterCriteria = {
+  const statusFilter = {
       status: { $in: ['Pending', 'Partially Fulfilled'] }, // Only show active requests
-      // We need to filter based on the *school's* location
-      // This requires populating school first or a more complex query/aggregation
   };
 
-  // --- Prepare Category Matching (case-insensitive) ---
-   // Updated regex for better matching, including partial words and plurals
-  const categoryMatchers = categoriesQuery.map(cat => {
-      switch(cat.toLowerCase().trim()) { // Normalize input
-          case 'books': return /book|books|textbook|textbooks/i;
-          case 'stationery': return /stationer|pen|pencil|bag|bags|notebook|notebooks|rule|eraser/i; // Expanded
-          case 'uniform': return /uniform|uniforms|clothe|clothing|shoe|shoes/i; // Expanded
-          case 'equipment': return /equipment|computer|computers|library|lab|projector|furniture/i; // Expanded
-          case 'sportsgear': return /sport|gear|ball|bat|net|athletic/i; // Expanded
-          case 'other': return /other|resource|miscellaneous|supply|supplies/i; // Expanded
-          default: return new RegExp(cat.trim().replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'i'); // Escape special chars & case-insensitive
-      }
-  });
+  // --- Build Category Filter based on categoryIds ---
+  const categoryFilter = categoryIdsQuery.length > 0 ?
+      { 'requestedItems.categoryId': { $in: categoryIdsQuery } } :
+      {}; // No filter if no category IDs are provided
 
 
   // --- Perform Query (Using Aggregation for location filtering and progress calculation) ---
   const aggregationPipeline = [
-      // Match basic request status first (optimizes)
-      { $match: { status: { $in: ['Pending', 'Partially Fulfilled'] } } },
+      // Match basic request status and category filter first (optimizes)
+      { $match: { ...statusFilter, ...categoryFilter } }, // Combine status and category filters
+
       // Lookup school details
       {
           $lookup: {
@@ -266,21 +253,6 @@ const getPublicDonationRequests = asyncHandler(async (req, res) => {
               })
           }
       },
-       // Match based on categories if specified
-       ...(categoryMatchers.length > 0 ? [{
-           $match: {
-               'requestedItems': {
-                   $elemMatch: {
-                       // Check against both English and Sinhala names for broader matching
-                       $or: [
-                            { 'categoryNameEnglish': { $in: categoryMatchers } },
-                            // Optional: Add Sinhala matching if needed and if names are predictable
-                            // { 'categoryNameSinhala': { $in: categoryMatchers } } // Adjust regex if needed for Sinhala
-                        ]
-                    }
-               }
-           }
-       }] : []),
       // Calculate total requested and received quantities for progress
       {
           $addFields: {
@@ -293,11 +265,10 @@ const getPublicDonationRequests = asyncHandler(async (req, res) => {
                   city: '$schoolDetails.city',
                   district: '$schoolDetails.district',
                   province: '$schoolDetails.province',
-                  // ***** ADD IMAGES HERE for the list view *****
+                  // ADD IMAGES HERE for the list view
                   // Take only the first image for the card display, if available
                   firstImage: { $arrayElemAt: ['$schoolDetails.images', 0] }
                   // Add other needed school fields here (e.g., description for tooltip/preview)
-                   // description: '$schoolDetails.description' // Example
               }
           }
       },
@@ -344,7 +315,7 @@ const getPublicDonationRequests = asyncHandler(async (req, res) => {
 
   const results = await DonationRequest.aggregate(aggregationPipeline);
 
-  const requests = results[0]?.data || []; // Handle cases where results might be empty
+  const requests = results[0]?.data || []; 
   const totalRequests = results[0]?.metadata[0]?.totalRequests || 0;
   const totalPages = Math.ceil(totalRequests / limit);
 
@@ -360,9 +331,8 @@ const getPublicDonationRequests = asyncHandler(async (req, res) => {
 module.exports = {
 createDonationRequest,
 getSchoolDonationRequests,
-getDonationRequestById, // <-- Export it
+getDonationRequestById, 
 updateDonationRequestStatus,
 deleteDonationRequest,
-getPublicDonationRequests, // <-- Export it
-
+getPublicDonationRequests, 
 };

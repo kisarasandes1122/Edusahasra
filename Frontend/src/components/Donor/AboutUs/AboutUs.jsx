@@ -8,7 +8,6 @@ const AboutUs = () => {
     <div className="aboutUsContainer">
       <div className="aboutUsBackground"></div>
       
-      {/* Header Section */}
       <div className="aboutUsHeader">
         <h1 className="aboutUsTitle">
           <span className="aboutUsTitleLight">About</span>
@@ -19,7 +18,6 @@ const AboutUs = () => {
         </div>
       </div>
       
-      {/* Mission Section */}
       <section className="aboutUsSection missionSection">
         <div className="sectionContent">
           <h2 className="sectionTitle">Our Mission</h2>
@@ -35,7 +33,6 @@ const AboutUs = () => {
         </div>
       </section>
       
-      {/* Problem Section */}
       <section className="aboutUsSection problemSection">
         <div className="sectionImageContainer">
           <div className="problemCards">
@@ -67,7 +64,6 @@ const AboutUs = () => {
         </div>
       </section>
       
-      {/* Solution Section */}
       <section className="aboutUsSection solutionSection">
         <div className="sectionContent">
           <h2 className="sectionTitle">Our Solution</h2>
@@ -109,7 +105,6 @@ const AboutUs = () => {
         </div>
       </section>
       
-      {/* Team Section */}
       <section className="aboutUsSection teamSection">
         <div className="sectionImageContainer">
           <img src={teamImage} alt="Our team" className="sectionImage teamImage" />
@@ -124,7 +119,6 @@ const AboutUs = () => {
         </div>
       </section>
       
-      {/* Impact Goals Section */}
       <section className="aboutUsSection impactSection">
         <h2 className="impactTitle">Impact Goals</h2>
         <div className="impactGoals">
@@ -143,7 +137,6 @@ const AboutUs = () => {
         </div>
       </section>
       
-      {/* CTA Section */}
       <section className="ctaSection">
         <h2 className="ctaTitle">Join Our Mission</h2>
         <p className="ctaText">

@@ -1,7 +1,6 @@
-// Home.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Import motion
+import { motion } from 'framer-motion';
 import { ArrowRight, School, Users, Gift, TrendingUp, Clock, BookOpen, GraduationCap, Heart, MapPin, User } from 'lucide-react';
 import api from '../../../api';
 import './Home.css';
@@ -11,7 +10,6 @@ import rural1 from '../../../assets/images/image1.jpg';
 import rural2 from '../../../assets/images/image2.webp';
 import rural3 from '../../../assets/images/image3.jpg';
 
-// Helper function to shuffle an array
 function shuffleArray(array) {
   let currentIndex = array.length, randomIndex;
   while (currentIndex !== 0) {
@@ -23,14 +21,12 @@ function shuffleArray(array) {
   return array;
 }
 
-// Helper function to format location
 const formatLocation = (school) => {
     if (!school) return 'Location Unavailable';
     const parts = [school.city, school.district, school.province].filter(Boolean);
     return parts.join(', ') || 'Location details missing';
 }
 
-// --- Animation Variants ---
 const sectionVariant = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -164,7 +160,6 @@ const Home = () => {
 
   return (
     <div className="home">
-      {/* Hero Section */}
       <section className="home__hero">
          <div className="home__hero-slideshow">
           <div className="home__hero-slide" style={{ backgroundImage: `url(${rural1})` }}></div>
@@ -223,7 +218,6 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* Schools Donation Section */}
       <motion.section 
         className="home__schools"
         variants={sectionVariant}
@@ -254,7 +248,6 @@ const Home = () => {
                   key={request._id} 
                   className="home__school-card" 
                   variants={cardItemVariant}
-                  // Removed cardHoverEffect for now, as it has more complex content
                 >
                   <h3 className="home__school-name">{request.schoolInfo?.schoolName || 'School Name Unavailable'}</h3>
                   <div className="home__school-info">
@@ -316,7 +309,6 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Impact Statistics Section */}
       <motion.section 
         className="home__impact"
         variants={sectionVariant}
@@ -357,7 +349,6 @@ const Home = () => {
       </motion.section>
 
 
-      {/* How It Works Section */}
       <motion.section 
         className="home__how-works"
         variants={sectionVariant}
@@ -382,7 +373,7 @@ const Home = () => {
                 key={item.id} 
                 className="home__how-works-card"
                 variants={cardItemVariant}
-                whileHover={cardHoverEffect.hover} // using defined object
+                whileHover={cardHoverEffect.hover}
                 transition={{ duration: 0.2 }}
               >
                 <div className="home__how-works-icon-container">
@@ -396,10 +387,8 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Get Involved CTA Section */}
       <motion.section 
         className="home__get-involved"
-        // No sectionVariant here, as it has a background gradient that might look odd fading
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.3 }}
@@ -430,7 +419,7 @@ const Home = () => {
               <motion.a 
                 href="/donor-register" 
                 className="home__button--get-involved-primary"
-                variants={cardItemVariant} // Reuse for simple fade-up
+                variants={cardItemVariant}
                 whileHover={{ scale: 1.05, y: -2, backgroundColor: "#f0f0f0" }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.2 }}
@@ -440,7 +429,7 @@ const Home = () => {
               <motion.a 
                 href="/needs" 
                 className="home__button--get-involved-secondary"
-                variants={cardItemVariant} // Reuse for simple fade-up
+                variants={cardItemVariant}
                 whileHover={{ scale: 1.05, y: -2, backgroundColor: "rgba(255, 255, 255, 0.3)", gap: "12px" }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.2 }}
@@ -452,7 +441,6 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {/* Testimonials Section */}
       <motion.section 
         className="home__testimonials"
         variants={sectionVariant}
@@ -477,7 +465,7 @@ const Home = () => {
                 key={testimonial.id} 
                 className="home__testimonial-card"
                 variants={cardItemVariant}
-                whileHover={cardHoverEffect.hover} // using defined object
+                whileHover={cardHoverEffect.hover}
                 transition={{ duration: 0.2 }}
               >
                 <div className="home__quote-icon">"</div>

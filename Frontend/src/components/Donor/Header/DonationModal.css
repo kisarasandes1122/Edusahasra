@@ -1,6 +1,4 @@
-/* --- EduDonationModal.css with unique class names --- */
-
-:root { /* Define variables if not already global */
+:root { 
   --edu-font-primary: 'Inter', sans-serif;
   --edu-color-text: #111827;
   --edu-color-text-secondary: #6B7280;
@@ -202,7 +200,6 @@
   box-sizing: border-box;
 }
 
-/* Style for Register button */
 .edu-modal-button.edu-register-button {
   background-color: var(--edu-color-primary);
   color: var(--edu-color-button-text);
@@ -216,14 +213,12 @@
   box-shadow: 0 4px 12px rgba(42, 111, 43, 0.2);
 }
 
-/* Style for Login button */
 .edu-modal-button.edu-login-button {
   background-color: var(--edu-color-login-button-bg);
   color: var(--edu-color-login-button-text);
   border: 1px solid var(--edu-color-login-button-border);
 }
 
-/* Hover style for Login button */
 .edu-modal-button.edu-login-button:hover {
   background-color: var(--edu-color-login-button-hover-bg);
   color: var(--edu-color-login-button-hover-text);
@@ -232,7 +227,6 @@
   box-shadow: 0 4px 12px rgba(42, 111, 43, 0.15);
 }
 
-/* Responsive Modal */
 @media (max-width: 640px) {
   .edu-modal-container {
     padding: 30px 24px;

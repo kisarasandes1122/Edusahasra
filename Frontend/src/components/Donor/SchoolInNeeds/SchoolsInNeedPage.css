@@ -44,7 +44,6 @@
   gap: 30px;
 }
 
-/* Enhanced Sidebar Styles */
 .sin-sidebar {
   flex: 0 0 320px;
   border-radius: 12px;
@@ -148,7 +147,6 @@
   padding: 0 15px 15px;
 }
 
-/* Enhanced Select Styles */
 .sin-select-container {
   position: relative;
 }
@@ -180,7 +178,6 @@
   pointer-events: none;
 }
 
-/* Enhanced Checkbox Styles */
 .sin-checkbox-group {
   display: flex;
   flex-direction: column;
@@ -252,7 +249,6 @@
   font-weight: 500;
 }
 
-/* Category Color Tags */
 .sin-category-tag {
   display: inline-block;
   width: 8px;
@@ -270,7 +266,6 @@
 .tag-sports { background-color: #ED64A6; }
 .tag-teaching { background-color: #ECC94B; }
 
-/* Reset Button */
 .sin-reset-button {
   width: 100%;
   padding: 14px;
@@ -303,7 +298,6 @@
   font-size: 14px;
 }
 
-/* Pill Filter Tags */
 .sin-active-filters {
   display: flex;
   flex-wrap: wrap;
@@ -338,12 +332,10 @@
   color: #E53E3E;
 }
 
-/* Pill colors for different filter types */
 .sin-pill-location { background-color: #E9F5FE; color: #3182CE; }
 .sin-pill-category { background-color: #F0FFF4; color: #38A169; }
 .sin-pill-sort { background-color: #FAF5FF; color: #805AD5; }
 
-/* School Grid */
 .sin-school-grid {
   flex: 1;
   display: grid;
@@ -497,7 +489,6 @@
   font-size: 16px;
 }
 
-/* Pagination styles */
 .sin-main-content {
   display: flex;
   flex-direction: column;
@@ -596,7 +587,6 @@
   margin-bottom: 20px;
 }
 
-/* Responsive styles */
 @media (max-width: 1024px) {
   .sin-school-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -632,7 +622,6 @@
   }
 }
 
-/* Loading animation */
 .sin-loading-spinner {
   display: flex;
   justify-content: center;
@@ -654,7 +643,6 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

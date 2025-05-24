@@ -130,14 +130,14 @@
 }
 
 .usr-profile-error-message {
-  background-color: #FEE2E2; /* Light red background */
-  color: #991B1B; /* Darker red text */
+  background-color: #FEE2E2; 
+  color: #991B1B; 
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 24px;
   font-size: 14px;
   font-weight: 500;
-  border: 1px solid #FCA5A5; /* Optional border */
+  border: 1px solid #FCA5A5; 
 }
 
 .usr-profile-form-section-title {
@@ -256,7 +256,7 @@
 }
 
 .usr-profile-btn-primary:disabled {
-  background-color: #cccccc; /* Grey out when disabled */
+  background-color: #cccccc; 
   cursor: not-allowed;
 }
 
@@ -270,8 +270,8 @@
 }
 
 .usr-profile-btn-secondary {
-  background-color: #E5E7EB; /* Light grey */
-  color: #374151; /* Dark grey text */
+  background-color: #E5E7EB; 
+  color: #374151; 
   padding: 10px 20px;
   border-radius: 8px;
   border: 1px solid #D1D5DB;
@@ -287,7 +287,7 @@
 }
 
 .usr-profile-btn-secondary:disabled {
-    background-color: #F3F4F6; /* Lighter grey when disabled */
+    background-color: #F3F4F6; 
     color: #9CA3AF;
     cursor: not-allowed;
 }
@@ -323,7 +323,6 @@
   margin-bottom: 16px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .usr-profile-content {
     flex-direction: column;

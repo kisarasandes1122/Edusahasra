@@ -16,8 +16,6 @@
   overflow-x: hidden;
 }
 
-
-
 .aboutUsBackground {
   background: #ffffff;
   width: 100%; 
@@ -28,7 +26,6 @@
   z-index: -1; 
 }
 
-/* Header Section */
 .aboutUsHeader {
   width: 100%;
   max-width: 1200px;
@@ -58,7 +55,6 @@
   margin: 0 auto;
 }
 
-/* Common Section Styles */
 .aboutUsSection {
   width: 100%;
   max-width: 1200px;
@@ -104,14 +100,12 @@
   object-fit: cover;
 }
 
-/* Mission Section Specific */
 .missionSection {
   background-color: #f9f9f9;
   border-radius: 30px;
   margin-top: 20px;
 }
 
-/* Problem Section Specific */
 .problemSection {
   flex-direction: row-reverse;
 }
@@ -143,7 +137,6 @@
   line-height: 1.4;
 }
 
-/* Solution Section Specific */
 .solutionSection {
   background-color: #f9f9f9;
   border-radius: 30px;
@@ -199,7 +192,6 @@
   font-size: 16px;
 }
 
-/* Team Section Specific */
 .teamSection {
   flex-direction: row-reverse;
 }
@@ -209,7 +201,6 @@
   height: 350px;
 }
 
-/* Impact Goals Section */
 .impactSection {
   flex-direction: column;
   text-align: center;
@@ -249,14 +240,11 @@
   font-size: 18px;
 }
 
-/* CTA Section */
 .ctaSection {
   width: 100%;
   max-width: 800px;
   text-align: center;
   padding: 60px 20px;
-  
-
 }
 
 .ctaTitle {
@@ -306,7 +294,6 @@
   background-color: #f0f0f0;
 }
 
-/* Responsive Styles */
 @media (max-width: 900px) {
   .aboutUsSection {
     flex-direction: column;

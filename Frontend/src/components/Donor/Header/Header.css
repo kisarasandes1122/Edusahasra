@@ -68,7 +68,6 @@
   position: relative;
 }
 
-/* Green underline effect on hover */
 .edu-nav-link::after {
   content: '';
   position: absolute;
@@ -88,7 +87,6 @@
   width: 100%;
 }
 
-/* Dropdown styles - modernized */
 .edu-dropdown-container {
   position: relative;
   display: flex;
@@ -134,7 +132,7 @@
   font-size: 18px;
   transition: transform 0.3s ease;
   color: #666;
-  margin-left: 4px; /* Add a little spacing */
+  margin-left: 4px;
 }
 
 .edu-dropdown-arrow.edu-rotated {
@@ -151,8 +149,8 @@
 .edu-dropdown-menu {
   position: absolute;
   top: calc(100% + 12px);
-  left: 0; /* Change from 50% to 0 */
-  transform: none; /* Remove the transform */
+  left: 0;
+  transform: none;
   background: white;
   border-radius: 14px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
@@ -162,10 +160,10 @@
   z-index: 5000;
   display: none;
   opacity: 0;
-  animation: eduFadeIn 0.2s ease forwards;
+  animation: eduFadeInDropdown 0.2s ease forwards; /* Renamed animation */
 }
 
-@keyframes eduFadeIn {
+@keyframes eduFadeInDropdown { /* Renamed animation */
   from {
     opacity: 0;
     transform: translateY(-8px);
@@ -242,14 +240,12 @@
   line-height: 1.4;
 }
 
-/* Header user section */
 .edu-header-user {
   display: flex;
   align-items: center;
   margin-left: 24px;
 }
 
-/* User dropdown styles */
 .edu-user-dropdown-container {
   position: relative;
 }
@@ -291,7 +287,7 @@
   padding: 8px;
   border: none;
   z-index: 5000;
-  animation: eduFadeIn 0.2s ease forwards;
+  animation: eduFadeInDropdown 0.2s ease forwards; /* Reused renamed animation */
 }
 
 .edu-user-dropdown-header {
@@ -349,12 +345,6 @@
   font-size: 16px;
 }
 
-.edu-dropdown-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
 .edu-dropdown-item:active, 
 .edu-user-dropdown-item:active {
   background-color: rgba(76, 175, 80, 0.2);
@@ -371,7 +361,6 @@
   color: #666;
 }
 
-/* Button styles */
 .edu-header-buttons {
   display: flex;
   gap: 12px;
@@ -415,7 +404,6 @@
   box-shadow: 0 4px 8px rgba(76, 175, 80, 0.1) !important;
 }
 
-/* Mobile menu controls */
 .edu-mobile-menu-toggle {
   display: none;
   background: none;
@@ -433,7 +421,6 @@
   color: #4CAF50;
 }
 
-/* Mobile menu visibility and desktop/mobile button toggling */
 .edu-mobile-only-buttons {
   display: none;
 }
@@ -485,7 +472,6 @@
     width: 44px;
   }
   
-  /* Improved mobile menu positioning and styling */
   .edu-nav {
     position: fixed;
     top: 0;
@@ -506,7 +492,6 @@
     left: 0;
   }
   
-  /* Improved navigation items spacing */
   .edu-nav-list {
     flex-direction: column;
     align-items: flex-start;
@@ -530,7 +515,6 @@
     bottom: 8px;
   }
   
-  /* Fix for dropdowns in mobile view */
   .edu-dropdown-container {
     width: 100%;
   }
@@ -560,7 +544,6 @@
     padding: 12px 0;
   }
   
-  /* Mobile only buttons */
   .edu-mobile-only-buttons {
     display: block;
     margin-top: 24px;
@@ -584,7 +567,6 @@
     display: none;
   }
   
-  /* Mobile menu overlay */
   .edu-mobile-menu-overlay {
     position: fixed;
     top: 0;
@@ -603,19 +585,16 @@
     visibility: visible;
   }
   
-  /* Prevent body scrolling when mobile menu is open */
   body.edu-menu-open {
     overflow: hidden;
   }
   
-  /* User dropdown positioning */
   .edu-user-dropdown-menu {
     width: 260px;
     right: -10px;
   }
   
-  /* Fade animation doesn't work well on mobile */
-  @keyframes eduFadeIn {
+  @keyframes eduFadeInMobile { /* Renamed animation for mobile */
     from {
       opacity: 0;
     }
@@ -663,7 +642,6 @@
   }
 }
 
-/* Very small screens */
 @media (max-width: 360px) {
   .edu-header-content {
     padding: 0 10px;

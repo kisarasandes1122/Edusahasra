@@ -1,4 +1,3 @@
-// frontend/src/components/Admin/AdminImpactStories/AdminImpactStoryDetail.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api, { getFullImageUrl } from '../../../api';
@@ -21,7 +20,6 @@ import {
 } from 'lucide-react';
 import './AdminImpactStoryDetail.css';
 
-// Helper function to format date/time
 const formatDate = (timestamp) => {
   if (!timestamp) return 'N/A';
   try {
@@ -129,9 +127,8 @@ const AdminImpactStoryDetail = () => {
   const handleImageError = (e) => {
     console.warn("Failed to load image:", e.target.src);
     e.target.style.display = 'none';
-    e.target.parentNode.style.backgroundColor = '#f8f9fa'; // Set background color
+    e.target.parentNode.style.backgroundColor = '#f8f9fa';
     
-    // Create fallback element
     const fallback = document.createElement('div');
     fallback.style.display = 'flex';
     fallback.style.alignItems = 'center';
@@ -144,7 +141,6 @@ const AdminImpactStoryDetail = () => {
     e.target.parentNode.appendChild(fallback);
   };
 
-  // Get status badge color class
   const getStatusClass = (status) => {
     switch(status) {
       case 'Approved': return 'status-approved';

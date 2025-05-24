@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { sendEmail } = require('./adminController'); 
 
 // --- Multer Configuration for Impact Story Images ---
 const impactStoryImageStorage = multer.diskStorage({
@@ -425,8 +426,7 @@ const getPublicImpactStories = asyncHandler(async (req, res) => {
               // Return the relative path for the first school image
               firstSchoolImage: firstSchoolImagePath,
           },
-          // Don't include full donation details in public list for privacy/simplicity
-          // Add donation ID if linking to it is needed: donationId: story.donation
+
       };
   });
 
@@ -448,7 +448,7 @@ const approveImpactStory = asyncHandler(async (req, res) => {
       throw new Error('Invalid Impact Story ID format.');
   }
 
-  const story = await ImpactStory.findById(storyId);
+  const story = await ImpactStory.findById(storyId).populate('school', 'schoolName schoolEmail'); // Populate school for email
 
   if (!story) {
     res.status(404);
@@ -467,6 +467,36 @@ const approveImpactStory = asyncHandler(async (req, res) => {
   story.adminRemarks = adminRemarks || 'Approved'; // Save admin remarks
 
   const updatedStory = await story.save();
+
+  // Send approval email to the school
+  if (story.school && story.school.schoolEmail) {
+    try {
+      const emailMessage = `Dear ${story.school.schoolName},
+
+We are pleased to inform you that your impact story titled "${updatedStory.title}" has been approved!
+
+It will now be visible to the public (if applicable based on platform settings).
+
+Admin Remarks: ${updatedStory.adminRemarks || 'N/A'}
+
+Thank you for sharing the positive impact of donations.
+
+Best regards,
+EduSahasra Team`;
+
+      await sendEmail({
+        email: story.school.schoolEmail,
+        subject: 'Your Impact Story has been Approved!',
+        message: emailMessage,
+      });
+    } catch (emailError) {
+      console.error(`Failed to send impact story approval email to ${story.school.schoolEmail}:`, emailError);
+      // Don't fail the request, but log the error
+    }
+  } else {
+      console.warn(`Could not send approval email for story ${updatedStory._id}: School email not found.`);
+  }
+
 
   res.json({
     message: 'Impact story approved successfully.',
@@ -501,7 +531,7 @@ const rejectImpactStory = asyncHandler(async (req, res) => {
         throw new Error('Admin remarks are required when rejecting an impact story.');
     }
 
-    const story = await ImpactStory.findById(storyId);
+    const story = await ImpactStory.findById(storyId).populate('school', 'schoolName schoolEmail'); // Populate for email
 
     if (!story) {
       res.status(404);
@@ -512,7 +542,7 @@ const rejectImpactStory = asyncHandler(async (req, res) => {
     // Let's allow rejecting 'Pending Approval' or 'Approved'
      if (story.status === 'Rejected') {
          res.status(400);
-         throw new Error('Impact story is already rejected.');
+         throw new Error('Impact story is already rejected.')   ;
      }
 
     story.status = 'Rejected';
@@ -521,6 +551,34 @@ const rejectImpactStory = asyncHandler(async (req, res) => {
     story.adminRemarks = adminRemarks.trim(); // Save rejection reason
 
     const updatedStory = await story.save();
+
+    // Send rejection email to the school
+    if (story.school && story.school.schoolEmail) {
+        try {
+          const emailMessage = `Dear ${story.school.schoolName},
+
+We are writing to inform you that your impact story titled "${updatedStory.title}" has been reviewed and, unfortunately, has not been approved at this time.
+
+Reason for Rejection: ${updatedStory.adminRemarks}
+
+Please review the feedback and consider resubmitting with the necessary changes if you wish.
+If you have any questions, please contact our support team.
+
+Best regards,
+EduSahasra Team`;
+
+          await sendEmail({
+            email: story.school.schoolEmail,
+            subject: 'Update on Your Impact Story Submission',
+            message: emailMessage,
+          });
+        } catch (emailError) {
+          console.error(`Failed to send impact story rejection email to ${story.school.schoolEmail}:`, emailError);
+        }
+    } else {
+          console.warn(`Could not send rejection email for story ${updatedStory._id}: School email not found.`);
+    }
+
 
      // Optional: Delete uploaded files on rejection? Let's keep them for record for now.
 

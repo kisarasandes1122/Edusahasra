@@ -6,41 +6,39 @@ import {
   RiTruckLine,
   RiHomeGearLine,
   RiCalendarLine,
-  RiRefreshLine // Added refresh icon
+  RiRefreshLine
 } from 'react-icons/ri';
 import './DonationManagement.css';
 import DonationDetails from './DonationDetails';
-import api from '../../../api'; // Import the configured Axios instance
-import Loader from '../../Common/LoadingSpinner/LoadingSpinner'; // Assuming you have a Loader component
-import Message from '../../Common/Message/Message'; // <-- Import the Message component
+import api from '../../../api';
+import Loader from '../../Common/LoadingSpinner/LoadingSpinner';
+import Message from '../../Common/Message/Message';
 
 
 const DonationManagement = () => {
-  const [donations, setDonations] = useState([]); // Use state for fetched data
+  const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [selectedDate, setSelectedDate] = useState(''); // Assuming YYYY-MM-DD format
+  const [selectedDate, setSelectedDate] = useState('');
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const entriesPerPage = 10; // Increased per page count for better admin view
+  const entriesPerPage = 10;
 
-  // State for detail view
   const [viewingDetails, setViewingDetails] = useState(false);
   const [selectedDonation, setSelectedDonation] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [errorDetails, setErrorDetails] = useState(null);
 
 
-  // --- Fetch Donations Hook ---
   const fetchDonations = async () => {
     setLoading(true);
-    setError(null); // Clear previous error
+    setError(null);
     try {
       const { data } = await api.get('/api/donations/admin-view');
-      setDonations(data); // Set fetched data to state
+      setDonations(data);
       setLoading(false);
     } catch (err) {
       console.error("Error fetching admin donations:", err);
@@ -49,35 +47,29 @@ const DonationManagement = () => {
     }
   };
 
-  // Fetch donations on component mount
   useEffect(() => {
     fetchDonations();
-  }, []); // Empty dependency array means run once on mount
+  }, []);
 
 
-  // --- Handle Filter and Pagination ---
   const handleFilterChange = (setter) => (e) => {
     setter(e.target.value);
-    setCurrentPage(1); // Reset to page 1 when filters change
+    setCurrentPage(1);
   };
 
-  // Filter donations using the fetched data (Client-side filtering)
   const filteredDonations = useMemo(() => {
-      // Ensure 'donations' is an array before filtering
     if (!Array.isArray(donations)) {
         console.warn("Donations data is not an array:", donations);
         return [];
     }
 
     return donations.filter(donation => {
-      // Add more robust checks for the structure before accessing nested properties
       if (!donation) {
-          return false; // Skip null/undefined donation objects
+          return false;
       }
 
       const searchLower = searchQuery.toLowerCase();
 
-      // Use optional chaining and nullish coalescing for safe access
       const donorName = donation.donor?.fullName ?? '';
       const schoolName = donation.school?.schoolName ?? '';
       const schoolCity = donation.school?.city ?? '';
@@ -86,54 +78,48 @@ const DonationManagement = () => {
                            schoolName.toLowerCase().includes(searchLower) ||
                            schoolCity.toLowerCase().includes(searchLower) ||
                            (Array.isArray(donation.itemsDonated) && donation.itemsDonated.some(item => {
-                               const categoryName = item?.categoryNameEnglish ?? ''; // Check item and name
+                               const categoryName = item?.categoryNameEnglish ?? '';
                                return categoryName.toLowerCase().includes(searchLower);
                            }));
 
-      const trackingStatus = donation.trackingStatus ?? ''; // Safely get trackingStatus
+      const trackingStatus = donation.trackingStatus ?? '';
       const matchesStatus = selectedStatus === 'all' ||
                             trackingStatus.toLowerCase() === selectedStatus.toLowerCase();
 
-      const deliveryMethod = donation.deliveryMethod ?? ''; // Safely get deliveryMethod
+      const deliveryMethod = donation.deliveryMethod ?? '';
       const matchesMethod = selectedDeliveryMethod === 'all' ||
                             deliveryMethod.toLowerCase() === selectedDeliveryMethod.toLowerCase();
 
-      // Date matching logic (assuming donation.createdAt is a valid date string/object)
       const matchesDate = !selectedDate ||
-                          (donation.createdAt && new Date(donation.createdAt).toISOString().split('T')[0] === selectedDate); // Check if createdAt exists
+                          (donation.createdAt && new Date(donation.createdAt).toISOString().split('T')[0] === selectedDate);
 
       return matchesSearch && matchesStatus && matchesMethod && matchesDate;
     });
-  }, [donations, searchQuery, selectedStatus, selectedDate, selectedDeliveryMethod]); // Re-run when these dependencies change
+  }, [donations, searchQuery, selectedStatus, selectedDate, selectedDeliveryMethod]);
 
 
-  // Calculate pagination info based on filtered data
   const totalEntries = filteredDonations.length;
   const totalPages = Math.ceil(totalEntries / entriesPerPage);
   const startEntryIndex = (currentPage - 1) * entriesPerPage;
   const endEntryIndex = Math.min(startEntryIndex + entriesPerPage, totalEntries);
-  const startEntryNumber = totalEntries === 0 ? 0 : startEntryIndex + 1; // Display 1-based index
+  const startEntryNumber = totalEntries === 0 ? 0 : startEntryIndex + 1;
   const endEntryNumber = totalEntries === 0 ? 0 : endEntryIndex;
 
-  // Get the donations for the current page
   const currentDonations = filteredDonations.slice(startEntryIndex, endEntryIndex);
 
 
-  // Handle page changes
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
 
-  // Generate page numbers for pagination control (simple range for now)
   const getPageNumbers = () => {
     const pages = [];
-    const maxPagesToShow = 5; // Limit number of page buttons shown
+    const maxPagesToShow = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
     let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
-    // Adjust startPage if we are at the end
     if (endPage - startPage + 1 < maxPagesToShow) {
         startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
@@ -145,12 +131,10 @@ const DonationManagement = () => {
   }
 
 
-  // --- Handle View Details ---
   const handleViewDetails = async (donationId) => {
     setLoadingDetails(true);
-    setErrorDetails(null); // Clear previous detail error
+    setErrorDetails(null);
     try {
-      // Fetch full donation details using the specific GET /api/donations/admin/:id route
       const { data } = await api.get(`/api/donations/admin/${donationId}`);
       setSelectedDonation(data);
       setViewingDetails(true);
@@ -159,51 +143,43 @@ const DonationManagement = () => {
       console.error("Error fetching donation details:", err);
       setErrorDetails(err.response?.data?.message || 'Failed to fetch donation details.');
       setLoadingDetails(false);
-       // Stay on list view and show error message if details fetch fails
        setViewingDetails(false);
        setSelectedDonation(null);
     }
   };
 
-  // Handle back button click from details view
-  // This function now receives the potentially updated donation data from DonationDetails
   const handleBackToList = (updatedDonation) => {
-     // If updatedDonation is provided (e.g., after a status update), update the list state
      if (updatedDonation && updatedDonation._id) {
          setDonations(prevDonations =>
              prevDonations.map(d => d._id === updatedDonation._id ? updatedDonation : d)
          );
-         // The useMemo hook will automatically re-filter and re-paginate based on the updated data
      }
     setViewingDetails(false);
     setSelectedDonation(null);
-    setErrorDetails(null); // Clear detail error on back
+    setErrorDetails(null);
   };
 
 
-  // Get status class based on status value
   const getStatusClass = (status) => {
-    switch(status) { // Use backend status values directly
-      case 'Received by School': return 'edusahasra-status-delivered'; // Map to 'Delivered' style
-      case 'Delivered': return 'edusahasra-status-delivered'; // Map to 'Delivered' style
+    switch(status) {
+      case 'Received by School': return 'edusahasra-status-delivered';
+      case 'Delivered': return 'edusahasra-status-delivered';
       case 'In Transit': return 'edusahasra-status-transit';
       case 'Pending Confirmation': return 'edusahasra-status-pending';
       case 'Preparing': return 'edusahasra-status-processing';
-      case 'Cancelled': return 'edusahasra-status-cancelled'; // Add a cancelled status style in CSS
+      case 'Cancelled': return 'edusahasra-status-cancelled';
       default: return '';
     }
   };
 
-   // Get delivery method icon
   const getDeliveryIcon = (method) => {
     if (method === 'Courier') {
       return <RiTruckLine className="edusahasra-delivery-icon" />;
-    } else { // Assuming 'Self-Delivery'
+    } else {
       return <RiHomeGearLine className="edusahasra-delivery-icon" />;
     }
   };
 
-  // Format date and time for display
   const formatDateTime = (dateString) => {
     if (!dateString) return '';
     try {
@@ -211,22 +187,18 @@ const DonationManagement = () => {
       return new Date(dateString).toLocaleDateString('en-US', options);
     } catch (e) {
       console.error("Error formatting date:", dateString, e);
-      return dateString; // Return original if formatting fails
+      return dateString;
     }
   };
 
 
-  // Render details view or list view based on state
   if (viewingDetails && selectedDonation) {
-    // Pass handleBackToList (which now accepts updated donation)
     return <DonationDetails donation={selectedDonation} onBack={handleBackToList} />;
   }
 
 
-    // Render loading state for detail fetch attempts (if they happen while list is visible)
     if (loadingDetails) {
-        // Could overlay a spinner or show a message
-         return <Loader />; // Or a smaller loader specific to details fetch
+         return <Loader />;
     }
 
 
@@ -234,8 +206,7 @@ const DonationManagement = () => {
     <div className="edusahasra-donation-management">
       <div className="edusahasra-donation-header">
         <h1>Donation Management</h1>
-         {/* Replace static text with dynamic user info if available */}
-        <div className="edusahasra-user-info">Admin User</div> {/* You might replace this with actual admin name */}
+        <div className="edusahasra-user-info">Admin User</div>
       </div>
 
       <div className="edusahasra-donation-container">
@@ -246,21 +217,14 @@ const DonationManagement = () => {
           </div>
 
           <div className="edusahasra-donation-actions">
-             {/* Refresh Button */}
             <button className="edusahasra-btn edusahasra-export-btn" onClick={fetchDonations} disabled={loading}>
                <RiRefreshLine className={`edusahasra-btn-icon ${loading ? 'edusahasra-spinner' : ''}`} />
                {loading ? 'Loading...' : 'Refresh'}
              </button>
-            <button className="edusahasra-btn edusahasra-export-btn">
-              <RiDownload2Line className="edusahasra-btn-icon" />
-              Export
-            </button>
           </div>
         </div>
 
-         {/* Display list error message */}
          {error && <Message variant="danger">{error}</Message>}
-         {/* Display detail fetch error message if it occurred */}
          {errorDetails && <Message variant="danger">{errorDetails}</Message>}
 
 
@@ -283,7 +247,6 @@ const DonationManagement = () => {
               onChange={handleFilterChange(setSelectedStatus)}
             >
               <option value="all">All Statuses</option>
-              {/* Use actual backend statuses */}
               <option value="Pending Confirmation">Pending Confirmation</option>
               <option value="Preparing">Preparing</option>
               <option value="In Transit">In Transit</option>
@@ -301,7 +264,6 @@ const DonationManagement = () => {
                 value={selectedDate}
                 onChange={handleFilterChange(setSelectedDate)}
               />
-              {/* <RiCalendarLine className="edusahasra-calendar-icon" /> Icon might overlap with date picker */}
             </div>
           </div>
 
@@ -312,7 +274,6 @@ const DonationManagement = () => {
               onChange={handleFilterChange(setSelectedDeliveryMethod)}
             >
               <option value="all">All Methods</option>
-              {/* Use actual backend delivery methods */}
               <option value="Courier">Courier Delivery</option>
               <option value="Self-Delivery">Self-Delivery</option>
             </select>
@@ -326,28 +287,28 @@ const DonationManagement = () => {
             <div className="edusahasra-header-cell edusahasra-items-column">ITEMS</div>
             <div className="edusahasra-header-cell edusahasra-method-column">DELIVERY METHOD</div>
             <div className="edusahasra-header-cell edusahasra-status-column">STATUS</div>
-            <div className="edusahasra-header-cell edusahasra-date-column">CREATED DATE</div> {/* Use createdAt */}
+            <div className="edusahasra-header-cell edusahasra-date-column">CREATED DATE</div>
             <div className="edusahasra-header-cell edusahasra-actions-column">ACTIONS</div>
           </div>
 
           {currentDonations.map(donation => (
-            <div key={donation._id} className="edusahasra-table-row"> {/* Use _id */}
+            <div key={donation._id} className="edusahasra-table-row">
               <div className="edusahasra-cell edusahasra-donor-column">
                 <div className="edusahasra-donor-info">
-                  <span className="edusahasra-donor-name">{donation.donor?.fullName || 'N/A'}</span> {/* Use ?. for safety */}
+                  <span className="edusahasra-donor-name">{donation.donor?.fullName || 'N/A'}</span>
                 </div>
               </div>
 
               <div className="edusahasra-cell edusahasra-school-column">
                 <div className="edusahasra-school-info">
-                  <div className="edusahasra-school-name">{donation.school?.schoolName || 'N/A'}</div> {/* Use ?. */}
-                  <div className="edusahasra-school-location">{`${donation.school?.city || ''}, ${donation.school?.district || ''}`}</div> {/* Use ?. */}
+                  <div className="edusahasra-school-name">{donation.school?.schoolName || 'N/A'}</div>
+                  <div className="edusahasra-school-location">{`${donation.school?.city || ''}, ${donation.school?.district || ''}`}</div>
                 </div>
               </div>
 
               <div className="edusahasra-cell edusahasra-items-column">
                 <div className="edusahasra-items-column-wrapper">
-                  {Array.isArray(donation.itemsDonated) 
+                  {Array.isArray(donation.itemsDonated)
                     ? donation.itemsDonated.map((item, index) => (
                         <span key={index} className="edusahasra-item-pill">
                           {item.categoryNameEnglish || 'N/A'}
@@ -361,25 +322,25 @@ const DonationManagement = () => {
               <div className="edusahasra-cell edusahasra-method-column">
                 <div className="edusahasra-delivery-method">
                   {getDeliveryIcon(donation.deliveryMethod)}
-                  <span>{donation.deliveryMethod || 'N/A'}</span> {/* Safely access method */}
+                  <span>{donation.deliveryMethod || 'N/A'}</span>
                 </div>
               </div>
 
               <div className="edusahasra-cell edusahasra-status-column">
-                <span className={`edusahasra-status-badge ${getStatusClass(donation.trackingStatus)}`}> {/* Use trackingStatus */}
-                  {donation.trackingStatus || 'N/A'} {/* Safely access status */}
+                <span className={`edusahasra-status-badge ${getStatusClass(donation.trackingStatus)}`}>
+                  {donation.trackingStatus || 'N/A'}
                 </span>
               </div>
 
               <div className="edusahasra-cell edusahasra-date-column">
-                {formatDateTime(donation.createdAt)} {/* Use createdAt */}
+                {formatDateTime(donation.createdAt)}
               </div>
 
               <div className="edusahasra-cell edusahasra-actions-column">
                 <button
                   className="edusahasra-btn edusahasra-details-btn"
-                  onClick={() => handleViewDetails(donation._id)} // Pass _id
-                  disabled={loadingDetails} // Disable while fetching details
+                  onClick={() => handleViewDetails(donation._id)}
+                  disabled={loadingDetails}
                 >
                    {loadingDetails && selectedDonation?._id === donation._id ? 'Loading...' : 'View'}
                 </button>

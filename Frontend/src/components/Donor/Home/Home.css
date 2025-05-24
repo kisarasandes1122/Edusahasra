@@ -1,8 +1,5 @@
-/* Home.css */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-/* Base styles */
 * {
   margin: 0;
   padding: 0;
@@ -15,7 +12,6 @@
   overflow-x: hidden;
 }
 
-/* Common section styles */
 .home__section-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -39,7 +35,6 @@
   line-height: 1.6;
 }
 
-/* Hero Section with Slideshow */
 .home__hero {
   position: relative;
   min-height: 600px;
@@ -144,7 +139,6 @@
   font-weight: 600;
   font-size: 16px;
   text-decoration: none;
-  /* transition: all 0.3s ease; /* REMOVED - Handled by Framer Motion */
   display: inline-block;
 }
 
@@ -155,9 +149,6 @@
 }
 
 .home__button--primary:hover {
-  /* background-color: #69b119; /* Can be handled by Framer Motion or kept if preferred */
-  /* transform: translateY(-3px); /* REMOVED - Handled by Framer Motion */
-  /* box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Can be handled by Framer Motion or kept */
 }
 
 .home__button--secondary {
@@ -167,11 +158,8 @@
 }
 
 .home__button--secondary:hover {
-  /* background-color: rgba(255, 255, 255, 0.2); /* Can be handled by Framer Motion or kept */
-  /* transform: translateY(-3px); /* REMOVED - Handled by Framer Motion */
 }
 
-/* Schools Donations Section */
 .home__schools {
   background-color: #f8faf9;
   padding: 4rem 0;
@@ -281,13 +269,10 @@
   text-decoration: none;
   display: block;
   cursor: pointer;
-  /* transition: all 0.2s ease; /* REMOVED - Handled by Framer Motion */
-  margin-top: auto; /* IMPORTANT: Keep for layout */
+  margin-top: auto;
 }
 
 .home__donate-button:hover {
-  /* background-color: #3d9c40; /* Handled by Framer Motion */
-  /* transform: translateY(-2px); /* Handled by Framer Motion */
 }
 
 .home__view-all-container {
@@ -305,16 +290,11 @@
   border-radius: 24px;
   font-weight: 600;
   text-decoration: none;
-  /* transition: all 0.3s ease; /* REMOVED - Handled by Framer Motion */
 }
 
 .home__view-all-button:hover {
-  /* background-color: #043f2e; /* Handled by Framer Motion */
-  /* color: white; /* Handled by Framer Motion */
-  /* gap: 12px; /* Handled by Framer Motion for hover */
 }
 
-/* How It Works Section */
 .home__how-works {
   background-color: white;
   padding: 2rem 0;
@@ -332,12 +312,9 @@
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   text-align: center;
-  /* transition: transform 0.3s ease, box-shadow 0.3s ease; /* REMOVED - Handled by Framer Motion */
 }
 
 .home__how-works-card:hover {
-  /* transform: translateY(-5px); /* Handled by Framer Motion */
-  /* box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Handled by Framer Motion */
 }
 
 .home__how-works-icon-container {
@@ -370,7 +347,6 @@
   line-height: 1.5;
 }
 
-/* Impact Statistics Section */
 .home__impact {
   position: relative;
   background-color: #043f2e;
@@ -411,11 +387,9 @@
   padding: 24px;
   flex: 1;
   text-align: center;
-  /* transition: transform 0.3s ease; /* REMOVED - Handled by Framer Motion */
 }
 
 .home__impact-stat-card:hover {
-  /* transform: translateY(-5px); /* Handled by Framer Motion */
 }
 
 .home__impact-icon-container {
@@ -440,7 +414,6 @@
   font-weight: 500;
 }
 
-/* Testimonials Section */
 .home__testimonials {
   background-color: white;
   padding: 2rem 0;
@@ -458,11 +431,9 @@
   padding: 32px;
   position: relative;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  /* transition: transform 0.3s ease; /* REMOVED - Handled by Framer Motion */
 }
 
 .home__testimonial-card:hover {
-  /* transform: translateY(-5px); /* Handled by Framer Motion */
 }
 
 .home__quote-icon {
@@ -501,7 +472,6 @@
   color: #666;
 }
 
-/* Get Involved CTA Section */
 .home__get-involved {
   background: linear-gradient(to right, #78C51C, #2A6F2B);
   color: white;
@@ -541,13 +511,10 @@
   font-weight: 600;
   font-size: 16px;
   text-decoration: none;
-  /* transition: all 0.3s ease; /* REMOVED - Handled by Framer Motion */
   display: inline-block;
 }
 
 .home__button--get-involved-primary:hover {
-  /* background-color: #f0f0f0; /* Handled by Framer Motion */
-  /* transform: translateY(-2px); /* Handled by Framer Motion */
 }
 
 .home__button--get-involved-secondary {
@@ -558,19 +525,14 @@
   font-weight: 600;
   font-size: 16px;
   text-decoration: none;
-  /* transition: all 0.3s ease; /* REMOVED - Handled by Framer Motion */
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
 .home__button--get-involved-secondary:hover {
-  /* background-color: rgba(255, 255, 255, 0.3); /* Handled by Framer Motion */
-  /* transform: translateY(-2px); /* Handled by Framer Motion */
-  /* gap: 12px; /* Handled by Framer Motion for hover */
 }
 
-/* Responsive styles */
 @media screen and (max-width: 1024px) {
   .home__how-works-grid {
     grid-template-columns: repeat(2, 1fr);

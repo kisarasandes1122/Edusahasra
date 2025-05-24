@@ -7,7 +7,6 @@ import { IoCalendarOutline, IoLeafOutline } from 'react-icons/io5';
 import { FiTool, FiHeart, FiChevronDown, FiMenu, FiX, FiChevronRight } from 'react-icons/fi';
 import { IoChatbox, IoSchoolOutline } from "react-icons/io5";
 
-// --- Updated DonationModal Component with unique class names ---
 const DonationModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
 
@@ -84,7 +83,6 @@ const DonationModal = ({ isOpen, onClose }) => {
   );
 };
 
-// --- Updated RequestModal Component with unique class names ---
 const RequestModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
 
@@ -161,7 +159,6 @@ const RequestModal = ({ isOpen, onClose }) => {
   );
 };
 
-// --- Updated Header Component with unique class names ---
 const Header = () => {
   const [isDonorsDropdownOpen, setIsDonorsDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -176,7 +173,6 @@ const Header = () => {
   const mobileMenuRef = useRef(null);
   const navigate = useNavigate();
 
-  // Toggle body class when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.classList.add('edu-menu-open');
@@ -189,7 +185,6 @@ const Header = () => {
     };
   }, [mobileMenuOpen]);
 
-  // Check login status on component mount
   useEffect(() => {
     const checkAuthStatus = () => {
       const storedUserInfo = localStorage.getItem('donorInfo');
@@ -224,10 +219,8 @@ const Header = () => {
     };
   }, []);
 
-  // Handle clicks outside dropdowns and mobile menu
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Handle dropdowns
       if (donorsDropdownRef.current && !donorsDropdownRef.current.contains(event.target)) {
         setIsDonorsDropdownOpen(false);
       }
@@ -235,8 +228,6 @@ const Header = () => {
         setIsUserDropdownOpen(false);
       }
       
-      // Handle mobile menu - close menu when clicking outside
-      // But don't close it if we click the menu toggle button
       if (mobileMenuOpen && 
           mobileMenuRef.current && 
           !mobileMenuRef.current.contains(event.target) &&
@@ -247,7 +238,6 @@ const Header = () => {
 
     document.addEventListener('mousedown', handleClickOutside);
     
-    // Close mobile menu when window is resized beyond mobile breakpoint
     const handleResize = () => {
       if (window.innerWidth > 768 && mobileMenuOpen) {
         setMobileMenuOpen(false);
@@ -281,12 +271,12 @@ const Header = () => {
 
   const handleStartDonate = () => {
     setIsDonationModalOpen(true);
-    setMobileMenuOpen(false); // Close mobile menu if open
+    setMobileMenuOpen(false);
   };
 
   const handleRequestDonation = () => {
     setIsRequestModalOpen(true);
-    setMobileMenuOpen(false); // Close mobile menu if open
+    setMobileMenuOpen(false);
   };
 
   const handleLogout = () => {
@@ -294,12 +284,11 @@ const Header = () => {
     setCurrentUser(null);
     setIsLoggedIn(false);
     setIsUserDropdownOpen(false);
-    setMobileMenuOpen(false); // Close mobile menu if open
+    setMobileMenuOpen(false);
     navigate('/');
     window.location.reload();
   };
 
-  // Close mobile menu when clicking nav links
   const handleNavLinkClick = () => {
     setMobileMenuOpen(false);
   };
@@ -313,7 +302,6 @@ const Header = () => {
               <a href="/"><img src={logo} alt="EduSahasra Logo" /></a>
             </div>
 
-            {/* Mobile menu toggle button */}
             <button 
               className="edu-mobile-menu-toggle" 
               onClick={toggleMobileMenu}
@@ -323,10 +311,8 @@ const Header = () => {
             </button>
           </div>
 
-          {/* Mobile menu overlay - improves UX */}
           <div className={`edu-mobile-menu-overlay ${mobileMenuOpen ? 'edu-active' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
 
-          {/* Main navigation */}
           <nav className={`edu-nav ${mobileMenuOpen ? 'edu-open' : ''}`} ref={mobileMenuRef}>
             <ul className="edu-nav-list">
               <li className="edu-nav-item"><a className="edu-nav-link" href="/" onClick={handleNavLinkClick}>Home</a></li>
@@ -361,7 +347,6 @@ const Header = () => {
               <li className="edu-nav-item"><a className="edu-nav-link" href="/about-us" onClick={handleNavLinkClick}>About</a></li>
               <li className="edu-nav-item"><a className="edu-nav-link" href="/impact-stories" onClick={handleNavLinkClick}>Impact</a></li>
               
-              {/* Mobile-only buttons (visible in mobile menu) */}
               {!isLoggedIn && (
                 <li className="edu-mobile-only-buttons">
                   <div className="edu-header-buttons">
@@ -426,7 +411,6 @@ const Header = () => {
                 )}
               </div>
             ) : (
-              // Show these buttons only on desktop
               <div className="edu-header-buttons edu-desktop-only-buttons">
                 <button className="edu-btn edu-btn-secondary" onClick={handleStartDonate}>
                   <FiHeart style={{ marginRight: '6px' }} /> Start Donate
@@ -440,7 +424,6 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Updated Modals */}
       <DonationModal
         isOpen={isDonationModalOpen}
         onClose={() => setIsDonationModalOpen(false)}

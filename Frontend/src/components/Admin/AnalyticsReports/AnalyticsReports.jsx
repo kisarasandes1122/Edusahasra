@@ -16,7 +16,7 @@ const AnalyticsReports = () => {
   const [activeTab, setActiveTab] = useState('donation');
   const [timeRange, setTimeRange] = useState('month');
   const [isLoading, setIsLoading] = useState(true);
-  const [reportData, setReportData] = useState({ // Initialize with null or empty objects
+  const [reportData, setReportData] = useState({ // Initialize with null for each tab's data
     donation: null,
     users: null,
     resources: null,
@@ -25,100 +25,85 @@ const AnalyticsReports = () => {
     verification: null,
   });
   const [error, setError] = useState(null); // State for error handling
-  const [isExporting, setIsExporting] = useState(false); // State for export loading
+  const [isExporting, setIsExporting] = useState(false); // State for export loading indicator
 
   // Fetch data function - memoized with useCallback
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     setError(null); // Clear previous errors
-    console.log(`[AnalyticsReports] Fetching data for tab: ${activeTab}, time range: ${timeRange}`);
 
     try {
-        // CORRECTED endpoint path to include /api prefix based on server.js routing
+        // API endpoint structure: /api/admin/analytics/:reportType
         // api.js baseURL is http://localhost:5000
-        // Backend route is /api/admin/analytics/:reportType
-        const endpoint = `/api/admin/analytics/${activeTab}`; // <--- CORRECTED PATH
-
-        console.debug(`[AnalyticsReports] Making API GET request to: ${endpoint} with params: { timeRange: ${timeRange} }`);
+        const endpoint = `/api/admin/analytics/${activeTab}`;
 
         const response = await api.get(endpoint, {
             params: { timeRange: timeRange } // Pass timeRange as a query parameter
         });
 
-        console.debug(`[AnalyticsReports] Received data for ${activeTab}:`, response.data);
-
         // Update state based on the active tab
         setReportData(prevData => ({
             ...prevData,
-            [activeTab]: response.data // Store data under the tab key
+            [activeTab]: response.data // Store fetched data under the active tab's key
         }));
 
     } catch (err) {
         console.error(`[AnalyticsReports] Error fetching data for ${activeTab}:`, err.response?.data || err.message);
-         // Check if it's a 404 error for report type not found
+         // Check if it's a 404 error (e.g. report type not found or not implemented on backend)
         if (err.response && err.response.status === 404) {
              setError(`Report type "${activeTab}" not found or not implemented.`);
         } else {
              setError(`Failed to fetch ${activeTab} data: ${err.response?.data?.message || err.message}`);
         }
-         setReportData(prevData => ({ // Clear data for the failed tab
+         setReportData(prevData => ({ // Clear data for the tab that failed to load
              ...prevData,
              [activeTab]: null
          }));
     } finally {
-        console.debug(`[AnalyticsReports] Finished fetching data for ${activeTab}.`);
         setIsLoading(false);
     }
   }, [activeTab, timeRange]); // Dependencies for useCallback
 
   // Effect to fetch data whenever the active tab or time range changes
   useEffect(() => {
-    console.log(`[AnalyticsReports] useEffect triggered for ${activeTab}/${timeRange}.`);
     fetchData();
-  }, [fetchData]); // fetchData is the dependency
+  }, [fetchData]); // fetchData is memoized and includes activeTab and timeRange as dependencies
 
-   // Effect to clear report data when switching tabs to show loading state properly
+   // Effect to clear report data for the new tab when switching tabs.
+   // This ensures the loading state is shown correctly rather than stale data.
    useEffect(() => {
-        // Clear data for the new tab when the tab changes, before the fetch starts
        setReportData(prevData => ({
            ...prevData,
-           [activeTab]: null // Clear previous data for the new tab
+           [activeTab]: null // Clear previous data for the newly selected tab
        }));
-       setError(null); // Also clear error
+       setError(null); // Also clear any previous errors
    }, [activeTab]);
 
   // Function to handle exporting reports
   const handleExportReport = async (format) => {
-    setIsExporting(true); // Start exporting state
-    console.log(`[AnalyticsReports] Exporting report for ${activeTab} in ${format} format (Time Range: ${timeRange})`);
+    setIsExporting(true);
     try {
-        // CORRECTED export endpoint path to include /api prefix based on server.js routing
-        // api.js baseURL is http://localhost:5000
-        // Backend route is /api/admin/analytics/export/:reportType/:format
-        const exportEndpoint = `/api/admin/analytics/export/${activeTab}/${format}`; // <--- CORRECTED PATH
-
-        console.debug(`[AnalyticsReports] Making API GET request to: ${exportEndpoint} with params: { timeRange: ${timeRange} }, responseType: 'blob'`);
+        // API export endpoint structure: /api/admin/analytics/export/:reportType/:format
+        const exportEndpoint = `/api/admin/analytics/export/${activeTab}/${format}`;
 
         const response = await api.get(exportEndpoint, {
-          responseType: 'blob', // Important for file downloads
-          timeout: 60000, // Increased timeout for potentially large reports
+          responseType: 'blob', // Important for handling file downloads
+          timeout: 60000, // Increased timeout for potentially large report generation
           params: { timeRange: timeRange } // Pass timeRange as a query parameter
         });
-
-        console.debug(`[AnalyticsReports] Received blob response for export.`);
 
         // Create a blob URL and trigger download
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        // Suggest a filename. Backend might also provide one via Content-Disposition header
+
+        // Suggest a filename. Backend might provide one via Content-Disposition header.
         const contentDisposition = response.headers['content-disposition'];
-         let filename = `${activeTab}_report.${format}`;
+         let filename = `${activeTab}_report.${format}`; // Default filename
          if (contentDisposition) {
               const filenameMatch = contentDisposition.match(/filename="(.+)"/);
               if (filenameMatch && filenameMatch[1]) {
-                  // Clean up filename to remove potential quotes or extra chars
-                  filename = filenameMatch[1].replace(/["']/g, '');
+                  filename = filenameMatch[1].replace(/["']/g, ''); // Clean up potential quotes
               } else {
                   console.warn('[AnalyticsReports] Content-Disposition header found but filename could not be parsed:', contentDisposition);
               }
@@ -126,63 +111,56 @@ const AnalyticsReports = () => {
              console.warn('[AnalyticsReports] No Content-Disposition header received. Using default filename:', filename);
          }
 
-        console.debug(`[AnalyticsReports] Setting download filename: ${filename}`);
         link.setAttribute('download', filename);
 
         // Append, click, and remove the link to trigger the download
         document.body.appendChild(link);
         link.click();
-        // Using a timeout to ensure the link is clicked before removal
+
+        // Using a timeout to ensure the download link is processed before removal and URL revocation
         setTimeout(() => {
              document.body.removeChild(link);
-            // Clean up the blob URL
-            window.URL.revokeObjectURL(url);
-             console.debug('[AnalyticsReports] Revoked blob URL and removed link.');
+             window.URL.revokeObjectURL(url); // Clean up the blob URL
         }, 100);
-
-         console.log(`[AnalyticsReports] Export initiated successfully for ${activeTab}.${format}`);
 
     } catch (err) {
         console.error(`[AnalyticsReports] Error exporting report for ${activeTab} in ${format}:`, err.response?.data || err.message);
         let errorMessage = 'Failed to export report.';
 
-         // Attempt to read error message from blob if available
+         // Attempt to read error message from blob if the error response is a blob
          if (err.response?.data instanceof Blob) {
              const reader = new FileReader();
              reader.onload = function() {
                  try {
                      const errorJson = JSON.parse(reader.result);
-                     errorMessage = errorJson.message || 'Unknown error from server';
-                     alert(`Export Error: ${errorMessage}`);
+                     errorMessage = errorJson.message || 'Unknown error from server during export';
                  } catch (e) {
-                      console.warn('[AnalyticsReports] Could not parse error blob as JSON:', e);
-                      errorMessage = `Failed to export report: ${err.message} (See console for details)`;
-                       alert(`Export Error: ${errorMessage}`);
+                      console.warn('[AnalyticsReports] Could not parse error blob as JSON during export:', e);
+                      errorMessage = `Failed to export report: ${err.message} (Error response was a non-JSON blob).`;
                  }
+                 alert(`Export Error: ${errorMessage}`);
              };
              reader.onerror = function() {
-                  console.warn('[AnalyticsReports] Error reading error blob:', reader.error);
-                   errorMessage = `Failed to export report: ${err.message} (See console for details)`;
-                   alert(`Export Error: ${errorMessage}`);
+                  console.warn('[AnalyticsReports] Error reading error blob during export:', reader.error);
+                  errorMessage = `Failed to export report: ${err.message} (Could not read error blob).`;
+                  alert(`Export Error: ${errorMessage}`);
              };
-             // Read the blob content as text (assuming it's a text error message like JSON)
-             reader.readAsText(err.response.data);
+             reader.readAsText(err.response.data); // Read blob as text (assuming JSON error message)
          } else {
              errorMessage = err.response?.data?.message || err.message;
-              alert(`Export Error: ${errorMessage}`);
+             alert(`Export Error: ${errorMessage}`);
          }
-
     } finally {
-         setIsExporting(false); // End exporting state
-         console.debug('[AnalyticsReports] Finished exporting.');
+         setIsExporting(false);
     }
   };
 
-  // Check if data is available for the current tab
+  // Helper function to check if there's meaningful data for the current active tab
   const checkHasData = () => {
     const data = reportData[activeTab];
-    if (!data) return false;
+    if (!data) return false; // No data object for the tab
     
+    // Check for specific data points within each tab's data structure
     switch (activeTab) {
       case 'donation':
         return (data.monthlyDonations?.length > 0 || data.resourceCategories?.length > 0 || data.regionData?.length > 0 || (data.donationStats && Object.values(data.donationStats).some(val => val !== null && val !== undefined)));
@@ -203,7 +181,7 @@ const AnalyticsReports = () => {
 
   const hasData = checkHasData();
 
-   // Render data based on the currently active tab
+   // Renders the content (charts, tables, stats) based on the currently active tab
   const renderTabContent = () => {
     const data = reportData[activeTab];
 
@@ -215,18 +193,19 @@ const AnalyticsReports = () => {
          return <div className="loading-indicator error">Error: {error}</div>;
      }
 
+     // Check if there's data to display after loading and no errors
      if (!hasData) {
          return <div className="loading-indicator">No data available for this report type or time range.</div>;
      }
 
-    // Destructure expected data based on active tab and render content
+    // Destructure expected data based on active tab and render corresponding visualizations
     switch (activeTab) {
       case 'donation':
         const { monthlyDonations, resourceCategories, regionData, donationStats } = data;
         return (
           <div className="analytics-content">
             {/* Stats Summary */}
-            {donationStats && ( // Render stats only if donationStats object exists
+            {donationStats && ( // Render stats only if donationStats object exists and has values
                 <div className="stats-summary">
                     <div className="stat-card"><h4>Total Donations</h4><p className="stat-value">{donationStats.totalDonations ?? 0}</p></div>
                     <div className="stat-card"><h4>Avg. Items Per Donation</h4><p className="stat-value">{donationStats.avgDonationValue ?? 'N/A'}</p></div>
@@ -239,13 +218,12 @@ const AnalyticsReports = () => {
                 {monthlyDonations?.length > 0 ? (
                    <div className="chart-container">
                      <h3>Monthly Donations</h3>
-                     {/* Centering div for Recharts */}
                      <div>
                         <ResponsiveContainer width="100%" height={300}>
                           <LineChart data={monthlyDonations} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="month" />
-                            <YAxis allowDecimals={false} /> {/* Quantities are usually whole numbers */}
+                            <YAxis allowDecimals={false} /> {/* Quantities are generally whole numbers */}
                             <Tooltip />
                             <Legend />
                             <Line type="monotone" dataKey="total" stroke="#8884d8" activeDot={{ r: 8 }} />
@@ -258,7 +236,6 @@ const AnalyticsReports = () => {
                {resourceCategories?.length > 0 ? (
                  <div className="chart-container">
                    <h3>Donation Categories (Total Quantity)</h3>
-                   {/* Centering div for Recharts */}
                     <div>
                         <ResponsiveContainer width="100%" height={300}>
                           <PieChart>
@@ -267,18 +244,19 @@ const AnalyticsReports = () => {
                               cx="50%"
                               cy="50%"
                               labelLine={false}
-                              // Show quantity and percentage
+                              // Label displays name, value, and percentage
                               label={({ name, percent, value }) => `${name}: ${value ?? 0} (${((percent || 0) * 100).toFixed(0)}%)`}
                               outerRadius={100}
                               fill="#8884d8"
                               dataKey="value"
-                              nameKey="name" // Specify name key
+                              nameKey="name" // Key for the name of the pie slice
                             >
                               {resourceCategories.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                               ))}
                             </Pie>
-                            <Tooltip formatter={(value, name, props) => [`${value ?? 0} (${((props?.payload?.percent || 0) * 100).toFixed(0)}%)`, name]} /> {/* Tooltip formatter with safety */}
+                            {/* Tooltip formatter includes value and percentage, with safety checks */}
+                            <Tooltip formatter={(value, name, props) => [`${value ?? 0} (${((props?.payload?.percent || 0) * 100).toFixed(0)}%)`, name]} />
                             <Legend />
                           </PieChart>
                         </ResponsiveContainer>
@@ -291,7 +269,6 @@ const AnalyticsReports = () => {
              <div className="chart-row">
                <div className="chart-container full-width">
                  <h3>Regional Donation Analysis (Donations Count)</h3>
-                 {/* Centering div for Recharts */}
                   <div>
                     <ResponsiveContainer width="100%" height={300}>
                       <BarChart data={regionData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -301,13 +278,13 @@ const AnalyticsReports = () => {
                         <Tooltip />
                         <Legend />
                          <Bar dataKey="donations" fill="#82ca9d" name="Donations" />
-                         <Bar dataKey="requests" fill="#8884d8" name="Requests (Mock)" /> {/* Keep mock indicator as backend provides mock */}
+                         <Bar dataKey="requests" fill="#8884d8" name="Requests (Mock)" /> {/* Mock data indicator is kept as backend provides this as mock */}
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
                </div>
              </div>
-              ) : null /* Hide if no regional data */}
+              ) : null}
            </div>
          );
 
@@ -316,11 +293,11 @@ const AnalyticsReports = () => {
          return (
            <div className="analytics-content">
               {/* Stats Summary */}
-             {userStats && ( // Render stats only if userStats object exists
+             {userStats && (
                  <div className="stats-summary">
                      <div className="stat-card"><h4>Total Schools</h4><p className="stat-value">{userStats.totalSchools ?? 0}</p></div>
                      <div className="stat-card"><h4>Total Donors</h4><p className="stat-value">{userStats.totalDonors ?? 0}</p></div>
-                     {/* Keep mock indicators as backend provides mock */}
+                     {/* Mock data indicators are kept as backend provides these as mock */}
                      <div className="stat-card"><h4>Avg. Session Duration (Mock)</h4><p className="stat-value">{userStats.avgSessionDuration ?? 'N/A'}</p></div>
                      <div className="stat-card"><h4>Returning Users (Mock)</h4><p className="stat-value">{userStats.returningUsersRate ?? 'N/A'}</p></div>
                  </div>
@@ -329,7 +306,6 @@ const AnalyticsReports = () => {
                {userGrowth?.length > 0 ? (
                  <div className="chart-container">
                    <h3>Cumulative User Growth</h3>
-                   {/* Centering div for Recharts */}
                    <div>
                       <ResponsiveContainer width="100%" height={300}>
                         <AreaChart data={userGrowth} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -348,8 +324,7 @@ const AnalyticsReports = () => {
 
                {userRetention?.length > 0 ? (
                  <div className="chart-container">
-                   <h3>User Retention Rate (%) (Mock)</h3> {/* Keep mock indicator */}
-                   {/* Centering div for Recharts */}
+                   <h3>User Retention Rate (%) (Mock)</h3> {/* Mock data indicator */}
                    <div>
                      <ResponsiveContainer width="100%" height={300}>
                        <LineChart data={userRetention} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -363,7 +338,7 @@ const AnalyticsReports = () => {
                      </ResponsiveContainer>
                    </div>
                  </div>
-               ) : null /* Hide if no retention data (mock) */}
+               ) : null}
              </div>
            </div>
          );
@@ -374,16 +349,15 @@ const AnalyticsReports = () => {
            <div className="analytics-content">
              {fulfillmentRate?.length > 0 ? (
                <div className="chart-row">
-                 <div className="chart-container full-width"> {/* Use full-width if only one chart row */}
+                 <div className="chart-container full-width"> {/* Uses full-width class if it's the only chart in the row or needs more space */}
                    <h3>Resource Fulfillment Rate (%) by Category</h3>
-                   {/* Centering div for Recharts */}
                     <div>
                       <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={fulfillmentRate} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="category" />
                           <YAxis domain={[0, 100]} />
-                          <Tooltip formatter={(value, name) => [`${value}%`, name]} /> {/* Format tooltip for percentages */}
+                          <Tooltip formatter={(value, name) => [`${value}%`, name]} /> {/* Format tooltip to show percentages */}
                           <Legend />
                           <Bar dataKey="fulfilled" stackId="a" fill="#82ca9d" name="Fulfilled %" />
                           <Bar dataKey="unfulfilled" stackId="a" fill="#ff8042" name="Unfulfilled %" />
@@ -395,10 +369,9 @@ const AnalyticsReports = () => {
              ) : <div className="chart-container full-width"><h3>Resource Fulfillment Rate (%) by Category</h3><p className="loading-indicator">No resource fulfillment data available.</p></div>}
 
               {regionalCoverage?.length > 0 ? (
-              <div className="chart-row"> {/* New row for regional coverage if needed */}
-                <div className="chart-container"> {/* Adjust size based on layout */}
-                  <h3>Regional Coverage (%) (Mock)</h3> {/* Keep mock indicator */}
-                  {/* Centering div for Recharts */}
+              <div className="chart-row">
+                <div className="chart-container">
+                  <h3>Regional Coverage (%) (Mock)</h3> {/* Mock data indicator */}
                    <div>
                      <ResponsiveContainer width="100%" height={300}>
                        <BarChart data={regionalCoverage} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -411,9 +384,8 @@ const AnalyticsReports = () => {
                      </ResponsiveContainer>
                    </div>
                  </div>
-                 {/* Add second chart here if needed in this row */}
               </div>
-               ) : null /* Hide if no regional coverage data (mock) */}
+               ) : null}
 
             <div className="resource-map-container">
               <h3>Resource Distribution Map</h3>
@@ -433,7 +405,6 @@ const AnalyticsReports = () => {
                {studentsBenefited?.length > 0 ? (
                  <div className="chart-container">
                    <h3>Confirmed Donations Received by Schools (Proxy for Students Benefited)</h3>
-                   {/* Centering div for Recharts */}
                    <div>
                     <ResponsiveContainer width="100%" height={300}>
                       <AreaChart data={studentsBenefited} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -450,8 +421,7 @@ const AnalyticsReports = () => {
 
                {donationImpact?.length > 0 ? (
                  <div className="chart-container">
-                   <h3>Donation Impact Areas (Mock)</h3> {/* Keep mock indicator */}
-                   {/* Centering div for Recharts */}
+                   <h3>Donation Impact Areas (Mock)</h3> {/* Mock data indicator */}
                    <div>
                      <ResponsiveContainer width="100%" height={300}>
                        <BarChart data={donationImpact} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -464,11 +434,11 @@ const AnalyticsReports = () => {
                      </ResponsiveContainer>
                    </div>
                  </div>
-               ) : null /* Hide if no impact area data (mock) */}
+               ) : null}
              </div>
 
              <div className="testimonials-section">
-                <h3>School Testimonials (Mock)</h3> {/* Indicate mock */}
+                <h3>School Testimonials (Mock)</h3> {/* Mock data indicator */}
                 <div className="testimonials-container">
                   <div className="testimonial-card">
                     <p>"The textbooks donated through Edusahasra have significantly improved our students' learning experience. We are grateful for this platform."</p>
@@ -495,14 +465,13 @@ const AnalyticsReports = () => {
                {deliveryTime?.length > 0 ? (
                  <div className="chart-container">
                    <h3>Average Delivery Time (Days) for Confirmed Donations</h3>
-                   {/* Centering div for Recharts */}
                    <div>
                     <ResponsiveContainer width="100%" height={300}>
                       <BarChart data={deliveryTime} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="method" />
                         <YAxis />
-                        <Tooltip formatter={(value) => [`${value} days`, 'Average Time']} /> {/* Format tooltip */}
+                        <Tooltip formatter={(value) => [`${value} days`, 'Average Time']} /> {/* Format tooltip to show days */}
                         <Bar dataKey="avgDays" fill="#8884d8" name="Average Days" />
                       </BarChart>
                     </ResponsiveContainer>
@@ -513,7 +482,6 @@ const AnalyticsReports = () => {
                {deliveryStatus?.length > 0 ? (
                  <div className="chart-container">
                    <h3>Delivery Status Distribution</h3>
-                   {/* Centering div for Recharts */}
                     <div>
                       <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
@@ -532,7 +500,8 @@ const AnalyticsReports = () => {
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                           </Pie>
-                          <Tooltip formatter={(value, name, props) => [`${value ?? 0} (${((props?.payload?.percent || 0) * 100).toFixed(0)}%)`, name]} /> {/* Tooltip formatter with safety */}
+                          {/* Tooltip formatter includes value and percentage, with safety checks */}
+                          <Tooltip formatter={(value, name, props) => [`${value ?? 0} (${((props?.payload?.percent || 0) * 100).toFixed(0)}%)`, name]} />
                           <Legend />
                         </PieChart>
                       </ResponsiveContainer>
@@ -544,7 +513,7 @@ const AnalyticsReports = () => {
              <div className="table-container">
                <h3>Recent Deliveries</h3>
                 {recentDeliveries && recentDeliveries.length > 0 ? (
-                   <div style={{ overflowX: 'auto' }}>
+                   <div style={{ overflowX: 'auto' }}> {/* Wrapper for horizontal scrolling on small screens */}
                       <table className="analytics-table">
                         <thead>
                           <tr>
@@ -563,7 +532,8 @@ const AnalyticsReports = () => {
                               <td>{delivery.schoolName} ({delivery.schoolCity})</td>
                               <td>{delivery.itemsSummary}</td>
                               <td>{delivery.deliveryMethod}</td>
-                              <td><span className={`status-${delivery.status?.toLowerCase().replace(/\s+/g, '-')}`}>{delivery.status}</span></td> {/* Added optional chaining and class formatting */}
+                              {/* Status with dynamic class for styling based on status value */}
+                              <td><span className={`status-${delivery.status?.toLowerCase().replace(/\s+/g, '-')}`}>{delivery.status}</span></td>
                               <td>{delivery.date}</td>
                             </tr>
                           ))}
@@ -582,7 +552,7 @@ const AnalyticsReports = () => {
          return (
            <div className="analytics-content">
               {/* Stats Summary */}
-              {verificationStats && ( // Render stats only if verificationStats object exists
+              {verificationStats && (
                   <div className="stats-summary">
                       <div className="stat-card"><h4>Total Processed Verifications</h4><p className="stat-value">{verificationStats.totalVerifications ?? 0}</p></div>
                       <div className="stat-card"><h4>Approval Rate</h4><p className="stat-value">{verificationStats.approvalRate ?? 'N/A'}</p></div>
@@ -594,7 +564,6 @@ const AnalyticsReports = () => {
                {verificationRate?.length > 0 ? (
                  <div className="chart-container">
                    <h3>School Verification Statistics (Approved vs Rejected)</h3>
-                   {/* Centering div for Recharts */}
                    <div>
                     <ResponsiveContainer width="100%" height={300}>
                       <BarChart data={verificationRate} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -614,7 +583,6 @@ const AnalyticsReports = () => {
                {processingTime?.length > 0 ? (
                  <div className="chart-container">
                    <h3>Average Processing Time for Verified Schools (Days)</h3>
-                   {/* Centering div for Recharts */}
                    <div>
                      <ResponsiveContainer width="100%" height={300}>
                        <LineChart data={processingTime} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -633,8 +601,8 @@ const AnalyticsReports = () => {
          );
 
        default:
-         // Handle unknown tab case
-         return <div className="loading-indicator">Select a report type.</div>;
+         // Fallback for an unknown or unhandled tab
+         return <div className="loading-indicator">Select a report type to view analytics.</div>;
      }
   };
 
@@ -658,13 +626,14 @@ const AnalyticsReports = () => {
             {isLoading ? 'Refreshing...' : 'Refresh Data'}
           </button>
           <div className="export-dropdown">
-            <button className="export-btn" disabled={isLoading || isExporting || !reportData[activeTab] || !hasData}> {/* Disable if loading, exporting, no data object, or no data within object */}
+            {/* Disable export button if loading, exporting, no data object for tab, or no actual data points */}
+            <button className="export-btn" disabled={isLoading || isExporting || !reportData[activeTab] || !hasData}>
               {isExporting ? <RefreshCw size={16} className="spin" /> : <Download size={16} />}
               {isExporting ? 'Exporting...' : 'Export Report'}
-               {/* Arrow hidden via CSS for disabled state */}
+               {/* Dropdown arrow might be styled via CSS, comment notes if it's hidden when disabled */}
             </button>
-            {/* Only show dropdown content if button is NOT disabled */}
-             {(!isLoading && !isExporting && reportData[activeTab] && hasData) && ( // Check hasData before showing dropdown
+            {/* Show dropdown content only if not loading/exporting and data is available */}
+             {(!isLoading && !isExporting && reportData[activeTab] && hasData) && (
                  <div className="export-dropdown-content">
                    <button onClick={() => handleExportReport('csv')}>CSV</button>
                    <button onClick={() => handleExportReport('pdf')}>PDF</button>
@@ -678,7 +647,7 @@ const AnalyticsReports = () => {
         <button
           className={activeTab === 'donation' ? 'active' : ''}
           onClick={() => setActiveTab('donation')}
-           disabled={isLoading || isExporting}
+           disabled={isLoading || isExporting} // Disable tab switching during load/export
         >
           Donation Analytics
         </button>

@@ -1,7 +1,5 @@
-/* frontend/src/components/Donor/HowItWorksPage/HowItWorksPage.css */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-/* Base Styles */
 :root {
   --primary-green: #2A6F2B;
   --accent-green: #78C51C;
@@ -29,7 +27,6 @@
   color: var(--body-text);
 }
 
-/* Hero Section */
 .hiw-hero {
   display: flex;
   flex-direction: column;
@@ -93,7 +90,6 @@
   font-weight: 500;
 }
 
-/* Section Titles */
 .hiw-section-title {
   font-size: 32px;
   font-weight: 700;
@@ -113,7 +109,6 @@
   border-radius: 2px;
 }
 
-/* Process Steps Section */
 .hiw-process-section {
   margin-bottom: 80px;
 }
@@ -227,7 +222,6 @@
   color: var(--body-text);
 }
 
-/* Testimonials Section */
 .hiw-testimonials-section {
   margin-bottom: 80px;
   background-color: var(--bg-light);
@@ -276,7 +270,6 @@
   color: var(--primary-green);
 }
 
-/* FAQ Section */
 .hiw-faq-section {
   margin-bottom: 80px;
 }
@@ -326,7 +319,6 @@
   line-height: 1.6;
 }
 
-/* CTA Section */
 .hiw-cta-section {
   background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
   color: white;
@@ -359,7 +351,6 @@
   line-height: 1.6;
 }
 
-/* Button Styles */
 .hiw-button {
   padding: 14px 28px;
   border-radius: var(--radius-md);
@@ -402,7 +393,6 @@
   flex-wrap: wrap;
 }
 
-/* Responsive Styles */
 @media (max-width: 1024px) {
   .hiw-title {
     font-size: 36px;
