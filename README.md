@@ -1,6 +1,9 @@
 # 🎓 Edusahasra
 ### *Connecting Schools in Need with Generous Donors*
 
+![Edusahasra](https://github.com/user-attachments/assets/295b2ab0-2937-464a-a728-e05ed8b7e4fa)
+
+
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://mongodb.com/)
@@ -98,7 +101,7 @@ The platform enables schools to request specific resources while allowing donors
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/Edusahasra.git
+   git clone https://github.com/kisarasandes1122/Edusahasra.git
    cd Edusahasra
    ```
 
@@ -337,8 +340,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 📞 Contact & Support
 
-- 📧 **Email**: support@edusahasra.lk
-- 🌐 **Website**: [www.edusahasra.lk](https://www.edusahasra.lk)
+- 📧 **Email**: donotreply.edusahasra@gmail.com
 
 ---
 
